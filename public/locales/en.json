@@ -1,0 +1,1039 @@
+{
+  "common": {
+    "actions": {
+      "save": "Save",
+      "cancel": "Cancel",
+      "edit": "Edit",
+      "delete": "Delete",
+      "activate": "Activate",
+      "ban": "Ban",
+      "suspend": "Suspend",
+      "view": "View",
+      "select": "Select",
+      "search": "Search",
+      "clearSearch": "Clear search",
+      "resetFilters": "Reset Filters",
+      "openMenu": "Open menu",
+      "readMore": "Read More",
+      "showLess": "Show Less",
+      "addItem": "Add Item",
+      "submit": "Submit",
+      "close": "Close",
+      "share": "Share"
+    },
+    "labels": {
+      "actions": "Actions",
+      "name": "Name",
+      "status": "Status",
+      "statuses": "Statuses",
+      "createdAt": "Created At",
+      "all": "All",
+      "seeMore": "See more",
+      "seeLess": "See less",
+      "pickDate": "Pick a Date",
+      "assignmentType": "Assignment Type",
+      "assignmentTypes": "Assignment Types",
+      "unAuthorized": "Unauthorized",
+      "unknown": "Unknown",
+      "loading": "Loading",
+      "confirmBan": "Confirm Ban",
+      "confirmSuspend": "Confirm Suspension",
+      "confirmActivate": "Confirm Activation",
+      "banDescription": "Are you sure you want to ban this user? They will permanently lose access to their account.",
+      "suspendDescription": "Are you sure you want to suspend this user? They will temporarily lose access to their account.",
+      "activateDescription": "Are you sure you want to reactivate this user account? All access privileges will be restored.",
+      "min": "Minimum",
+      "max": "Maximum",
+      "quickActions": "Quick Actions"
+    },
+    "states": {
+      "noData": "No data available.",
+      "noResults": "No results found"
+    },
+    "delete": {
+      "title": "Delete item",
+      "titleNamed": "Delete {{name}}",
+      "confirm": "Are you sure you want to delete this item? This action cannot be undone.",
+      "confirmNamed": "Are you sure you want to delete this {{name}}? This action cannot be undone.",
+      "confirmNamedFemale": "Are you sure you want to delete this {{name}}? This action cannot be undone."
+    },
+    "errors": {
+      "network": {
+        "title": "Network Connection Failed",
+        "description": "We couldn't reach the server. Please check your internet connection and try again."
+      },
+      "auth": {
+        "title": "Access Denied",
+        "description": "You don't have permission to view this resource or your current session expired."
+      },
+      "generic": {
+        "title": "Data Loading Error",
+        "description": "Something went wrong while compiling this layout section."
+      },
+      "details": "Error Details",
+      "fallback": "An unexpected application error occurred.",
+      "retry": "Try Again",
+      "notFound": {
+        "title": "Page Not Found",
+        "description": "The page you're looking for doesn't exist or was moved.",
+        "goHome": "Go Home",
+        "goBack": "Go Back"
+      }
+    },
+    "fileUpload": {
+      "errors": {
+        "fileTooLarge": "File exceeds {{size}}MB limit."
+      },
+      "status": {
+        "ready": "Ready",
+        "preserved": "Preserved",
+        "existingFile": "Existing file",
+        "uploadedFile": "Uploaded file"
+      },
+      "dropzone": {
+        "dropToUpload": "Drop to upload",
+        "clickOrDrag": "Click or drag file here",
+        "maximumSize": "Maximum size:"
+      }
+    },
+    "fields": {
+      "loadingOptions": "Loading options...",
+      "failedToLoadOptions": "Failed to load options",
+      "noOptions": "No options available",
+      "format": "Format",
+      "hex": "HEX",
+      "rgb": "RGB"
+    },
+    "noItems": {
+      "title": "No items to show",
+      "description": "Try adjusting your filters or check back later."
+    },
+    "toasts": {
+      "success": "Success",
+      "error": "Error"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Sign in to your account",
+      "subtitle": "Enter your credentials to continue",
+      "email": "Email address",
+      "emailPlaceholder": "you@example.com",
+      "password": "Password",
+      "passwordPlaceholder": "Enter Your Password",
+      "passwordRequired": "Password is required.",
+      "wrongPassword": "Wrong Password",
+      "rememberMe": "Remember me",
+      "forgotPassword": "Forgot password?",
+      "signIn": "Sign in",
+      "signingIn": "Signing in...",
+      "brand": "Jadal",
+      "successMessage": "Logged in successfully",
+      "errorMessage": "Invalid email or password"
+    },
+    "signup": {
+      "noAccount": "Don't have an account?",
+      "signUpFree": "Sign up for free"
+    },
+    "oauth": {
+      "continueWithGoogle": "Continue with Google"
+    },
+    "hero": {
+      "title1": "Where great",
+      "titleEm": "arguments",
+      "title2": "are born.",
+      "subtitle": "Join thousands of debaters, trainers, and judges building the future of structured discourse."
+    },
+    "session": {
+      "welcomeBack": "Welcome back",
+      "secureLogin": "Secure login"
+    },
+    "logout": {
+      "title": "Sign out",
+      "confirmDescription": "Are you sure you want to sign out? You will need to log in again to access your account.",
+      "failed": "Failed to sign out"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "description": "Manage your account settings and preferences.",
+    "appearance": {
+      "title": "Appearance",
+      "description": "Customize how the application looks and behaves."
+    },
+    "view": {
+      "title": "Default View",
+      "description": "Choose how you want to view your data lists."
+    },
+    "language": {
+      "title": "Language",
+      "description": "Select your preferred application language.",
+      "ar": "Arabic",
+      "en": "English",
+      "toggle": "Toggle language"
+    },
+    "theme": {
+      "title": "Theme",
+      "description": "Select the color theme for the application.",
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System",
+      "toggle": "Toggle theme"
+    }
+  },
+  "navigation": {
+    "sidebar": {
+      "home": "Home",
+      "users": "Users",
+      "debates": "Debates",
+      "debateFormats": "Debate Formats",
+      "debateMotions": "Debate Motions",
+      "debateMotionFrameworks": "Debate Motion Frameworks",
+      "blogs": "Blogs",
+      "surveys": "Surveys",
+      "statistics": "Statistics",
+      "complaints": "Complaints",
+      "teams": "Teams",
+      "account": "Account",
+      "settings": "Settings",
+      "logout": "Logout",
+      "toggle": "Toggle Sidebar",
+      "title": "Sidebar",
+      "description": "Displays the mobile sidebar."
+    },
+    "submenu": {
+      "judges": "Judges",
+      "debaters": "Debaters",
+      "coaches": "Trainers",
+      "admins": "Admins",
+      "scheduled": "Scheduled",
+      "announced": "Announced",
+      "teamsSelected": "Teams Selected",
+      "live": "Live",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "view": {
+      "cards": "Cards",
+      "table": "Table",
+      "toggle": "Toggle view"
+    }
+  },
+  "users": {
+    "single": "User",
+    "plural": "Users",
+    "actions": {
+      "create": "Create User",
+      "edit": "Edit User",
+      "delete": "Delete User"
+    },
+    "messages": {
+      "created": "User created successfully",
+      "updated": "User updated successfully",
+      "deleted": "User deleted successfully",
+      "suspended": "User suspended successfully",
+      "banned": "User banned successfully",
+      "activated": "User activated successfully",
+      "createError": "Failed to create user",
+      "updateError": "Failed to update user",
+      "deleteError": "Failed to delete user",
+      "suspendError": "Failed to suspend user",
+      "banError": "Failed to ban user",
+      "activateError": "Failed to activate user"
+    },
+    "roles": {
+      "all": "Users",
+      "judge": "Judges",
+      "debater": "Debaters",
+      "trainer": "Trainers",
+      "viewer": "Viewers",
+      "admin": "Admins"
+    },
+    "statuses": {
+      "active": "Active",
+      "suspended": "Suspended",
+      "banned": "Banned"
+    },
+    "empty": {
+      "withRole": "No users with Role \"{{role}}\" found.",
+      "noData": "There are currently no users available."
+    },
+    "card": {
+      "points": "Points",
+      "status": "Status",
+      "verifyInfo": "Verify Info"
+    },
+    "cardSkeleton": {
+      "likes": "Likes",
+      "posts": "Posts",
+      "views": "Views"
+    },
+    "form": {
+      "sections": {
+        "identity": "Identity",
+        "roleAndStatus": "Role & Status"
+      },
+      "fields": {
+        "name": "Full Name",
+        "email": "Email",
+        "phone": "Phone",
+        "password": "Password",
+        "avatar": "Avatar URL",
+        "role": "Role",
+        "status": "Status"
+      }
+    },
+    "validation": {
+      "nameRequired": "Name is required",
+      "nameTooShort": "Name must be at least 2 characters",
+      "emailRequired": "Email is required",
+      "invalidEmail": "Invalid email address",
+      "phoneRequired": "Phone number is required",
+      "invalidPhone": "Invalid phone number",
+      "avatarRequired": "Avatar URL is required",
+      "invalidAvatar": "Invalid URL",
+      "passwordRequired": "Password is required",
+      "passwordTooShort": "Password must be at least 8 characters",
+      "roleRequired": "Role is required",
+      "statusRequired": "Status is required"
+    },
+    "details": {
+      "back": "Back",
+      "userNotFound": "User not found",
+      "userNotFoundDesc": "The user you're looking for doesn't exist or has been deleted.",
+      "goBack": "Go back",
+      "edit": "Edit",
+      "sendMessage": "Send Message",
+      "resetPassword": "Reset Password",
+      "suspendAccount": "Suspend Account",
+      "banAccount": "Ban Account",
+      "contactInfo": "Contact Information",
+      "email": "Email",
+      "verified": "Verified",
+      "phone": "Phone",
+      "notProvided": "Not provided",
+      "language": "Language",
+      "languages": {
+        "en": "English",
+        "ar": "Arabic"
+      },
+      "accountInfo": "Account Information",
+      "role": "Role",
+      "status": "Status",
+      "themePreference": "Theme Preference",
+      "systemTheme": "System",
+      "pointsActivity": "Points & Activity",
+      "totalPoints": "Total Points",
+      "pointsDesc": "Points earned through participation and achievements",
+      "timeline": "Timeline",
+      "memberSince": "Member Since",
+      "lastUpdated": "Last Updated",
+      "unknownDate": "Unknown",
+      "quickActions": "Quick Actions",
+      "viewActivity": "View Activity",
+      "managePermissions": "Manage Permissions",
+      "viewDebates": "View Debates",
+      "roles": {
+        "debater": "Debater",
+        "trainer": "Trainer",
+        "judge": "Judge",
+        "admin": "Administrator"
+      },
+      "statuses": {
+        "active": "Active",
+        "suspended": "Suspended",
+        "banned": "Banned"
+      }
+    }
+  },
+  "debates": {
+    "single": "Debate",
+    "plural": "Debates",
+    "all": "Debates",
+    "actions": {
+      "create": "Create Debate",
+      "edit": "Edit Debate",
+      "delete": "Delete Debate"
+    },
+    "messages": {
+      "created": "Debate created successfully",
+      "updated": "Debate updated successfully",
+      "deleted": "Debate deleted successfully",
+      "createError": "Failed to create debate",
+      "updateError": "Failed to update debate",
+      "deleteError": "Failed to delete debate"
+    },
+    "statuses": {
+      "scheduled": "Scheduled",
+      "announced": "Announced",
+      "live": "Live",
+      "completed": "Completed",
+      "cancelled": "Cancelled",
+      "teams-selected": "Teams Selected"
+    },
+    "categories": {
+      "work": "Work",
+      "tech": "Technology",
+      "finance": "Finance"
+    },
+    "fields": {
+      "state": "State",
+      "states": "States",
+      "topic": "Topic",
+      "topics": "Topics"
+    },
+    "empty": {
+      "withState": "No debates with state \"{{state}}\" found.",
+      "withTopic": "No debates with topic \"{{topic}}\" found.",
+      "withStateAndTopic": "No debates with state \"{{state}}\" in topic \"{{topic}}\" found.",
+      "noData": "There are currently no debates available."
+    },
+    "card": {
+      "live": "LIVE",
+      "upcoming": "UPCOMING",
+      "draw": "DRAW",
+      "propWins": "A WINNING",
+      "oppWins": "B WINNING",
+      "vs": "VS",
+      "proposition": "Proposition",
+      "opposition": "Opposition",
+      "loading": "Loading debate"
+    },
+    "form": {
+      "sections": {
+        "info": "Info",
+        "scheduleAndStatus": "Schedule & Status"
+      },
+      "fields": {
+        "title": "Title",
+        "tag": "Tag",
+        "format": "Format",
+        "motion": "Motion",
+        "description": "Description",
+        "scheduledAt": "Scheduled At"
+      }
+    },
+    "validation": {
+      "titleRequired": "Title is required",
+      "titleTooShort": "Title must be at least 3 characters",
+      "tagRequired": "Tag is required",
+      "formatRequired": "Format is required",
+      "motionRequired": "Motion is required",
+      "scheduledAtRequired": "Scheduled date is required",
+      "statusRequired": "Status is required"
+    },
+    "result": {
+      "noResult": "No result",
+      "draw": "Draw",
+      "propWins": "Prop Wins",
+      "oppWins": "Opp Wins"
+    },
+    "details": {
+      "backToDebates": "Back",
+      "editDebate": "Edit Debate",
+      "shareLink": "Share Link",
+      "cancelDebate": "Cancel Debate",
+      "joinLive": "Join Live Debate",
+      "watchRecording": "Watch Recording",
+      "motion": "Motion",
+      "frameworks": "Frameworks",
+      "structure": "Debate Structure",
+      "minutes": "{{count}} minutes",
+      "participants": "Participants ({{count}})",
+      "status": "Status",
+      "result": "Result",
+      "winnerTitle": "{{side}} Wins",
+      "liveNow": "LIVE RIGHT NOW",
+      "scheduledFor": "Debate scheduled for",
+      "information": "Debate Information",
+      "hostedBy": "Hosted By",
+      "scheduledAt": "Scheduled At",
+      "totalDuration": "Total Duration",
+      "tag": "Tag",
+      "quickActions": "Quick Actions",
+      "setReminder": "Set Reminder",
+      "viewTranscript": "View Full Transcript",
+      "manageParticipants": "Manage Participants",
+      "phaseStatus": {
+        "pending": "Pending",
+        "active": "Active",
+        "completed": "Completed"
+      },
+      "minTotal": "Total Minutes",
+      "min": "Minutes"
+    }
+  },
+  "debateFormats": {
+    "single": "Debate Format",
+    "plural": "Debate Formats",
+    "actions": {
+      "create": "Create Debate Format",
+      "edit": "Edit Debate Format",
+      "delete": "Delete Debate Format",
+      "addPhase": "Add Phase"
+    },
+    "messages": {
+      "created": "Debate format created successfully",
+      "updated": "Debate format updated successfully",
+      "deleted": "Debate format deleted successfully",
+      "createError": "Failed to create debate format",
+      "updateError": "Failed to update debate format",
+      "deleteError": "Failed to delete debate format",
+      "noPhases": "No phases configured"
+    },
+    "fields": {
+      "phases": "Phases",
+      "sides": "Sides",
+      "phaseName": "Phase Name",
+      "durationSeconds": "Duration (seconds)",
+      "orderIndex": "Order Index",
+      "role": "Role"
+    },
+    "form": {
+      "sections": {
+        "info": "Info",
+        "phases": "Phases"
+      },
+      "fields": {
+        "phases": "Phases",
+        "name": "Name",
+        "description": "Description"
+      },
+      "phaseNamePlaceholder": "e.g. Prime Minister",
+      "durationPlaceholder": "420",
+      "selectRolePlaceholder": "Select role"
+    },
+    "empty": "No debate formats found",
+    "emptyDescription": "Create your first debate format to get started",
+    "validation": {
+      "nameRequired": "Name is required",
+      "nameTooShort": "Name must be at least 3 characters",
+      "phaseNameRequired": "Phase name is required",
+      "durationTooShort": "Duration must be at least 30 seconds",
+      "orderIndexNotValid": "Order index must be 1 or greater",
+      "roleRequired": "Role is required",
+      "phaseConfigRequired": "At least one phase is required"
+    },
+    "roles": {
+      "proposition": "Proposition",
+      "opposition": "Opposition",
+      "judge": "Judge"
+    },
+    "details": {
+      "formatHighlights": "Format Highlights",
+      "totalDuration": "Total Duration",
+      "speakersPerSide": "Speakers per Side",
+      "mainSpeech": "Main Speech",
+      "replySpeech": "Reply Speech",
+      "min": "Minutes"
+    }
+  },
+  "debateMotions": {
+    "single": "Motion",
+    "plural": "Motions",
+    "all": "Motions",
+    "actions": {
+      "create": "Create Motion",
+      "edit": "Edit Motion",
+      "delete": "Delete Motion"
+    },
+    "messages": {
+      "created": "Motion created successfully",
+      "updated": "Motion updated successfully",
+      "deleted": "Motion deleted successfully",
+      "createError": "Failed to create motion",
+      "updateError": "Failed to update motion",
+      "deleteError": "Failed to delete motion"
+    },
+    "form": {
+      "sections": {
+        "info": "Motion Information",
+        "frameworks": "Frameworks"
+      },
+      "fields": {
+        "text": "Motion Text",
+        "textPlaceholder": "Write the motion here...",
+        "frameworks": "Frameworks",
+        "selectFrameworks": "Select frameworks"
+      }
+    },
+    "card": {
+      "frameworks": "Frameworks",
+      "added": "Added ",
+      "updated": "Updated ",
+      "viewMotion": "View Motion"
+    },
+    "empty": "No motions found",
+    "emptyDescription": "Create your first motion to get started",
+    "validation": {
+      "textRequired": "Motion text is required",
+      "textTooShort": "Motion text must be at least 10 characters",
+      "frameworksRequired": "At least one framework is required"
+    }
+  },
+  "debateMotionFrameworks": {
+    "single": "Motion Framework",
+    "plural": "Motion Frameworks",
+    "all": "Motion Frameworks",
+    "actions": {
+      "create": "Create Motion Framework",
+      "edit": "Edit Motion Framework",
+      "delete": "Delete Motion Framework"
+    },
+    "messages": {
+      "created": "Motion framework created successfully",
+      "updated": "Motion framework updated successfully",
+      "deleted": "Motion framework deleted successfully",
+      "createError": "Failed to create motion framework",
+      "updateError": "Failed to update motion framework",
+      "deleteError": "Failed to delete motion framework"
+    },
+    "form": {
+      "sections": {
+        "info": "Motion Framework Information"
+      },
+      "fields": {
+        "name": "Name",
+        "namePlaceholder": "Enter framework name",
+        "color": "Color",
+        "colorPlaceholder": "#FF0000"
+      }
+    },
+    "card": {
+      "unknown": "Unknown",
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "empty": "No motion frameworks found",
+    "emptyDescription": "Create your first motion framework to get started",
+    "validation": {
+      "nameRequired": "Name is required",
+      "nameTooShort": "Name must be at least 3 characters",
+      "colorRequired": "Color is required",
+      "colorInvalid": "Color must be a valid hex code (e.g. #FF0000)"
+    }
+  },
+  "blogs": {
+    "title": "Blogs",
+    "topics": "Topics",
+    "tags": "Tags",
+    "filters": {
+      "hot": "Hot",
+      "new": "New",
+      "top": "Top",
+      "rising": "Rising"
+    },
+    "actions": {
+      "createCategory": "Create Category",
+      "editCategory": "Edit Category",
+      "createTag": "Create Tag",
+      "editTag": "Edit Tag"
+    },
+    "messages": {
+      "approveAction": "Approve",
+      "approveLabel": "Approved",
+      "approved": "Blog approved successfully",
+      "rejected": "Blog rejected successfully",
+      "approveError": "Failed to approve blog",
+      "rejectAction": "Reject",
+      "rejectLabel": "Rejected",
+      "rejectError": "Failed to reject blog"
+    },
+    "time": {
+      "minRead": "min/s read",
+      "hoursAgo": "hour/s ago"
+    },
+    "card": {
+      "reviewerComment": "Reviewer Comment",
+      "rejectionPlaceholder": "Enter reason for rejection...",
+      "confirmReject": "Confirm Reject",
+      "views": "Views",
+      "likes": "Likes",
+      "dislikes": "Dislikes",
+      "reviewerCommentLabel": "Reviewer Comment",
+      "blogLoading": "Loading article"
+    },
+    "empty": {
+      "noPosts": "No posts found for this filter."
+    },
+    "form": {
+      "sections": {
+        "category": "Category Information",
+        "tag": "Tag Information"
+      },
+      "fields": {
+        "categoryName": "Category Name",
+        "tagName": "Tag Name",
+        "slug": "Slug",
+        "slugPlaceholder": "tag-slug"
+      }
+    },
+    "validation": {
+      "category": {
+        "nameRequired": "Category name is required",
+        "nameTooShort": "Name must be at least 2 characters",
+        "invalidSlug": "Slug must be valid"
+      },
+      "tag": {
+        "nameRequired": "Tag name is required",
+        "nameTooShort": "Name must be at least 2 characters",
+        "invalidSlug": "Slug must be valid"
+      }
+    }
+  },
+  "surveys": {
+    "single": "Survey",
+    "plural": "Surveys",
+    "actions": {
+      "create": "Create Survey",
+      "edit": "Edit Survey",
+      "delete": "Delete Survey",
+      "update": "Update",
+      "addSurvey": "Add a Survey",
+      "preview": "Preview",
+      "saveSurvey": "Save Survey"
+    },
+    "messages": {
+      "created": "Survey created successfully",
+      "updated": "Survey updated successfully",
+      "deleted": "Survey deleted successfully",
+      "createError": "Failed to create survey",
+      "updateError": "Failed to update survey",
+      "deleteError": "Failed to delete survey"
+    },
+    "questions": {
+      "single": "Question",
+      "plural": "Questions",
+      "untitled": "Untitled Question",
+      "noQuestionsAdded": "No questions added yet",
+      "types": {
+        "select": "Select Question",
+        "text": "Text Question",
+        "rating": "Rating Question"
+      },
+      "actions": {
+        "addSelect": "Add Select Question",
+        "addText": "Add Text Question",
+        "addRating": "Add Rating Question",
+        "addOption": "Add Option",
+        "removeOption": "Remove Option",
+        "removeQuestion": "Remove Question"
+      }
+    },
+    "options": {
+      "single": "Option",
+      "plural": "Options",
+      "selectLabel": "Enter Label",
+      "selectTitle": "Enter Title",
+      "selectDescription": "Enter Description",
+      "textAnswer": "Text Answer..."
+    },
+    "status": {
+      "open": "Open",
+      "closingSoon": "Closing Soon",
+      "closed": "Closed"
+    },
+    "dates": {
+      "noCloseDate": "No close date",
+      "closesAt": "Closes At",
+      "closes": "Closes {{time}}",
+      "closed": "Closed {{time}}"
+    },
+    "empty": {
+      "noData": "There are no surveys yet. Create one to get started.",
+      "noResults": "No surveys found",
+      "withStatus": "No surveys with status {{status}} found."
+    },
+    "card": {
+      "question": "question",
+      "questions": "questions",
+      "response": "response",
+      "responses": "responses",
+      "rate": "% rate",
+      "noDescription": "No description",
+      "createdByFallback": "User #{{id}}"
+    },
+    "form": {
+      "sections": {
+        "basicInfo": "Basic Information",
+        "questions": "Questions",
+        "settings": "Settings"
+      },
+      "fields": {
+        "title": "Survey Title",
+        "description": "Description",
+        "questions": "Questions",
+        "closesAt": "Closes At",
+        "targetRoles": "Target Roles"
+      },
+      "titlePlaceholder": "Enter survey title",
+      "descriptionPlaceholder": "Enter survey description (optional)",
+      "questionTextPlaceholder": "Enter question text"
+    },
+    "labels": {
+      "untitledSurvey": "Untitled Survey",
+      "noTitle": "No Title",
+      "filterByStatus": "Filter by Status",
+      "showing": "Showing",
+      "targetRoles": "Target Roles"
+    },
+    "validation": {
+      "titleRequired": "Title is required",
+      "titleTooShort": "Title must be at least 3 characters",
+      "targetRolesRequired": "At least one target role is required",
+      "labelRequired": "Label is required",
+      "optionRequired": "Option is required",
+      "minOptions": "At least two options are required",
+      "minQuestions": "At least one question is required",
+      "closesAtInvalid": "Close date cannot be in the past",
+      "someQuestionsEmpty": "Some questions are empty"
+    },
+    "details": {
+      "back": "Back",
+      "responded": "Responded",
+      "closed": "Closed",
+      "reviewLayoutDescription": "Review Layout Description",
+      "closingSoon": "Closing Soon",
+      "active": "Active",
+      "by": "By",
+      "questionCount": "Question Count",
+      "closeDate": "Close Date",
+      "noCloseDate": "No Close Date",
+      "participationStatus": "Participation Status",
+      "respondedStatus": "Responded",
+      "notResponded": "Not Responded",
+      "surveyQuestions": "Survey Questions",
+      "questionsCount": "Questions",
+      "rating": "Rating",
+      "multipleChoice": "Multiple Choice",
+      "openText": "Open Text",
+      "from": "From",
+      "to": "To",
+      "moreOptions": "More Options",
+      "textResponseArea": "Text Response Area",
+      "noQuestions": "No questions added to this survey",
+      "targetRoles": "Target Roles",
+      "availableForAll": "Available for All Members",
+      "surveyClosed": "Survey Closed",
+      "youResponded": "You Have Responded",
+      "informationalSurvey": "Informational Survey",
+      "closedMessage": "The response period for this survey has ended.",
+      "alreadyRespondedMessage": "You have already participated in this survey.",
+      "notRespondedMessage": "This survey is designed to collect opinions and feedback."
+    }
+  },
+  "surveyBuilder": {
+    "label": "Survey Questions",
+    "description": "Create and manage your survey questions",
+    "validation": {
+      "formRequirements": "Form validation requirements",
+      "questionTextRequired": "Question text is required",
+      "atLeastQuestions": "At least {{count}} question{{plural}} required",
+      "mcqAtLeastTwoOptions": "Multiple choice questions need at least 2 options",
+      "optionsCannotBeEmpty": "Option{{plural}} cannot be empty"
+    },
+    "emptyState": {
+      "title": "No questions added yet",
+      "description": "Select a question format below to begin structuring your survey interface."
+    },
+    "buttons": {
+      "multipleChoice": "Multiple Choice",
+      "openText": "Open Text",
+      "ratingScale": "Rating Scale",
+      "addChoiceOption": "Add Choice Option",
+      "duplicate": "Duplicate",
+      "deleteQuestion": "Delete Question",
+      "moveUp": "Move Up",
+      "moveDown": "Move Down"
+    },
+    "questionCard": {
+      "questionTitle": "Question Title",
+      "untitled": "Untitled question...",
+      "issues": "Issues",
+      "types": {
+        "mcq": "MCQ",
+        "text": "Text",
+        "rating": "Rating"
+      },
+      "placeholder": "e.g., How satisfied were you with the presentation clarity?"
+    },
+    "mcq": {
+      "optionsSelection": "Options Selection",
+      "optionPlaceholder": "Option {{n}}...",
+      "defaultOption": "Option {{n}}"
+    },
+    "rating": {
+      "title": "Rating Grid Scale",
+      "minLimit": "Minimum Limit",
+      "maxLimit": "Maximum Limit",
+      "step": "Interval Step",
+      "livePreview": "Live Preview: Numerical range sequence dynamic from <strong>{{min}}</strong> to <strong>{{max}}</strong> (increments of {{step}})"
+    },
+    "openText": {
+      "title": "Text Response Field",
+      "description": "Provides an adaptive multiline text area for users to supply custom, descriptive answers."
+    },
+    "counter": "{{current}} / {{max}} questions"
+  },
+  "complaints": {
+    "title": "Complaints",
+    "actions": {
+      "seeMore": "See more",
+      "seeLess": "See less"
+    },
+    "dialog": {
+      "dismissTitle": "Dismiss Complaint?",
+      "resolveTitle": "Resolve Complaint?",
+      "dismissConfirm": "Confirm Dismiss",
+      "resolveConfirm": "Confirm Resolve",
+      "description": "This complaint will be removed from the active list.",
+      "adminResponse": "Admin Response",
+      "cancel": "Cancel"
+    },
+    "statuses": {
+      "under_review": "Under Review",
+      "resolved": "Resolved",
+      "dismissed": "Dismissed",
+      "open": "Opened"
+    },
+    "details": {
+      "back": "Back",
+      "notFound": "Complaint Not Found",
+      "notFoundDesc": "This complaint may have been removed or does not exist.",
+      "goBack": "Go Back",
+      "id": "Complaint",
+      "debateId": "Debate",
+      "filedBy": "Filed By",
+      "filedOn": "Filed On",
+      "adminResponse": "Admin Response",
+      "noResponse": "No response has been provided yet.",
+      "resolve": "Mark as Resolved",
+      "dismiss": "Dismiss Complaint",
+      "viewDebate": "View Debate"
+    }
+  },
+  "teams": {
+    "single": "Team",
+    "plural": "Teams",
+    "actions": {
+      "create": "Create Team",
+      "edit": "Edit Team",
+      "delete": "Delete Team"
+    },
+    "messages": {
+      "created": "Team created successfully",
+      "updated": "Team updated successfully",
+      "deleted": "Team deleted successfully",
+      "createError": "Failed to create team",
+      "updateError": "Failed to update team",
+      "deleteError": "Failed to delete team"
+    },
+    "fields": {
+      "city": "City",
+      "cities": "Cities",
+      "leader": "Leader"
+    },
+    "statuses": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "empty": {
+      "noData": "There are no teams yet. Create one to get started.",
+      "withStatus": "No {{status}} teams found."
+    },
+    "card": {
+      "teamActions": "Team actions"
+    },
+    "form": {
+      "sections": {
+        "info": "Team Info",
+        "settings": "Settings"
+      },
+      "fields": {
+        "name": "Team Name",
+        "leader": "Leader",
+        "teamMembers": "Team Members",
+        "assignmentType": "Assignment Type"
+      },
+      "options": {
+        "manual": "Manual",
+        "random": "Random"
+      }
+    },
+    "validation": {
+      "nameRequired": "Team name is required",
+      "leaderIsRequired": "Team Leader is required",
+      "nameTooShort": "Name must be at least 2 characters",
+      "invalidLeader": "Leader ID must be a valid number",
+      "statusRequired": "Status is required",
+      "teamMembersRequired": "Team Members are required",
+      "leaderMustBeMember": "The team leader must be a member of the team"
+    }
+  },
+  "categories": {
+    "messages": {
+      "created": "Category created successfully",
+      "updated": "Category updated successfully",
+      "deleted": "Category deleted successfully",
+      "createError": "Failed to create category",
+      "updateError": "Failed to update category",
+      "deleteError": "Failed to delete category"
+    }
+  },
+  "tags": {
+    "messages": {
+      "created": "Tag created successfully",
+      "updated": "Tag updated successfully",
+      "deleted": "Tag deleted successfully",
+      "createError": "Failed to create tag",
+      "updateError": "Failed to update tag",
+      "deleteError": "Failed to delete tag"
+    }
+  },
+  "table": {
+    "rowTotal": "Total rows",
+    "next": "Next",
+    "previous": "Previous",
+    "previousPage": "Previous page",
+    "nextPage": "Next page",
+    "page": "Page",
+    "of": "of",
+    "noResults": "No results found"
+  },
+  "toolbar": {
+    "search": "Search"
+  },
+  "statistics": {
+    "overview": "Overview",
+    "keyMetrics": "Key metrics at a glance",
+    "liveData": "Live data",
+    "totalRevenue": "Total Revenue",
+    "vsLastMonth": "vs last month",
+    "acrossAllChannels": "Across all active channels",
+    "activeUsers": "Active Users",
+    "vsLastWeek": "vs last week",
+    "registeredAccounts": "Registered & verified accounts",
+    "newOrders": "New Orders",
+    "vsYesterday": "vs yesterday",
+    "pendingFulfillment": "Pending fulfillment",
+    "avgRating": "Avg. Rating",
+    "satisfactionScore": "satisfaction score",
+    "basedOnReviews": "Based on 2.1k reviews",
+    "conversionRate": "Conversion Rate",
+    "vsLastQuarter": "vs last quarter",
+    "visitorToCustomer": "Visitor \u2192 customer rate",
+    "serverUptime": "Server Uptime",
+    "stable": "stable",
+    "thirtyDayAverage": "30-day rolling average",
+    "productsListed": "Products Listed",
+    "thisWeek": "this week",
+    "acrossAllCategories": "Across all categories",
+    "openIssues": "Open Issues",
+    "resolvedToday": "resolved today",
+    "requiresAttention": "Requires attention"
+  },
+  "home": {
+    "welcome": "Welcome",
+    "hello": "Hello"
+  }
+}

@@ -1,0 +1,1036 @@
+{
+  "common": {
+    "actions": {
+      "save": "حفظ",
+      "cancel": "إلغاء",
+      "edit": "تعديل",
+      "delete": "حذف",
+      "activate": "تفعيل",
+      "ban": "حظر",
+      "suspend": "توقيف",
+      "view": "عرض",
+      "select": "اختيار",
+      "search": "بحث",
+      "clearSearch": "مسح البحث",
+      "resetFilters": "إعادة تعيين الفلاتر",
+      "openMenu": "فتح القائمة",
+      "readMore": "قراءة المزيد",
+      "showLess": "عرض أقل",
+      "addItem": "إضافة عنصر",
+      "submit": "إرسال",
+      "close": "إغلاق",
+      "share": "مشاركة"
+    },
+    "labels": {
+      "actions": "الإجراءات",
+      "name": "الاسم",
+      "status": "الحالة",
+      "statuses": "الحالات",
+      "createdAt": "تاريخ الإنشاء",
+      "all": "كل",
+      "seeMore": "رؤية المزيد",
+      "seeLess": "رؤية الأقل",
+      "pickDate": "اختر تاريخاً",
+      "assignmentType": "نوع التعيين",
+      "assignmentTypes": "أنواع التعيين",
+      "unAuthorized": "غير مصرح لك",
+      "unknown": "غير معروف",
+      "loading": "جارٍ التحميل",
+      "confirmBan": "تأكيد الحظر",
+      "confirmSuspend": "تأكيد التعليق",
+      "confirmActivate": "تأكيد التفعيل",
+      "banDescription": "هل أنت متأكد أنك تريد حظر هذا المستخدم؟ سيفقد الوصول إلى حسابه بشكل دائم.",
+      "suspendDescription": "هل أنت متأكد أنك تريد تعليق هذا المستخدم؟ سيفقد الوصول إلى حسابه مؤقتاً.",
+      "activateDescription": "هل أنت متأكد أنك تريد إعادة تفعيل حساب هذا المستخدم؟ ستُستعاد جميع صلاحيات الوصول.",
+      "min": "الأقل",
+      "max": "الأعلى",
+      "quickActions": "إجراءات سريعة"
+    },
+    "states": {
+      "noData": "لا توجد بيانات متاحة.",
+      "noResults": "لم يتم العثور على نتائج"
+    },
+    "delete": {
+      "title": "حذف العنصر",
+      "titleNamed": "حذف {{name}}",
+      "confirm": "هل أنت متأكد أنك تريد حذف هذا العنصر؟ لا يمكن التراجع عن هذا الإجراء.",
+      "confirmNamed": "هل أنت متأكد أنك تريد حذف هذا {{name}}؟ لا يمكن التراجع عن هذا الإجراء.",
+      "confirmNamedFemale": "هل أنت متأكد أنك تريد حذف هذه {{name}}؟ لا يمكن التراجع عن هذا الإجراء."
+    },
+    "errors": {
+      "network": {
+        "title": "فشل الاتصال بالشبكة",
+        "description": "لم نتمكن من الاتصال بالخادم. يرجى التحقق من اتصالك بالإنترنت والمحاولة مرة أخرى."
+      },
+      "auth": {
+        "title": "تم رفض الوصول",
+        "description": "ليس لديك صلاحية لعرض هذا المورد أو أن جلستك الحالية قد انتهت."
+      },
+      "generic": {
+        "title": "خطأ في تحميل البيانات",
+        "description": "حدث خطأ ما أثناء تجميع هذا القسم."
+      },
+      "details": "تفاصيل الخطأ",
+      "fallback": "حدث خطأ غير متوقع في التطبيق.",
+      "retry": "إعادة المحاولة",
+      "notFound": {
+        "title": "الصفحة غير موجودة",
+        "description": "الصفحة التي تبحث عنها غير موجودة أو تم نقلها.",
+        "goHome": "الرئيسية",
+        "goBack": "العودة"
+      }
+    },
+    "fileUpload": {
+      "errors": {
+        "fileTooLarge": "حجم الملف يتجاوز الحد الأقصى {{size}}MB."
+      },
+      "status": {
+        "ready": "جاهز",
+        "preserved": "محفوظ",
+        "existingFile": "ملف موجود",
+        "uploadedFile": "ملف مرفوع"
+      },
+      "dropzone": {
+        "dropToUpload": "أفلت الملف للرفع",
+        "clickOrDrag": "اضغط أو اسحب الملف هنا",
+        "maximumSize": "الحد الأقصى للحجم:"
+      }
+    },
+    "fields": {
+      "loadingOptions": "جارٍ تحميل الخيارات...",
+      "failedToLoadOptions": "فشل تحميل الخيارات",
+      "noOptions": "لا توجد خيارات متاحة",
+      "format": "الصيغة",
+      "hex": "HEX",
+      "rgb": "RGB"
+    },
+    "noItems": {
+      "title": "لا توجد عناصر للعرض",
+      "description": "حاول تعديل الفلاتر أو تحقق لاحقاً."
+    },
+    "toasts": {
+      "success": "نجاح",
+      "error": "خطأ"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "تسجيل الدخول إلى حسابك",
+      "subtitle": "أدخل بيانات اعتمادك للمتابعة",
+      "email": "البريد الإلكتروني",
+      "emailPlaceholder": "example@domain.com",
+      "password": "كلمة المرور",
+      "passwordPlaceholder": "أدخل كلمة المرور",
+      "passwordRequired": "كلمة المرور مطلوبة.",
+      "wrongPassword": "كلمة المرور خاطئة",
+      "rememberMe": "تذكرني",
+      "forgotPassword": "نسيت كلمة المرور؟",
+      "signIn": "تسجيل الدخول",
+      "signingIn": "جارٍ تسجيل الدخول...",
+      "brand": "جدل",
+      "successMessage": "تم تسجيل الدخول بنجاح",
+      "errorMessage": "بريد إلكتروني أو كلمة مرور غير صالحة"
+    },
+    "signup": {
+      "noAccount": "ليس لديك حساب؟",
+      "signUpFree": "سجّل مجاناً"
+    },
+    "oauth": {
+      "continueWithGoogle": "المتابعة عبر Google"
+    },
+    "hero": {
+      "title1": "حيث تولد",
+      "titleEm": "الحجج العظيمة",
+      "title2": ".",
+      "subtitle": "انضم إلى آلاف المتناظرين والمدربين والحكام الذين يبنون مستقبل الخطاب المنظم."
+    },
+    "session": {
+      "welcomeBack": "مرحباً بعودتك",
+      "secureLogin": "تسجيل دخول آمن"
+    },
+    "logout": {
+      "title": "تسجيل الخروج",
+      "confirmDescription": "هل أنت متأكد أنك تريد تسجيل الخروج؟ ستحتاج إلى تسجيل الدخول مجدداً للوصول إلى حسابك.",
+      "failed": "فشل تسجيل الخروج"
+    }
+  },
+  "settings": {
+    "title": "الإعدادات",
+    "description": "إدارة إعدادات حسابك وتفضيلاتك.",
+    "appearance": {
+      "title": "المظهر",
+      "description": "تخصيص كيفية ظهور التطبيق وسلوكه."
+    },
+    "view": {
+      "title": "طريقة العرض الافتراضية",
+      "description": "اختر الطريقة التي تفضلها لعرض قوائم البيانات."
+    },
+    "language": {
+      "title": "اللغة",
+      "description": "اختر لغة التطبيق المفضلة.",
+      "ar": "العربية",
+      "en": "الإنجليزية",
+      "toggle": "تبديل اللغة"
+    },
+    "theme": {
+      "title": "السمة",
+      "description": "اختر سمة الألوان للتطبيق.",
+      "light": "فاتح",
+      "dark": "داكن",
+      "system": "نظام",
+      "toggle": "تبديل المظهر"
+    }
+  },
+  "navigation": {
+    "sidebar": {
+      "home": "الصفحة الرئيسية",
+      "users": "المستخدمون",
+      "debates": "المناظرات",
+      "debateFormats": "أنماط المناظرات",
+      "debateMotions": "مواضيع المناظرات",
+      "debateMotionFrameworks": "أطر مواضيع المناطرات",
+      "blogs": "المدونات",
+      "surveys": "الاستبيانات",
+      "statistics": "الإحصائيات",
+      "complaints": "الشكاوى",
+      "teams": "الفرق",
+      "account": "الحساب",
+      "settings": "الإعدادات",
+      "logout": "تسجيل الخروج",
+      "toggle": "تبديل القائمة الجانبية",
+      "title": "القائمة الجانبية",
+      "description": "عرض القائمة الجانبية للأجهزة المحمولة."
+    },
+    "submenu": {
+      "judges": "المحكّمون",
+      "debaters": "المتناظرون",
+      "coaches": "المدرّبون",
+      "admins": "المسؤولون",
+      "scheduled": "مجدولة",
+      "announced": "معلنة",
+      "teamsSelected": "تم اختيار الفرق",
+      "live": "مباشر",
+      "completed": "مكتملة",
+      "cancelled": "ملغاة"
+    },
+    "view": {
+      "cards": "البطاقات",
+      "table": "الجدول",
+      "toggle": "تبديل العرض"
+    }
+  },
+  "users": {
+    "single": "المستخدم",
+    "plural": "المستخدمون",
+    "actions": {
+      "create": "إنشاء مستخدم",
+      "edit": "تعديل مستخدم",
+      "delete": "حذف مستخدم"
+    },
+    "messages": {
+      "created": "تم إنشاء المستخدم بنجاح",
+      "updated": "تم تحديث المستخدم بنجاح",
+      "deleted": "تم حذف المستخدم بنجاح",
+      "suspended": "تم وقف المستخدم بنجاح",
+      "banned": "تم حظر المستخدم بنجاح",
+      "activated": "تم تفعيل المستخدم بنجاح",
+      "createError": "فشل إنشاء المستخدم",
+      "updateError": "فشل تحديث المستخدم",
+      "deleteError": "فشل حذف المستخدم",
+      "suspendError": "فشل وقف المستخدم",
+      "banError": "فشل حظر المستخدم",
+      "activateError": "فشل تفعيل المستخدم"
+    },
+    "roles": {
+      "all": "الأدوار",
+      "judge": "المحكمون",
+      "debater": "المتناظرون",
+      "trainer": "المدربون",
+      "viewer": "المشاهدون",
+      "admin": "المسؤولون"
+    },
+    "statuses": {
+      "active": "نشط",
+      "suspended": "موقوف",
+      "banned": "محظور"
+    },
+    "empty": {
+      "withRole": "لا يوجد مستخدمين بالدور \"{{role}}\".",
+      "noData": "لا يوجد مستخدمين متاحين حالياً."
+    },
+    "card": {
+      "points": "النقاط",
+      "status": "الحالة",
+      "verifyInfo": "التحقق من المعلومات"
+    },
+    "cardSkeleton": {
+      "likes": "الإعجابات",
+      "posts": "المنشورات",
+      "views": "المشاهدات"
+    },
+    "form": {
+      "sections": {
+        "identity": "الهوية",
+        "roleAndStatus": "الدور و الحالة"
+      },
+      "fields": {
+        "name": "الاسم الكامل",
+        "email": "البريد الإلكتروني",
+        "phone": "رقم الهاتف",
+        "password": "كلمة المرور",
+        "avatar": "رابط الصورة",
+        "role": "الدور",
+        "status": "الحالة"
+      }
+    },
+    "validation": {
+      "nameRequired": "الاسم مطلوب",
+      "nameTooShort": "يجب أن يكون الاسم حرفين على الأقل",
+      "emailRequired": "البريد الإلكتروني مطلوب",
+      "invalidEmail": "عنوان البريد الإلكتروني غير صالح",
+      "phoneRequired": "رقم الهاتف مطلوب",
+      "invalidPhone": "رقم الهاتف غير صالح",
+      "avatarRequired": "رابط الصورة مطلوب",
+      "invalidAvatar": "رابط الصورة غير صالح",
+      "passwordRequired": "كلمة المرور مطلوبة",
+      "passwordTooShort": "يجب أن تكون كلمة المرور 8 أحرف على الأقل",
+      "roleRequired": "الدور مطلوب",
+      "statusRequired": "الحالة مطلوبة"
+    },
+    "details": {
+      "back": "رجوع",
+      "userNotFound": "المستخدم غير موجود",
+      "userNotFoundDesc": "المستخدم الذي تبحث عنه غير موجود أو تم حذفه.",
+      "goBack": "العودة للخلف",
+      "edit": "تعديل",
+      "sendMessage": "إرسال رسالة",
+      "resetPassword": "إعادة تعيين كلمة المرور",
+      "suspendAccount": "إيقاف الحساب مؤقتاً",
+      "banAccount": "حظر الحساب",
+      "contactInfo": "معلومات الاتصال",
+      "email": "البريد الإلكتروني",
+      "verified": "تم التحقق",
+      "phone": "الهاتف",
+      "notProvided": "غير متوفر",
+      "accountInfo": "معلومات الحساب",
+      "role": "الدور",
+      "status": "الحالة",
+      "themePreference": "المظهر المفضل",
+      "systemTheme": "النظام",
+      "pointsActivity": "النقاط والنشاط",
+      "totalPoints": "إجمالي النقاط",
+      "pointsDesc": "النقاط المكتسبة من خلال المشاركة والإنجازات",
+      "timeline": "الجدول الزمني",
+      "memberSince": "عضو منذ",
+      "lastUpdated": "آخر تحديث",
+      "unknownDate": "غير معروف",
+      "quickActions": "إجراءات سريعة",
+      "viewActivity": "عرض النشاط",
+      "managePermissions": "إدارة الصلاحيات",
+      "viewDebates": "عرض المناظرات",
+      "roles": {
+        "debater": "مناظر",
+        "trainer": "مدرب",
+        "judge": "محكّم",
+        "admin": "مسؤول"
+      },
+      "statuses": {
+        "active": "نشط",
+        "suspended": "موقوف مؤقتاً",
+        "banned": "محظور"
+      }
+    }
+  },
+  "debates": {
+    "single": "مناظرة",
+    "plural": "المناظرات",
+    "all": "المناظرات",
+    "actions": {
+      "create": "إنشاء مناظرة",
+      "edit": "تعديل مناظرة",
+      "delete": "حذف مناظرة"
+    },
+    "messages": {
+      "created": "تم إنشاء المناظرة بنجاح",
+      "updated": "تم تحديث المناظرة بنجاح",
+      "deleted": "تم حذف المناظرة بنجاح",
+      "createError": "فشل إنشاء المناظرة",
+      "updateError": "فشل تحديث المناظرة",
+      "deleteError": "فشل حذف المناظرة"
+    },
+    "statuses": {
+      "scheduled": "مجدولة",
+      "announced": "معلنة",
+      "live": "مباشرة",
+      "completed": "مكتملة",
+      "cancelled": "ملغاة",
+      "teams-selected": "تم اختيار الفرق"
+    },
+    "categories": {
+      "work": "عمل",
+      "tech": "تقنية",
+      "finance": "مالية"
+    },
+    "fields": {
+      "state": "الحالة",
+      "states": "الحالات",
+      "topic": "الموضوع",
+      "topics": "المواضيع"
+    },
+    "empty": {
+      "withState": "لا توجد مناظرات بالحالة \"{{state}}\".",
+      "withTopic": "لا توجد مناظرات بموضوع \"{{topic}}\".",
+      "withStateAndTopic": "لا توجد مناظرات بالحالة \"{{state}}\" ضمن موضوع \"{{topic}}\".",
+      "noData": "لا توجد مناظرات متاحة حالياً."
+    },
+    "card": {
+      "live": "جارٍ الآن",
+      "upcoming": "لم يبدأ",
+      "draw": "تعادل",
+      "propWins": "فوز أ",
+      "oppWins": "فوز ب",
+      "vs": "ضد",
+      "proposition": "مع",
+      "opposition": "ضد",
+      "loading": "جارٍ تحميل المناظرة"
+    },
+    "form": {
+      "sections": {
+        "info": "المعلومات",
+        "scheduleAndStatus": "الجدولة والحالة"
+      },
+      "fields": {
+        "title": "العنوان",
+        "tag": "الوسم",
+        "format": "النمط",
+        "motion": "الموضوع",
+        "description": "الوصف",
+        "scheduledAt": "موعد الجدولة"
+      }
+    },
+    "validation": {
+      "titleRequired": "العنوان مطلوب",
+      "titleTooShort": "يجب أن يكون العنوان 3 أحرف على الأقل",
+      "tagRequired": "الوسم مطلوب",
+      "formatRequired": "صيغة النقاش مطلوبة",
+      "motionRequired": "موضوع النقاش مطلوب",
+      "scheduledAtRequired": "تاريخ الجلسة مطلوب",
+      "statusRequired": "الحالة مطلوبة"
+    },
+    "result": {
+      "noResult": "لا توجد نتيجة",
+      "draw": "تعادل",
+      "propWins": "فوز أ",
+      "oppWins": "فوز ب"
+    },
+    "details": {
+      "backToDebates": "الرجوع",
+      "editDebate": "تعديل المناظرة",
+      "shareLink": "مشاركة الرابط",
+      "cancelDebate": "إلغاء المناظرة",
+      "joinLive": "الانضمام للمناظرة المباشرة",
+      "watchRecording": "مشاهدة التسجيل",
+      "motion": "القضية المطروحة",
+      "frameworks": "أطر العمل",
+      "structure": "هيكل المناظرة",
+      "minutes": "{{count}} دقائق",
+      "participants": "المشاركون ({{count}})",
+      "status": "الحالة",
+      "result": "النتيجة",
+      "winnerTitle": "فوز فريق {{side}}",
+      "liveNow": "مباشر الآن",
+      "scheduledFor": "تم جدولة المناظرة في",
+      "information": "معلومات المناظرة",
+      "hostedBy": "المستضيف",
+      "scheduledAt": "وقت الجدولة",
+      "totalDuration": "المدة الإجمالية",
+      "tag": "الوسم",
+      "quickActions": "إجراءات سريعة",
+      "setReminder": "تعيين تذكير",
+      "viewTranscript": "عرض النص الكامل",
+      "manageParticipants": "إدارة المشاركين",
+      "phaseStatus": {
+        "pending": "قريباً",
+        "active": "نشطة",
+        "completed": "مكتملة"
+      },
+      "minTotal": "المدة الإجمالية",
+      "min": "دقائق"
+    }
+  },
+  "debateFormats": {
+    "single": "نمط مناظرة",
+    "plural": "أنماط المناظرات",
+    "actions": {
+      "create": "إنشاء نمط مناظرة",
+      "edit": "تعديل نمط مناظرة",
+      "delete": "حذف نمط مناظرة",
+      "addPhase": "إضافة مرحلة"
+    },
+    "messages": {
+      "created": "تم إنشاء نمط المناظرة بنجاح",
+      "updated": "تم تحديث نمط المناظرة بنجاح",
+      "deleted": "تم حذف نمط المناظرة بنجاح",
+      "createError": "فشل إنشاء نمط المناظرة",
+      "updateError": "فشل تحديث نمط المناظرة",
+      "deleteError": "فشل حذف نمط المناظرة",
+      "noPhases": "لم يتم إنشاء مراحل"
+    },
+    "fields": {
+      "phases": "المراحل",
+      "sides": "الجانبان",
+      "phaseName": "اسم المرحلة",
+      "durationSeconds": "المدة (ثواني)",
+      "orderIndex": "ترتيب المرحلة",
+      "role": "الدور"
+    },
+    "form": {
+      "sections": {
+        "info": "المعلومات",
+        "phases": "المراحل"
+      },
+      "fields": {
+        "phases": "المراحل",
+        "name": "الاسم",
+        "description": "الوصف"
+      },
+      "phaseNamePlaceholder": "مثال: رئيس النقاش",
+      "durationPlaceholder": "420",
+      "selectRolePlaceholder": "اختر الدور"
+    },
+    "empty": "لا توجد أنماط مناظرة",
+    "emptyDescription": "أنشئ أول نمط مناظرة للبدء",
+    "validation": {
+      "nameRequired": "الاسم مطلوب",
+      "nameTooShort": "يجب أن يكون الاسم 3 أحرف على الأقل",
+      "phaseNameRequired": "اسم المرحلة مطلوب",
+      "durationTooShort": "يجب أن تكون المدة 30 ثانية على الأقل",
+      "orderIndexNotValid": "يجب أن يكون ترتيب المرحلة 1 أو أكبر",
+      "roleRequired": "الدور مطلوب",
+      "phaseConfigRequired": "مطلوب مرحلة واحدة على الأقل"
+    },
+    "roles": {
+      "proposition": "مع",
+      "opposition": "ضد",
+      "judge": "المحكم"
+    },
+    "details": {
+      "formatHighlights": "أبرز ملامح النمط",
+      "totalDuration": "المدة الإجمالية",
+      "speakersPerSide": "المحادثون لكل جانب",
+      "mainSpeech": "الخطاب الرئيسي",
+      "replySpeech": "الخطاب المقابل",
+      "min": "دقائق"
+    }
+  },
+  "debateMotions": {
+    "single": "الموضوع",
+    "plural": "المواضيع",
+    "all": "المواضيع",
+    "actions": {
+      "create": "إنشاء موضوع",
+      "edit": "تعديل الموضوع",
+      "delete": "حذف الموضوع"
+    },
+    "messages": {
+      "created": "تم إنشاء الموضوع بنجاح",
+      "updated": "تم تحديث الموضوع بنجاح",
+      "deleted": "تم حذف الموضوع بنجاح",
+      "createError": "فشل إنشاء الموضوع",
+      "updateError": "فشل تحديث الموضوع",
+      "deleteError": "فشل حذف الموضوع"
+    },
+    "form": {
+      "sections": {
+        "info": "معلومات الموضوع",
+        "frameworks": "الإطارات"
+      },
+      "fields": {
+        "text": "نص الموضوع",
+        "textPlaceholder": "اكتب نص الموضوع هنا...",
+        "frameworks": "الإطارات",
+        "selectFrameworks": "اختر الإطارات"
+      }
+    },
+    "card": {
+      "frameworks": "الأطر",
+      "added": "أُضيف ",
+      "updated": "حُدّث ",
+      "viewMotion": "عرض الموضوع"
+    },
+    "empty": "لا توجد مواضيع",
+    "emptyDescription": "أنشئ أول موضوع للبدء",
+    "validation": {
+      "textRequired": "نص الموضوع مطلوب",
+      "textTooShort": "يجب أن يكون نص الموضوع 10 أحرف على الأقل",
+      "frameworksRequired": "مطلوب إطار واحد على الأقل"
+    }
+  },
+  "debateMotionFrameworks": {
+    "single": "الإطار",
+    "plural": "الإطارات",
+    "all": "الإطارات",
+    "actions": {
+      "create": "إنشاء إطار",
+      "edit": "تعديل الإطار",
+      "delete": "حذف الإطار"
+    },
+    "messages": {
+      "created": "تم إنشاء الإطار بنجاح",
+      "updated": "تم تحديث الإطار بنجاح",
+      "deleted": "تم حذف الإطار بنجاح",
+      "createError": "فشل إنشاء الإطار",
+      "updateError": "فشل تحديث الإطار",
+      "deleteError": "فشل حذف الإطار"
+    },
+    "form": {
+      "sections": {
+        "info": "معلومات الإطار"
+      },
+      "fields": {
+        "name": "الاسم",
+        "namePlaceholder": "أدخل اسم الإطار",
+        "color": "اللون",
+        "colorPlaceholder": "#FF0000"
+      }
+    },
+    "card": {
+      "unknown": "غير معروف",
+      "edit": "تعديل",
+      "delete": "حذف"
+    },
+    "empty": "لا توجد إطارات",
+    "emptyDescription": "أنشئ أول إطار للبدء",
+    "validation": {
+      "nameRequired": "الاسم مطلوب",
+      "nameTooShort": "يجب أن يكون الاسم 3 أحرف على الأقل",
+      "colorRequired": "اللون مطلوب",
+      "colorInvalid": "اللون يجب أن يكون رمزاً سوداء صحيحاً (مثلاً #FF0000)"
+    }
+  },
+  "blogs": {
+    "title": "المدونات",
+    "topics": "المواضيع",
+    "tags": "الوسوم",
+    "filters": {
+      "hot": "الأكثر إثارة",
+      "new": "جديد",
+      "top": "الأكثر تقييماً",
+      "rising": "الأكثر صعوداً"
+    },
+    "actions": {
+      "createCategory": "إنشاء فئة",
+      "editCategory": "تعديل الفئة",
+      "createTag": "إنشاء وسم",
+      "editTag": "تعديل الوسم"
+    },
+    "messages": {
+      "approveAction": "موافقة",
+      "approveVerb": "موافقة",
+      "approveLabel": "موافق عليه",
+      "approved": "تم الموافقة على المدونة بنجاح",
+      "rejected": "تم رفض المدونة بنجاح",
+      "approveError": "فشل الموافقة على المدونة",
+      "rejectAction": "رفض",
+      "rejectLabel": "مرفوض",
+      "rejectError": "فشل رفض المدونة"
+    },
+    "time": {
+      "minRead": "دقيقة/دقائق قراءة",
+      "hoursAgo": "ساعة/ساعات مضت"
+    },
+    "card": {
+      "reviewerComment": "تعليق المراجع",
+      "rejectionPlaceholder": "أدخل سبب الرفض...",
+      "confirmReject": "تأكيد الرفض",
+      "views": "المشاهدات",
+      "likes": "الإعجابات",
+      "dislikes": "عدم الإعجاب",
+      "reviewerCommentLabel": "تعليق المراجع",
+      "blogLoading": "جارٍ تحميل المقال"
+    },
+    "empty": {
+      "noPosts": "لا توجد منشورات لهذا الفلتر."
+    },
+    "form": {
+      "sections": {
+        "category": "معلومات الفئة",
+        "tag": "معلومات الوسم"
+      },
+      "fields": {
+        "categoryName": "اسم الفئة",
+        "tagName": "اسم الوسم",
+        "slug": "الرابط الثابت",
+        "slugPlaceholder": "وسم-الرابط"
+      }
+    },
+    "validation": {
+      "category": {
+        "nameRequired": "اسم الفئة مطلوب",
+        "nameTooShort": "يجب أن يكون الاسم حرفين على الأقل",
+        "invalidSlug": "الرابط الثابت يجب أن يكون صحيحاً"
+      },
+      "tag": {
+        "nameRequired": "اسم الوسم مطلوب",
+        "nameTooShort": "يجب أن يكون الاسم حرفين على الأقل",
+        "invalidSlug": "الرابط الثابت يجب أن يكون صحيحاً"
+      }
+    }
+  },
+  "surveys": {
+    "single": "استبيان",
+    "plural": "الاستبيانات",
+    "actions": {
+      "create": "إنشاء استبيان",
+      "edit": "تعديل الاستبيان",
+      "delete": "حذف الاستبيان",
+      "update": "تحديث",
+      "addSurvey": "إضافة استبيان",
+      "preview": "شكل الاستبيان",
+      "saveSurvey": "حفظ الاستبيان"
+    },
+    "messages": {
+      "created": "تم إنشاء الاستبيان بنجاح",
+      "updated": "تم تحديث الاستبيان بنجاح",
+      "deleted": "تم حذف الاستبيان بنجاح",
+      "createError": "فشل إنشاء الاستبيان",
+      "updateError": "فشل تحديث الاستبيان",
+      "deleteError": "فشل حذف الاستبيان"
+    },
+    "questions": {
+      "single": "سؤال",
+      "plural": "الأسئلة",
+      "untitled": "سؤال بدون عنوان",
+      "noQuestionsAdded": "لم يتم إضافة أسئلة بعد",
+      "types": {
+        "select": "سؤال اختيار",
+        "text": "سؤال نصي",
+        "rating": "سؤال تقييم"
+      },
+      "actions": {
+        "addSelect": "إضافة سؤال اختيار",
+        "addText": "إضافة سؤال نصي",
+        "addRating": "إضافة سؤال تقييم",
+        "addOption": "إضافة خيار",
+        "removeOption": "إزالة الخيار",
+        "removeQuestion": "إزالة السؤال"
+      }
+    },
+    "options": {
+      "single": "خيار",
+      "plural": "خيارات",
+      "selectLabel": "أدخل السؤال",
+      "selectTitle": "أدخل العنوان",
+      "selectDescription": "أدخل الوصف",
+      "textAnswer": "إجابة نصية..."
+    },
+    "status": {
+      "open": "مفتوح",
+      "closingSoon": "سينتهي قريباً",
+      "closed": "مغلق"
+    },
+    "dates": {
+      "noCloseDate": "لا يوجد تاريخ إغلاق",
+      "closesAt": "ينتهي في",
+      "closes": "ينتهي {{time}}",
+      "closed": "انتهى {{time}}"
+    },
+    "empty": {
+      "noData": "لا توجد استبيانات بعد. أنشئ واحداً للبدء.",
+      "noResults": "لم يتم العثور على استبيانات",
+      "withStatus": "لا توجد استبيانات بحالة {{status}}."
+    },
+    "card": {
+      "question": "سؤال",
+      "questions": "أسئلة",
+      "response": "إجابة",
+      "responses": "إجابات",
+      "rate": "% نسبة",
+      "noDescription": "لا يوجد وصف",
+      "createdByFallback": "مستخدم #{{id}}"
+    },
+    "form": {
+      "sections": {
+        "basicInfo": "المعلومات الأساسية",
+        "questions": "أسئلة الاستبيان",
+        "settings": "الإعدادات"
+      },
+      "fields": {
+        "title": "عنوان الاستبيان",
+        "description": "الوصف",
+        "questions": "الأسئلة",
+        "closesAt": "ينتهي في",
+        "targetRoles": "الأدوار المستهدفة"
+      },
+      "titlePlaceholder": "أدخل عنوان الاستبيان",
+      "descriptionPlaceholder": "أدخل وصف الاستبيان (اختياري)",
+      "questionTextPlaceholder": "أدخل نص السؤال"
+    },
+    "labels": {
+      "untitledSurvey": "استبيان بدون عنوان",
+      "noTitle": "بلا عنوان",
+      "filterByStatus": "تصفية حسب الحالة",
+      "showing": "يعرض",
+      "targetRoles": "الأدوار المستهدفة"
+    },
+    "validation": {
+      "titleRequired": "العنوان مطلوب",
+      "titleTooShort": "يجب أن يكون العنوان 3 أحرف على الأقل",
+      "targetRolesRequired": "يجب تحديد دور مستهدف واحد على الأقل",
+      "labelRequired": "السؤال مطلوب",
+      "optionRequired": "الخيار مطلوب",
+      "minOptions": "مطلوب خيارين على الأقل",
+      "minQuestions": "مطلوب سؤال واحد على الأقل",
+      "closesAtInvalid": "لا يمكن أن يكون تاريخ الإغلاق في الماضي",
+      "someQuestionsEmpty": "بعض الأسئلة فارغة"
+    },
+    "details": {
+      "back": "العودة",
+      "responded": "تمت الإجابة",
+      "closed": "مغلق",
+      "reviewLayoutDescription": "راجع أسئلة الاستبيان قبل نشره",
+      "closingSoon": "ينتهي قريباً",
+      "active": "نشط",
+      "by": "بواسطة",
+      "questionCount": "عدد الأسئلة",
+      "closeDate": "تاريخ الإغلاق",
+      "noCloseDate": "غير محدود",
+      "participationStatus": "حالة المشاركة",
+      "respondedStatus": "تم الإجابة",
+      "notResponded": "غير مجاب",
+      "surveyQuestions": "أسئلة الاستبيان",
+      "questionsCount": "سؤال",
+      "rating": "تقييم",
+      "multipleChoice": "اختيار متعدد",
+      "openText": "نص مفتوح",
+      "from": "من",
+      "to": "إلى",
+      "moreOptions": "خيارات أخرى",
+      "textResponseArea": "منطقة الإجابة النصية",
+      "noQuestions": "لا توجد أسئلة في هذا الاستبيان",
+      "targetRoles": "الفئات المستهدفة",
+      "availableForAll": "متاح لجميع الأعضاء",
+      "surveyClosed": "الاستبيان مغلق",
+      "youResponded": "تمت مشاركتك",
+      "informationalSurvey": "استبيان معلوماتي",
+      "closedMessage": "انتهت فترة استقبال الإجابات لهذا الاستبيان.",
+      "alreadyRespondedMessage": "لقد قمت بالمشاركة في هذا الاستبيان سابقاً.",
+      "notRespondedMessage": "هذا الاستبيان مخصص لجمع آراء وردود الفعل."
+    }
+  },
+  "surveyBuilder": {
+    "label": "أسئلة الاستطلاع",
+    "description": "أنشئ وأدِر أسئلة استطلاعك",
+    "validation": {
+      "formRequirements": "متطلبات التحقق من صحة النموذج",
+      "questionTextRequired": "نص السؤال مطلوب",
+      "atLeastQuestions": "مطلوب {{count}} سؤال{{plural}} على الأقل",
+      "mcqAtLeastTwoOptions": "تحتاج أسئلة الاختيار المتعدد إلى خيارين على الأقل",
+      "optionsCannotBeEmpty": "لا يمكن أن تكون الخيار{{plural}} فارغة"
+    },
+    "emptyState": {
+      "title": "لم تتم إضافة أي أسئلة بعد",
+      "description": "اختر نوع سؤال أدناه لبدء هيكلة استطلاعك"
+    },
+    "buttons": {
+      "multipleChoice": "اختيار متعدد",
+      "openText": "نص مفتوح",
+      "ratingScale": "مقياس تقييم",
+      "addChoiceOption": "إضافة خيار",
+      "duplicate": "تكرار",
+      "deleteQuestion": "حذف السؤال",
+      "moveUp": "نقل للأعلى",
+      "moveDown": "نقل للأسفل"
+    },
+    "questionCard": {
+      "questionTitle": "عنوان السؤال",
+      "untitled": "سؤال بدون عنوان...",
+      "issues": "مشاكل",
+      "types": {
+        "mcq": "اختيار متعدد",
+        "text": "نص",
+        "rating": "تقييم"
+      },
+      "placeholder": "مثال: ما مدى رضاك عن وضوح طريقة العرض؟"
+    },
+    "mcq": {
+      "optionsSelection": "خيارات الاختيار",
+      "optionPlaceholder": "خيار {{n}}...",
+      "defaultOption": "خيار {{n}}"
+    },
+    "rating": {
+      "title": "مقياس التقييم",
+      "minLimit": "الحد الأدنى",
+      "maxLimit": "الحد الأعلى",
+      "step": "الخطوة",
+      "livePreview": "معاينة حية: نطاق رقمي من <strong>{{min}}</strong> إلى <strong>{{max}}</strong> (بزيادات {{step}})"
+    },
+    "openText": {
+      "title": "حقل نصي",
+      "description": "يوفر منطقة نصية متعددة الأسطر قابلة للتكيف ليتمكن المستخدمون من تقديم إجابات وصفية مخصصة."
+    },
+    "counter": "{{current}} / {{max}} أسئلة"
+  },
+  "complaints": {
+    "title": "الشكاوى",
+    "actions": {
+      "seeMore": "رؤية المزيد",
+      "seeLess": "رؤية الأقل"
+    },
+    "dialog": {
+      "dismissTitle": "رفض الشكوى؟",
+      "resolveTitle": "حل الشكوى؟",
+      "dismissConfirm": "تأكيد الرفض",
+      "resolveConfirm": "تأكيد الحل",
+      "description": "سيتم إزالة هذه الشكوى من القائمة النشطة.",
+      "adminResponse": "رد المشرف",
+
+      "cancel": "إلغاء"
+    },
+    "statuses": {
+      "under_review": "قيد المراجعة",
+      "resolved": "تم الحل",
+      "dismissed": "مرفوضة",
+      "open": "مفتوحة"
+    },
+    "details": {
+      "back": "رجوع",
+      "notFound": "الشكوى غير موجودة",
+      "notFoundDesc": "ربما تم حذف هذه الشكوى أو أنها غير موجودة.",
+      "goBack": "العودة",
+      "id": "شكوى",
+      "debateId": "نقاش",
+      "filedBy": "مقدّم الشكوى",
+      "filedOn": "تاريخ التقديم",
+      "adminResponse": "رد المشرف",
+      "noResponse": "لم يتم تقديم أي رد حتى الآن.",
+      "resolve": "تعيين كمحلولة",
+      "dismiss": "رفض الشكوى",
+      "viewDebate": "عرض النقاش"
+    }
+  },
+  "teams": {
+    "single": "الفريق",
+    "plural": "الفرق",
+    "actions": {
+      "create": "إنشاء فريق",
+      "edit": "تعديل الفريق",
+      "delete": "حذف فريق"
+    },
+    "messages": {
+      "created": "تم إنشاء الفريق بنجاح",
+      "updated": "تم تحديث الفريق بنجاح",
+      "deleted": "تم حذف الفريق بنجاح",
+      "createError": "فشل إنشاء الفريق",
+      "updateError": "فشل تحديث الفريق",
+      "deleteError": "فشل حذف الفريق"
+    },
+    "fields": {
+      "city": "المدينة",
+      "cities": "المدن",
+      "leader": "القائد"
+    },
+    "statuses": {
+      "active": "نشط",
+      "inactive": "غير نشط"
+    },
+    "empty": {
+      "noData": "لا توجد فرق بعد. أنشئ فريقاً للبدء.",
+      "withStatus": "لا توجد فرق بحالة {{status}}."
+    },
+    "card": {
+      "teamActions": "إجراءات الفريق"
+    },
+    "form": {
+      "sections": {
+        "info": "معلومات الفريق",
+        "settings": "الإعدادات"
+      },
+      "fields": {
+        "name": "اسم الفريق",
+        "leader": "القائد",
+        "teamMembers": "أعضاء الفريق",
+        "assignmentType": "نوع التعيين"
+      },
+      "options": {
+        "manual": "يدوي",
+        "random": "عشوائي"
+      }
+    },
+    "validation": {
+      "nameRequired": "اسم الفريق مطلوب",
+      "leaderIsRequired": "قائد الفريق مطلوب",
+      "nameTooShort": "يجب أن يكون الاسم حرفين على الأقل",
+      "invalidLeader": "معرّف القائد يجب أن يكون رقماً صحيحاً",
+      "statusRequired": "الحالة مطلوبة",
+      "teamMembersRequired": "أعضاء الفريق مطلوبون",
+      "leaderMustBeMember": "يجب أن يكون قائد الفريق عضواً في الفريق"
+    }
+  },
+  "categories": {
+    "messages": {
+      "created": "تم إنشاء الفئة بنجاح",
+      "updated": "تم تحديث الفئة بنجاح",
+      "deleted": "تم حذف الفئة بنجاح",
+      "createError": "فشل إنشاء الفئة",
+      "updateError": "فشل تحديث الفئة",
+      "deleteError": "فشل حذف الفئة"
+    }
+  },
+  "tags": {
+    "messages": {
+      "created": "تم إنشاء الوسم بنجاح",
+      "updated": "تم تحديث الوسم بنجاح",
+      "deleted": "تم حذف الوسم بنجاح",
+      "createError": "فشل إنشاء الوسم",
+      "updateError": "فشل تحديث الوسم",
+      "deleteError": "فشل حذف الوسم"
+    }
+  },
+  "table": {
+    "rowTotal": "إجمالي الصفوف",
+    "next": "التالي",
+    "previous": "السابق",
+    "previousPage": "الصفحة السابقة",
+    "nextPage": "الصفحة التالية",
+    "page": "الصفحة",
+    "of": "من",
+    "noResults": "لم يتم العثور على نتائج"
+  },
+  "toolbar": {
+    "search": "ابحث في"
+  },
+  "statistics": {
+    "overview": "نظرة عامة",
+    "keyMetrics": "المقاييس الرئيسية في لمحة",
+    "liveData": "بيانات مباشرة",
+    "totalRevenue": "إجمالي الإيرادات",
+    "vsLastMonth": "مقابل الشهر الماضي",
+    "acrossAllChannels": "عبر جميع القنوات النشطة",
+    "activeUsers": "المستخدمون النشطون",
+    "vsLastWeek": "مقابل الأسبوع الماضي",
+    "registeredAccounts": "الحسابات المسجلة والمؤكدة",
+    "newOrders": "طلبات جديدة",
+    "vsYesterday": "مقابل الأمس",
+    "pendingFulfillment": "قيد التنفيذ",
+    "avgRating": "متوسط التقييم",
+    "satisfactionScore": "درجة الرضا",
+    "basedOnReviews": "بناءً على 2.1k مراجعة",
+    "conversionRate": "معدل التحويل",
+    "vsLastQuarter": "مقابل الربع الماضي",
+    "visitorToCustomer": "معدل الزائر إلى العميل",
+    "serverUptime": "وقت تشغيل الخادم",
+    "stable": "مستقر",
+    "thirtyDayAverage": "متوسط متجدد لثلاثين يوماً",
+    "productsListed": "المنتجات المدرجة",
+    "thisWeek": "هذا الأسبوع",
+    "acrossAllCategories": "عبر جميع الفئات",
+    "openIssues": "مشكلات مفتوحة",
+    "resolvedToday": "تم حلها اليوم",
+    "requiresAttention": "تتطلب انتباهاً"
+  },
+  "home": {
+    "welcome": "مرحباً بك",
+    "hello": "مرحباً"
+  }
+}
