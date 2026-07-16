@@ -106,17 +106,17 @@ export function TeamCard({ team, onEdit, onDelete }: TeamCardProps) {
     <Card
       dir={i18n.dir()}
       className={cn(
-        "group relative flex flex-col overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm bg-white dark:bg-slate-900 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/10 dark:hover:shadow-primary/20",
+        "group relative flex flex-col overflow-hidden rounded-2xl border border-border shadow-sm bg-card transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/10 dark:hover:shadow-primary/20",
         "cursor-pointer select-none",
       )}
       style={{ background: backgroundGradient }}
     >
       {/* Top accent gradient */}
-      <div className="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-primary via-violet-500 to-primary opacity-80" />
+      <div className="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-primary via-chart-5 to-primary opacity-80" />
 
       {/* Header: Avatar + Menu */}
       <div className="flex items-start justify-between px-5 pt-5 pb-0">
-        <Avatar className="h-12 w-12 sm:h-14 sm:w-14 shrink-0 rounded-full ring-2 ring-white dark:ring-slate-900 shadow-md">
+        <Avatar className="h-12 w-12 sm:h-14 sm:w-14 shrink-0 rounded-full ring-2 ring-card shadow-md">
           <AvatarFallback
             className={cn(
               "text-sm sm:text-base font-bold text-white",
@@ -179,7 +179,7 @@ export function TeamCard({ team, onEdit, onDelete }: TeamCardProps) {
       <div className="flex flex-col flex-1 px-5 pt-3 pb-5 gap-4">
         {/* Team name */}
         <div>
-          <h3 className="text-lg font-bold tracking-tight text-slate-900 dark:text-white leading-snug line-clamp-1">
+          <h3 className="text-lg font-bold tracking-tight text-card-foreground leading-snug line-clamp-1">
             {team.name}
           </h3>
         </div>
@@ -227,7 +227,7 @@ export function TeamCard({ team, onEdit, onDelete }: TeamCardProps) {
 
           {/* Member count */}
           {memberCount > 0 && (
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-muted text-muted-foreground border border-border">
               <Users className="h-3 w-3 shrink-0" />
               {memberCount}
             </span>
@@ -235,12 +235,12 @@ export function TeamCard({ team, onEdit, onDelete }: TeamCardProps) {
         </div>
 
         {/* Divider */}
-        <div className="h-px bg-slate-100 dark:bg-slate-800 mt-auto" />
+        <div className="h-px bg-border mt-auto" />
 
         {/* Footer: leader & date */}
-        <div className="flex items-center justify-between gap-2 text-xs text-slate-500 dark:text-slate-400">
+        <div className="flex items-center justify-between gap-2 text-xs text-muted-foreground">
           <span className="flex items-center gap-1.5 truncate">
-            <Crown className="h-3.5 w-3.5 shrink-0 text-amber-500" />
+            <Crown className="h-3.5 w-3.5 shrink-0 text-warning" />
             <span className="truncate">{team.leader.name}</span>
           </span>
           <span className="flex items-center gap-1.5 shrink-0">

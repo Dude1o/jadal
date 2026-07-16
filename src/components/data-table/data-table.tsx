@@ -62,13 +62,10 @@ export interface CustomAction<TData> {
 
 const getActionColorClasses = (color?: string): string => {
   const colorMap: Record<string, string> = {
-    red: "text-destructive focus:text-destructive focus:bg-red-500/10 dark:focus:bg-red-500/10",
-    orange:
-      "text-orange-600 dark:text-orange-400 focus:text-orange-600 dark:focus:text-orange-400 focus:bg-orange-500/10 dark:focus:bg-orange-500/10",
-    violet:
-      "text-violet-600 dark:text-violet-400 focus:text-violet-600 dark:focus:text-violet-400 focus:bg-violet-500/10 dark:focus:bg-violet-500/10",
-    emerald:
-      "text-emerald-600 dark:text-emerald-400 focus:text-emerald-600 dark:focus:text-emerald-400 focus:bg-emerald-500/10 dark:focus:bg-emerald-500/10",
+    red: "text-destructive focus:text-destructive focus:bg-destructive/10",
+    orange: "text-accent focus:text-accent focus:bg-accent/10",
+    violet: "text-chart-5 focus:text-chart-5 focus:bg-chart-5/10",
+    emerald: "text-success focus:text-success focus:bg-success/10",
     default: "",
   };
   return colorMap[color || "default"] || "";
@@ -253,7 +250,7 @@ export function DataTable<TData, TValue>({
                     e.stopPropagation();
                     onEdit?.(item);
                   }}
-                  className="gap-2"
+                  className="gap-2 text-chart-6 focus:text-chart-6 focus:bg-chart-6/10"
                 >
                   <Edit className="h-4 w-4" />
                   {getTranslation(t, "common.actions.edit")}
@@ -266,7 +263,7 @@ export function DataTable<TData, TValue>({
                     e.stopPropagation();
                     onDelete?.(item);
                   }}
-                  className="gap-2 text-destructive focus:text-destructive focus:bg-red-500/10 dark:focus:bg-red-500/10" // 👈 Updated
+                  className="gap-2 text-destructive focus:text-destructive focus:bg-destructive/10" // 👈 Updated
                 >
                   <Trash className="h-4 w-4" />
                   {getTranslation(t, "common.actions.delete")}

@@ -95,7 +95,7 @@ export function DialogProvider() {
                     className={cn(
                       d.actions?.length === 1 && "w-full", // full width when alone
                       action.variant === "ghost" &&
-                        "hover:bg-gray-300 hover:text-black dark:hover:bg-gray-700 dark:hover:text-white",
+                        "hover:bg-muted hover:text-foreground",
                     )}
                   >
                     {action.label}

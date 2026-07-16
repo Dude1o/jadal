@@ -103,7 +103,7 @@ function LeftPanel() {
           {getTranslation(t, "auth.hero.subtitle")}
         </p>
         <div className="flex gap-1.5 animate-fade-in [animation-delay:.8s] opacity-0">
-          <div className="w-5 h-[5px] rounded-full bg-indigo-500" />
+          <div className="w-5 h-[5px] rounded-full bg-primary" />
           <div className="w-[5px] h-[5px] rounded-full bg-white/15" />
           <div className="w-[5px] h-[5px] rounded-full bg-white/15" />
         </div>
@@ -149,7 +149,7 @@ function InputField({
         <Input
           id={id}
           className={cn(
-            "h-10 bg-secondary/50 border-border/50 transition-all focus-visible:ring-2 focus-visible:ring-indigo-500/20 focus-visible:border-indigo-400",
+            "h-10 bg-secondary/50 border-border/50 transition-all focus-visible:ring-2 focus-visible:ring-ring/20 focus-visible:border-ring",
             isRTL ? "pr-9" : "pl-9",
             trailingIcon && (isRTL ? "pl-9" : "pr-9"),
             error && "border-destructive focus-visible:ring-destructive/20",
@@ -206,8 +206,8 @@ export default function Login({ onSubmit, isLoading, error }: LoginProps) {
           </div>
 
           {/* Status badge */}
-          <div className="animate-fade-up [animation-delay:.22s] inline-flex items-center gap-1.5 bg-green-500/10 text-green-700 dark:text-green-400 border border-green-500/20 rounded-full text-[10px] font-semibold px-3 py-1 mb-5">
-            <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+          <div className="animate-fade-up [animation-delay:.22s] inline-flex items-center gap-1.5 bg-success/10 text-success border border-success/20 rounded-full text-[10px] font-semibold px-3 py-1 mb-5">
+            <span className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" />
             {getTranslation(t, "auth.session.secureLogin")}
           </div>
 
@@ -273,7 +273,7 @@ export default function Login({ onSubmit, isLoading, error }: LoginProps) {
               </label>
               <Link
                 to="/forgot-password"
-                className="text-[11px] text-indigo-500 font-medium hover:underline"
+                className="text-[11px] text-primary font-medium hover:underline"
               >
                 {getTranslation(t, "auth.login.forgotPassword")}
               </Link>
@@ -281,7 +281,7 @@ export default function Login({ onSubmit, isLoading, error }: LoginProps) {
 
             <Button
               disabled={isLoading}
-              className="animate-fade-up [animation-delay:.72s] relative overflow-hidden w-full h-10 bg-[#0f1623] text-white text-sm font-medium rounded-lg hover:opacity-90 hover:-translate-y-px active:scale-[.98] transition-all"
+              className="animate-fade-up [animation-delay:.72s] relative overflow-hidden w-full h-10 bg-primary text-primary-foreground text-sm font-medium rounded-lg hover:opacity-90 hover:-translate-y-px active:scale-[.98] transition-all"
             >
               {/* Shimmer */}
               <span className="absolute inset-y-0 w-3/5 bg-gradient-to-r from-transparent via-white/[.06] to-transparent animate-[shimmer_2.4s_linear_infinite]" />

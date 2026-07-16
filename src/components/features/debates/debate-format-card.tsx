@@ -47,25 +47,25 @@ export default function DebateFormatCard({
   };
 
   return (
-    <Card className="group relative w-full max-w-sm flex flex-col overflow-hidden border border-slate-200 dark:border-slate-800 shadow-md bg-white dark:bg-slate-900 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/10 dark:hover:shadow-primary/20">
+    <Card className="group relative w-full max-w-sm flex flex-col overflow-hidden border border-border shadow-md bg-card transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/10 dark:hover:shadow-primary/20">
       {/* Top accent gradient */}
-      <div className="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-primary via-violet-500 to-primary opacity-80" />
+      <div className="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-primary via-chart-5 to-primary opacity-80" />
 
       <CardHeader className="relative pb-3 pt-6 px-6">
         <div className="flex items-start justify-between">
           <div className="space-y-1.5">
-            <CardTitle className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
+            <CardTitle className="text-xl font-bold tracking-tight text-card-foreground">
               {format.name}
             </CardTitle>
             {format.description && (
-              <CardDescription className="line-clamp-2 text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+              <CardDescription className="line-clamp-2 text-sm text-muted-foreground leading-relaxed">
                 {format.description}
               </CardDescription>
             )}
           </div>
           {/* Optional: a subtle icon or badge for type */}
-          <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-violet-100 dark:bg-violet-900/30 flex items-center justify-center">
-            <Layers className="w-5 h-5 text-violet-600 dark:text-violet-400" />
+          <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-chart-5/15 flex items-center justify-center">
+            <Layers className="w-5 h-5 text-chart-5" />
           </div>
         </div>
       </CardHeader>
@@ -73,25 +73,25 @@ export default function DebateFormatCard({
       <CardContent className="flex-1 flex flex-col px-6 pb-6 pt-0 space-y-5">
         {/* Stats row */}
         <div className="grid grid-cols-2 gap-3">
-          <div className="rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700/50 p-3">
+          <div className="rounded-xl bg-muted/50 border border-border p-3">
             <div className="flex items-center gap-2 mb-1">
-              <Clock className="h-4 w-4 text-indigo-500 dark:text-indigo-400" />
-              <span className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+              <Clock className="h-4 w-4 text-primary" />
+              <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
                 {getTranslation(t, "debateFormats.fields.phases")}
               </span>
             </div>
-            <p className="text-2xl font-bold text-slate-900 dark:text-white tabular-nums">
+            <p className="text-2xl font-bold text-card-foreground tabular-nums">
               {phases.length}
             </p>
           </div>
-          <div className="rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700/50 p-3">
+          <div className="rounded-xl bg-muted/50 border border-border p-3">
             <div className="flex items-center gap-2 mb-1">
-              <Users className="h-4 w-4 text-blue-500 dark:text-blue-400" />
-              <span className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+              <Users className="h-4 w-4 text-primary" />
+              <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
                 {getTranslation(t, "debateFormats.fields.sides")}
               </span>
             </div>
-            <p className="text-2xl font-bold text-slate-900 dark:text-white tabular-nums">
+            <p className="text-2xl font-bold text-card-foreground tabular-nums">
               {uniqueSides}
             </p>
           </div>
@@ -100,7 +100,7 @@ export default function DebateFormatCard({
         {/* Quick phase preview (if any) */}
         {phases.length > 0 && (
           <div className="space-y-2">
-            <p className="text-xs font-medium text-slate-400 dark:text-slate-500 uppercase tracking-wider">
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
               {getTranslation(t, "debateFormats.fields.phases")}
             </p>
             <div className="flex flex-wrap gap-1.5">
@@ -108,11 +108,11 @@ export default function DebateFormatCard({
                 <Badge
                   key={idx}
                   variant="secondary"
-                  className="capitalize text-xs px-2.5 py-0.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-medium"
+                  className="capitalize text-xs px-2.5 py-0.5 bg-card border border-border font-medium"
                   style={{
                     borderLeftWidth: "3px",
                     borderLeftColor:
-                      phase.side === "proposition" ? "#3b82f6" : "#f43f5e",
+                      phase.side === "proposition" ? "var(--primary)" : "var(--accent)",
                   }}
                 >
                   {phase.name ?? phase.side}
@@ -130,7 +130,7 @@ export default function DebateFormatCard({
           </div>
         )}
 
-        <Separator className="bg-slate-100 dark:bg-slate-800" />
+        <Separator className="bg-border" />
 
         {/* Action buttons */}
         <div className="mt-auto flex gap-2 pt-1">

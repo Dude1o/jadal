@@ -852,7 +852,7 @@
       "issues": "Issues",
       "types": {
         "mcq": "MCQ",
-        "text": "Text",
+        "open_text": "Text",
         "rating": "Rating"
       },
       "placeholder": "e.g., How satisfied were you with the presentation clarity?"
@@ -936,6 +936,10 @@
     "statuses": {
       "active": "Active",
       "inactive": "Inactive"
+    },
+    "assignmentTypes": {
+      "manual": "Manual",
+      "random": "Random"
     },
     "empty": {
       "noData": "There are no teams yet. Create one to get started.",

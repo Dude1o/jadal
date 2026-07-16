@@ -93,29 +93,26 @@ export default function DebateFormatDetails({
   }
 
   return (
-    <div
-      className="w-full space-y-4 text-slate-900 dark:text-slate-100"
-      dir={i18n.dir()}
-    >
+    <div className="w-full space-y-4 text-foreground" dir={i18n.dir()}>
       {/* ── Header Section (Merged Hero & Total Duration) ── */}
-      <div className="flex items-start justify-between gap-4 border-b pb-3 border-slate-100 dark:border-slate-800/80">
+      <div className="flex items-start justify-between gap-4 border-b pb-3 border-border/80">
         <div className="flex gap-3 items-center min-w-0">
-          <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500 to-amber-600 text-white shadow-sm flex items-center justify-center">
+          <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-gradient-to-br from-accent to-warning text-accent-foreground shadow-sm flex items-center justify-center">
             <LayoutGrid className="w-5 h-5" />
           </div>
           <div className="min-w-0">
-            <h1 className="text-lg font-bold tracking-tight text-slate-900 dark:text-white truncate">
+            <h1 className="text-lg font-bold tracking-tight text-foreground truncate">
               {debateFormat.name}
             </h1>
             {debateFormat.description && (
-              <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-1 font-medium mt-0.5">
+              <p className="text-xs text-muted-foreground line-clamp-1 font-medium mt-0.5">
                 {debateFormat.description}
               </p>
             )}
           </div>
         </div>
 
-        <Badge className="px-2.5 py-1 text-xs font-bold bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 border border-orange-200 dark:border-orange-800/50 rounded-lg shrink-0 flex items-center gap-1.5 shadow-none">
+        <Badge className="px-2.5 py-1 text-xs font-bold bg-accent text-accent-foreground border border-accent/30 rounded-lg shrink-0 flex items-center gap-1.5 shadow-none">
           <Clock className="w-3.5 h-3.5" />
           <span>
             {Math.floor(totalDuration / 60)}{" "}
@@ -130,24 +127,24 @@ export default function DebateFormatDetails({
       {Object.keys(parsedDetails).length > 0 && (
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
           {parsedDetails.speakers_per_side && (
-            <div className="p-2.5 rounded-xl bg-gradient-to-br from-orange-50 to-amber-50 dark:from-orange-950/10 dark:to-amber-950/10 border border-orange-200/40 dark:border-orange-800/20">
-              <p className="text-[10px] font-bold text-orange-600 dark:text-orange-400 uppercase tracking-wider mb-0.5">
+            <div className="p-2.5 rounded-xl bg-accent/10 border border-accent/20">
+              <p className="text-[10px] font-bold text-accent uppercase tracking-wider mb-0.5">
                 {getTranslation(t, "debateFormats.details.speakersPerSide") ||
                   "Speakers / Side"}
               </p>
-              <p className="text-base font-black text-orange-700 dark:text-orange-300">
+              <p className="text-base font-black text-accent">
                 {parsedDetails.speakers_per_side}
               </p>
             </div>
           )}
 
           {parsedDetails.main_speech_duration && (
-            <div className="p-2.5 rounded-xl bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-950/10 dark:to-cyan-950/10 border border-blue-200/40 dark:border-blue-800/20">
-              <p className="text-[10px] font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider mb-0.5">
+            <div className="p-2.5 rounded-xl bg-primary/10 border border-primary/20">
+              <p className="text-[10px] font-bold text-primary uppercase tracking-wider mb-0.5">
                 {getTranslation(t, "debateFormats.details.mainSpeech") ||
                   "Main Speech"}
               </p>
-              <p className="text-base font-black text-blue-700 dark:text-blue-300">
+              <p className="text-base font-black text-primary">
                 {parsedDetails.main_speech_duration}
                 {/* 1. Add an explicit space here: */}{" "}
                 {/* 2. Alternatively, bump ml-0.5 up to ml-1 or ml-1.5 for visual spacing: */}
@@ -159,12 +156,12 @@ export default function DebateFormatDetails({
           )}
 
           {parsedDetails.reply_speech_duration && (
-            <div className="p-2.5 rounded-xl bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-950/10 dark:to-cyan-950/10 border border-blue-200/40 dark:border-blue-800/20">
-              <p className="text-[10px] font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider mb-0.5">
+            <div className="p-2.5 rounded-xl bg-primary/10 border border-primary/20">
+              <p className="text-[10px] font-bold text-primary uppercase tracking-wider mb-0.5">
                 {getTranslation(t, "debateFormats.details.replySpeech") ||
                   "Reply Speech"}
               </p>
-              <p className="text-base font-black text-blue-700 dark:text-blue-300">
+              <p className="text-base font-black text-primary">
                 {parsedDetails.reply_speech_duration}
                 {/* 1. Add an explicit space here: */}{" "}
                 {/* 2. Alternatively, bump ml-0.5 up to ml-1 or ml-1.5 for visual spacing: */}
@@ -176,12 +173,12 @@ export default function DebateFormatDetails({
           )}
 
           {parsedDetails.cross_examination_duration && (
-            <div className="p-2.5 rounded-xl bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-950/10 dark:to-teal-950/10 border border-emerald-200/40 dark:border-emerald-800/20">
-              <p className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider mb-0.5">
+            <div className="p-2.5 rounded-xl bg-success/10 border border-success/20">
+              <p className="text-[10px] font-bold text-success uppercase tracking-wider mb-0.5">
                 {getTranslation(t, "debateFormats.details.crossExamination") ||
                   "Cross Exam"}
               </p>
-              <p className="text-base font-black text-emerald-700 dark:text-emerald-300">
+              <p className="text-base font-black text-success">
                 {parsedDetails.cross_examination_duration}
                 <span className="text-[10px] font-bold ml-0.5">
                   {getTranslation(t, "debateFormats.details.min") || "min"}
@@ -194,10 +191,10 @@ export default function DebateFormatDetails({
 
       {/* ── Internal Scrollable Phase Structure Timeline ── */}
       {normalizedPhases.length > 0 ? (
-        <Card className="border border-slate-200 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-900/30 rounded-xl overflow-hidden shadow-none">
-          <CardHeader className="py-2 px-4 border-b border-slate-100 dark:border-slate-800/60 bg-white dark:bg-slate-900 flex flex-row items-center gap-2">
-            <FileText className="w-3.5 h-3.5 text-violet-500" />
-            <CardTitle className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+        <Card className="border border-border/80 bg-muted/40 rounded-xl overflow-hidden shadow-none">
+          <CardHeader className="py-2 px-4 border-b border-border/60 bg-card flex flex-row items-center gap-2">
+            <FileText className="w-3.5 h-3.5 text-chart-5" />
+            <CardTitle className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
               {getTranslation(t, "debateFormats.form.sections.phases") ||
                 "Phase Structure"}
             </CardTitle>
@@ -210,12 +207,12 @@ export default function DebateFormatDetails({
                 phase.role === "proposition" || phase.role === "pro";
 
               const bgColor = isProposition
-                ? "from-blue-50/60 to-blue-50/20 dark:from-blue-950/10 dark:to-transparent border-blue-100 dark:border-blue-900/30"
-                : "from-rose-50/60 to-rose-50/20 dark:from-rose-950/10 dark:to-transparent border-rose-100 dark:border-rose-900/30";
+                ? "from-primary/10 to-primary/5 border-primary/20"
+                : "from-accent/10 to-accent/5 border-accent/20";
 
               const badgeColor = isProposition
-                ? "bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300"
-                : "bg-rose-100 dark:bg-rose-900/40 text-rose-700 dark:text-rose-300";
+                ? "bg-primary text-primary-foreground"
+                : "bg-accent text-accent-foreground";
 
               return (
                 <div
@@ -223,14 +220,14 @@ export default function DebateFormatDetails({
                   className={`flex items-center justify-between gap-3 p-2 rounded-lg border bg-gradient-to-r ${bgColor}`}
                 >
                   <div className="flex items-center gap-2.5 min-w-0">
-                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-slate-200 dark:bg-slate-800 text-[11px] font-bold text-slate-600 dark:text-slate-400 border border-slate-300 dark:border-slate-700">
+                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-muted text-[11px] font-bold text-muted-foreground border border-border">
                       {phase.order_index || idx + 1}
                     </span>
                     <div className="min-w-0">
-                      <p className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate leading-snug">
+                      <p className="text-xs font-bold text-card-foreground truncate leading-snug">
                         {phase.name}
                       </p>
-                      <p className="text-[10px] text-slate-400 dark:text-slate-500 capitalize font-medium leading-none mt-0.5">
+                      <p className="text-[10px] text-muted-foreground capitalize font-medium leading-none mt-0.5">
                         {getTranslation(
                           t,
                           `debateFormats.roles.${phase.role}`,
@@ -251,9 +248,9 @@ export default function DebateFormatDetails({
           </CardContent>
         </Card>
       ) : (
-        <div className="p-6 text-center border border-dashed rounded-xl border-slate-200 dark:border-slate-800">
-          <Users className="w-8 h-8 mx-auto text-slate-300 dark:text-slate-700 mb-2" />
-          <p className="text-xs font-medium text-slate-500 dark:text-slate-400">
+        <div className="p-6 text-center border border-dashed rounded-xl border-border">
+          <Users className="w-8 h-8 mx-auto text-border mb-2" />
+          <p className="text-xs font-medium text-muted-foreground">
             {getTranslation(t, "debateFormats.messages.noPhases") ||
               "No phases configured."}
           </p>

@@ -20,28 +20,28 @@ export const DEBATE_STATUSES: {
   {
     value: "scheduled",
     label: "debates.statuses.scheduled",
-    dot: "bg-blue-500",
+    dot: "bg-primary",
   },
   {
     value: "announced",
     label: "debates.statuses.announced",
-    dot: "bg-violet-500",
+    dot: "bg-chart-5",
   },
   {
     value: "teams-selected",
     label: "debates.statuses.teams-selected",
-    dot: "bg-amber-500",
+    dot: "bg-warning",
   },
-  { value: "live", label: "debates.statuses.live", dot: "bg-rose-500" },
+  { value: "live", label: "debates.statuses.live", dot: "bg-destructive" },
   {
     value: "completed",
     label: "debates.statuses.completed",
-    dot: "bg-emerald-500",
+    dot: "bg-success",
   },
   {
     value: "cancelled",
     label: "debates.statuses.cancelled",
-    dot: "bg-stone-400",
+    dot: "bg-muted-foreground",
   },
 ];
 
@@ -52,10 +52,10 @@ export const DEBATE_PHASE_ROLE = [
 ];
 
 export const ROLE_BADGE: Record<UserRole, string> = {
-  debater: "bg-blue-100 text-blue-800 border border-blue-200",
-  trainer: "bg-emerald-100 text-emerald-800 border border-emerald-200",
-  judge: "bg-amber-100 text-amber-800 border border-amber-200",
-  admin: "bg-rose-100 text-rose-800 border border-rose-200",
+  debater: "bg-primary/15 text-primary border border-primary/20",
+  trainer: "bg-success/15 text-success border border-success/20",
+  judge: "bg-warning/15 text-warning border border-warning/20",
+  admin: "bg-destructive/15 text-destructive border border-destructive/20",
 };
 
 export const ROLES: { value: UserRole; label: string }[] = [
@@ -66,13 +66,13 @@ export const ROLES: { value: UserRole; label: string }[] = [
 ];
 
 export const STATUSES: { value: UserStatus; label: string; dot: string }[] = [
-  { value: "active", label: "users.statuses.active", dot: "bg-emerald-500" },
+  { value: "active", label: "users.statuses.active", dot: "bg-success" },
   {
     value: "suspended",
     label: "users.statuses.suspended",
-    dot: "bg-amber-500",
+    dot: "bg-warning",
   },
-  { value: "banned", label: "users.statuses.banned", dot: "bg-rose-500" },
+  { value: "banned", label: "users.statuses.banned", dot: "bg-destructive" },
 ];
 
 export const SURVEY_STATUSES: { value: string; label: string }[] = [
@@ -89,8 +89,8 @@ export const TEAM_STATUSES: {
   label: string;
   dot: string;
 }[] = [
-  { value: "active", label: "teams.statuses.active", dot: "bg-emerald-500" },
-  { value: "inactive", label: "teams.statuses.inactive", dot: "bg-amber-500" },
+  { value: "active", label: "teams.statuses.active", dot: "bg-success" },
+  { value: "inactive", label: "teams.statuses.inactive", dot: "bg-warning" },
 ];
 
 export const TEAM_TYPES = [

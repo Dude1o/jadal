@@ -97,13 +97,13 @@ export function SurveyCard({
   const statusColor = closed
     ? "var(--destructive)"
     : urgent
-      ? "oklch(0.78 0.17 75)" // amber
+      ? "var(--warning)" // amber
       : "var(--primary)";
   const backgroundGradient = `linear-gradient(135deg, color-mix(in oklch, ${statusColor} 6%, transparent) 0%, color-mix(in oklch, ${statusColor} 2%, transparent) 40%, transparent 100%)`;
 
   return (
     <Card
-      className="group relative flex h-full w-full flex-col overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm bg-white dark:bg-slate-900 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/10 dark:hover:shadow-primary/20 cursor-pointer"
+      className="group relative flex h-full w-full flex-col overflow-hidden rounded-2xl border border-border shadow-sm bg-card transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/10 dark:hover:shadow-primary/20 cursor-pointer"
       onClick={() => navigate({ to: `/surveys/${survey.id}` })}
       style={{ background: backgroundGradient }}
     >
@@ -112,10 +112,10 @@ export function SurveyCard({
         className={cn(
           "h-1.5 w-full bg-gradient-to-r",
           closed
-            ? "from-destructive via-red-400 to-destructive/60"
+            ? "from-destructive via-destructive/60 to-destructive/60"
             : urgent
-              ? "from-amber-500 via-yellow-500 to-amber-500/60"
-              : "from-primary via-violet-500 to-primary/60",
+              ? "from-warning via-warning to-warning/60"
+              : "from-primary via-chart-5 to-primary/60",
         )}
       />
 
@@ -124,10 +124,10 @@ export function SurveyCard({
           {/* Header with title & actions */}
           <div className="flex items-start justify-between gap-3">
             <div className="space-y-1 min-w-0">
-              <h3 className="line-clamp-1 text-base font-bold tracking-tight text-slate-900 dark:text-white transition-colors group-hover:text-primary">
+              <h3 className="line-clamp-1 text-base font-bold tracking-tight text-card-foreground transition-colors group-hover:text-primary">
                 {title}
               </h3>
-              <p className="line-clamp-2 min-h-[2.5rem] text-xs leading-relaxed text-slate-500 dark:text-slate-400">
+              <p className="line-clamp-2 min-h-[2.5rem] text-xs leading-relaxed text-muted-foreground">
                 {description || getTranslation(t, "surveys.labels.noTitle")}
               </p>
             </div>
@@ -139,7 +139,7 @@ export function SurveyCard({
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="h-8 w-8 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-muted-foreground opacity-60 transition-all hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-foreground group-hover:opacity-100"
+                    className="h-8 w-8 rounded-full border border-border bg-card text-muted-foreground opacity-60 transition-all hover:bg-muted hover:text-foreground group-hover:opacity-100"
                   >
                     <MoreHorizontal className="h-4 w-4" />
                     <span className="sr-only">
@@ -214,7 +214,7 @@ export function SurveyCard({
           {/* Metrics pills */}
           <div className="flex flex-wrap items-center gap-2">
             {questions.length > 0 && (
-              <div className="inline-flex items-center gap-1.5 rounded-full bg-indigo-50 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-800 px-2.5 py-0.5 text-xs font-medium text-indigo-700 dark:text-indigo-300">
+              <div className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 border border-primary/20 px-2.5 py-0.5 text-xs font-medium text-primary">
                 <HelpCircle className="h-3 w-3" />
                 <span>
                   {questions.length}{" "}
@@ -225,7 +225,7 @@ export function SurveyCard({
               </div>
             )}
             {responses.length > 0 && (
-              <div className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 px-2.5 py-0.5 text-xs font-medium text-emerald-700 dark:text-emerald-300">
+              <div className="inline-flex items-center gap-1.5 rounded-full bg-success/10 border border-success/20 px-2.5 py-0.5 text-xs font-medium text-success">
                 <BarChart2 className="h-3 w-3" />
                 <span>
                   {responses.length}{" "}
@@ -244,7 +244,7 @@ export function SurveyCard({
             {target_roles.map((role) => (
               <span
                 key={role}
-                className="inline-flex items-center rounded-md border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 text-xs font-medium text-slate-600 dark:text-slate-400 capitalize"
+                className="inline-flex items-center rounded-md border border-border bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground capitalize"
               >
                 {getTranslation(t, `users.roles.${role}`) ?? role}
               </span>
@@ -254,12 +254,12 @@ export function SurveyCard({
       </CardContent>
 
       {/* Footer */}
-      <CardFooter className="flex items-center justify-between border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30 px-5 py-3 text-xs">
+      <CardFooter className="flex items-center justify-between border-t border-border bg-muted/40 px-5 py-3 text-xs">
         <div className="flex items-center gap-4">
           <span
             className={cn(
               "flex items-center gap-1.5 font-medium",
-              urgent && !closed && "text-amber-600 dark:text-amber-400",
+              urgent && !closed && "text-warning",
               closed && "text-destructive/80",
             )}
           >

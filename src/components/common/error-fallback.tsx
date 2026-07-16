@@ -40,7 +40,7 @@ export default function ErrorFallback({
       errorMessage.toLowerCase().includes("fetch")
     ) {
       return {
-        icon: <WifiOff className="h-10 w-10 text-amber-500 animate-pulse" />,
+        icon: <WifiOff className="h-10 w-10 text-warning animate-pulse" />,
         heading: title || getTranslation(t, "common.errors.network.title"),
         description: getTranslation(t, "common.errors.network.description"),
       };

@@ -409,7 +409,7 @@ export default function SurveyBuilder() {
                                 {/* Options minimum error */}
                                 {optionsField.state.meta.errors &&
                                   optionsField.state.meta.errors.length > 0 && (
-                                    <p className="text-sm text-destructive font-medium bg-red-50 p-2 rounded border border-red-200">
+                                    <p className="text-sm text-destructive font-medium bg-destructive/10 p-2 rounded border border-destructive/20">
                                       ⚠{" "}
                                       {getError(optionsField.state.meta.errors)}
                                     </p>
@@ -536,7 +536,7 @@ export default function SurveyBuilder() {
                             }
                             field.validate("change");
                           }}
-                          className="w-4 h-4 rounded border-gray-300 cursor-pointer"
+                          className="w-4 h-4 rounded border-input cursor-pointer"
                         />
                         <label
                           htmlFor={`role-${role.value}`}

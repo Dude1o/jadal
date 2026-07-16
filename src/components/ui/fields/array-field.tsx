@@ -38,7 +38,8 @@ export function ArrayField({
   const { t } = useTranslation();
   const arrayField = useFieldContext<Record<string, any>[]>();
 
-  const effectiveAddButtonText = addButtonText ?? getTranslation(t, "common.actions.addItem");
+  const effectiveAddButtonText =
+    addButtonText ?? getTranslation(t, "common.actions.addItem");
 
   const value = Array.isArray(arrayField.state.value)
     ? arrayField.state.value
@@ -72,7 +73,7 @@ export function ArrayField({
           type="button"
           variant="outline"
           onClick={addItem}
-          className="w-full"
+          className="w-full dark:hover:text-accent"
         >
           <Plus className="mr-2 h-4 w-4" />
           {effectiveAddButtonText}
@@ -159,7 +160,10 @@ function ArrayItemRow({
                       >
                         <SelectTrigger>
                           <SelectValue
-                            placeholder={cfg.placeholder ?? getTranslation(t, "common.actions.select")}
+                            placeholder={
+                              cfg.placeholder ??
+                              getTranslation(t, "common.actions.select")
+                            }
                           />
                         </SelectTrigger>
                         <SelectContent>

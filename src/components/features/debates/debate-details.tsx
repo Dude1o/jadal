@@ -55,6 +55,9 @@ export function DebateDetails({ debateId }: DebateDetailsProps) {
   const isLive = debate.status === "live";
   const isCompleted = debate.status === "completed";
   const isScheduled = debate.status === "scheduled";
+  const isAnnounced = debate.status === "announced";
+  const isCancelled = debate.status === "cancelled";
+  const isTeamsSelected = debate.status === "teams-selected";
 
   const totalDuration = debate.phases.reduce(
     (sum, phase) => sum + phase.duration_seconds,
@@ -62,16 +65,16 @@ export function DebateDetails({ debateId }: DebateDetailsProps) {
   );
 
   const avatarColors = [
-    { bg: "bg-orange-500/10 text-orange-600 dark:text-orange-400" },
-    { bg: "bg-violet-500/10 text-violet-600 dark:text-violet-400" },
-    { bg: "bg-pink-500/10 text-pink-600 dark:text-pink-400" },
-    { bg: "bg-blue-500/10 text-blue-600 dark:text-blue-400" },
+    { bg: "bg-accent/10 text-accent" },
+    { bg: "bg-chart-5/10 text-chart-5" },
+    { bg: "bg-chart-7/10 text-chart-7" },
+    { bg: "bg-primary/10 text-primary" },
   ];
 
   const rtl = isRTL();
 
   return (
-    <div className="min-h-screen bg-slate-50/50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 selection:bg-orange-500/30 selection:text-slate-900">
+    <div className="min-h-screen bg-background text-foreground selection:bg-accent/30 selection:text-foreground">
       <div className="max-w-7xl mx-auto px-4 py-8 md:px-6 md:py-10 lg:px-8">
         {/* ── Top Navigation Action Hub ── */}
         <div className="flex items-center justify-between mb-8">
@@ -79,7 +82,7 @@ export function DebateDetails({ debateId }: DebateDetailsProps) {
             variant="ghost"
             size="sm"
             onClick={() => window.history.back()}
-            className="group rounded-xl px-4 py-2 hover:bg-white dark:hover:bg-slate-900 hover:shadow-sm ring-1 ring-transparent hover:ring-slate-200 dark:hover:ring-slate-800/60 transition-all font-medium text-slate-600 dark:text-slate-400"
+            className="group rounded-xl px-4 py-2 hover:bg-card hover:shadow-sm ring-1 ring-transparent hover:ring-border/40 transition-all font-medium text-muted-foreground"
           >
             {rtl ? (
               <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
@@ -95,9 +98,9 @@ export function DebateDetails({ debateId }: DebateDetailsProps) {
             <Button
               variant="outline"
               size="sm"
-              className="gap-2 text-xs font-semibold h-10 px-4 bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 rounded-xl shadow-sm hover:bg-slate-50 dark:hover:bg-slate-800 transition-all"
+              className="gap-2 text-xs font-semibold h-10 px-4 bg-card border-border rounded-xl shadow-sm hover:bg-muted transition-all"
             >
-              <Share2 className="w-4 h-4 text-slate-500" />
+              <Share2 className="w-4 h-4 text-muted-foreground" />
               {getTranslation(t, "debates.details.shareLink")}
             </Button>
 
@@ -106,20 +109,20 @@ export function DebateDetails({ debateId }: DebateDetailsProps) {
                 <Button
                   variant="outline"
                   size="icon"
-                  className="h-10 w-10 rounded-xl bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 shadow-sm transition-all"
+                  className="h-10 w-10 rounded-xl bg-card border-border hover:bg-muted shadow-sm transition-all"
                 >
-                  <MoreVertical className="w-4 h-4 text-slate-500" />
+                  <MoreVertical className="w-4 h-4 text-muted-foreground" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 align="end"
-                className="w-52 rounded-xl p-1.5 shadow-xl border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md"
+                className="w-52 rounded-xl p-1.5 shadow-xl border-border bg-card/80 backdrop-blur-md"
               >
                 <DropdownMenuItem className="rounded-lg py-2 cursor-pointer font-medium">
                   {getTranslation(t, "debates.details.editDebate")}
                 </DropdownMenuItem>
-                <DropdownMenuSeparator className="bg-slate-100 dark:bg-slate-800" />
-                <DropdownMenuItem className="rounded-lg py-2 cursor-pointer text-rose-600 dark:text-rose-400 focus:text-rose-600 dark:focus:text-rose-400 focus:bg-rose-500/10 dark:focus:bg-rose-500/10 font-medium">
+                <DropdownMenuSeparator className="bg-muted" />
+                <DropdownMenuItem className="rounded-lg py-2 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 font-medium">
                   {getTranslation(t, "debates.details.cancelDebate")}
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -128,21 +131,21 @@ export function DebateDetails({ debateId }: DebateDetailsProps) {
         </div>
 
         {/* ── Cyber-Glass Hero Card ── */}
-        <Card className="relative overflow-hidden border-0 shadow-xl ring-1 ring-slate-200/60 dark:ring-slate-800/80 mb-6 rounded-3xl bg-white dark:bg-slate-900">
-          <div className="absolute inset-0 bg-gradient-to-tr from-orange-500/10 via-yellow-500/5 to-transparent pointer-events-none" />
-          <div className="h-28 bg-gradient-to-r from-slate-100 via-slate-200 to-slate-100 dark:from-slate-800 dark:via-slate-900/40 dark:to-slate-800 relative overflow-hidden">
+        <Card className="relative overflow-hidden border-0 shadow-xl ring-1 ring-border/60 mb-6 rounded-3xl bg-card">
+          <div className="absolute inset-0 bg-gradient-to-tr from-accent/10 via-warning/5 to-transparent pointer-events-none" />
+          <div className="h-28 bg-gradient-to-r from-muted via-border to-muted relative overflow-hidden">
             <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
           </div>
 
           <CardContent className="relative pt-0 pb-8 px-6 md:px-10">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 -mt-10">
               <div className="flex flex-col sm:flex-row items-start gap-5 flex-1 min-w-0">
-                <div className="flex-shrink-0 w-16 h-16 rounded-2xl bg-gradient-to-br from-orange-500 to-amber-600 text-white shadow-lg flex items-center justify-center ring-4 ring-white dark:ring-slate-900">
+                <div className="flex-shrink-0 w-16 h-16 rounded-2xl bg-gradient-to-br from-accent to-warning text-accent-foreground shadow-lg flex items-center justify-center ring-4 ring-card">
                   <Gavel className="w-7 h-7" />
                 </div>
 
                 <div className="space-y-2 flex-1 min-w-0">
-                  <h1 className="text-xl md:text-2xl lg:text-3xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
+                  <h1 className="text-xl md:text-2xl lg:text-3xl font-black text-foreground tracking-tight leading-tight">
                     {debate.title}
                   </h1>
 
@@ -151,24 +154,32 @@ export function DebateDetails({ debateId }: DebateDetailsProps) {
                       variant="outline"
                       className={`text-xs px-3 py-0.5 font-bold rounded-md tracking-wide shadow-sm capitalize border ${
                         isLive
-                          ? "bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20"
+                          ? "bg-destructive/10 text-destructive border-destructive/20"
                           : isCompleted
-                            ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20"
-                            : "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20"
+                            ? "bg-success/10 text-success border-success/20"
+                            : isScheduled
+                              ? "bg-primary/10 text-primary border-primary/20"
+                              : isAnnounced
+                                ? "bg-primary/10 text-primary border-primary/20"
+                                : isCancelled
+                                  ? "bg-destructive/10 text-destructive border-destructive/20"
+                                  : isTeamsSelected
+                                    ? "bg-success/10 text-success border-success/20"
+                                    : "bg-primary/10 text-primary border-primary/20"
                       }`}
                     >
                       {isLive && (
                         <span className="relative flex h-2 w-2 ltr:mr-1.5 rtl:ml-1.5">
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
-                          <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500" />
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-destructive/60 opacity-75" />
+                          <span className="relative inline-flex rounded-full h-2 w-2 bg-destructive" />
                         </span>
                       )}
                       {getTranslation(t, `debates.statuses.${debate.status}`)}
                     </Badge>
-                    <span className="text-xs font-semibold text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800/60 px-2.5 py-1 rounded-md">
+                    <span className="text-xs font-semibold text-muted-foreground bg-muted/60 px-2.5 py-1 rounded-md">
                       {getTranslation(t, "debates.details.hostedBy")}
                       {": "}
-                      <strong className="text-slate-600 dark:text-slate-300 font-bold">
+                      <strong className="text-foreground font-bold">
                         {debate.created_by.name}
                       </strong>
                     </span>
@@ -180,14 +191,14 @@ export function DebateDetails({ debateId }: DebateDetailsProps) {
                 {isLive && (
                   <Button
                     onClick={() => setIsJoining(true)}
-                    className="w-full sm:w-auto bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 text-white shadow-md rounded-xl h-11 px-6 font-bold tracking-wide gap-2 transition-all hover:scale-102"
+                    className="w-full sm:w-auto bg-destructive hover:bg-destructive/90 text-destructive-foreground shadow-md rounded-xl h-11 px-6 font-bold tracking-wide gap-2 transition-all hover:scale-102"
                   >
                     <PlayCircle className="w-5 h-5 animate-pulse" />
                     {getTranslation(t, "debates.details.joinLive")}
                   </Button>
                 )}
                 {isCompleted && debate.recording_url && (
-                  <Button className="w-full sm:w-auto font-bold tracking-wide h-11 px-6 rounded-xl gap-2 bg-slate-900 hover:bg-slate-800 text-white dark:bg-slate-100 dark:text-slate-900 transition-all shadow-md">
+                  <Button className="w-full sm:w-auto font-bold tracking-wide h-11 px-6 rounded-xl gap-2 bg-primary text-primary-foreground hover:bg-primary/90 transition-all shadow-md">
                     <PlayCircle className="w-5 h-5" />
                     {getTranslation(t, "debates.details.watchRecording")}
                   </Button>
@@ -198,23 +209,23 @@ export function DebateDetails({ debateId }: DebateDetailsProps) {
         </Card>
 
         {/* ── Motion Card (Cinematic Layout) ── */}
-        <Card className="border-0 shadow-sm ring-1 ring-slate-200 dark:ring-slate-800/80 bg-white dark:bg-slate-900 mb-6 rounded-2xl overflow-hidden">
+        <Card className="border-0 shadow-sm ring-1 ring-border bg-card mb-6 rounded-2xl overflow-hidden">
           <CardHeader className="pb-3 px-6 pt-6">
-            <CardTitle className="flex items-center gap-2.5 text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">
-              <span className="w-7 h-7 rounded-lg bg-orange-500/10 dark:bg-orange-500/20 flex items-center justify-center flex-shrink-0">
-                <Quote className="w-3.5 h-3.5 text-orange-600 dark:text-orange-400" />
+            <CardTitle className="flex items-center gap-2.5 text-xs font-bold text-muted-foreground uppercase tracking-widest">
+              <span className="w-7 h-7 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0">
+                <Quote className="w-3.5 h-3.5 text-accent" />
               </span>
               {getTranslation(t, "debates.details.motion")}
             </CardTitle>
           </CardHeader>
           <CardContent className="px-6 pb-6 space-y-5">
-            <blockquote className="text-base md:text-lg font-bold border-l-4 border-orange-500 pl-4 py-2 text-slate-800 dark:text-slate-200 leading-relaxed bg-gradient-to-r from-orange-500/5 to-transparent rounded-r-xl">
+            <blockquote className="text-base md:text-lg font-bold border-l-4 border-accent pl-4 py-2 text-card-foreground leading-relaxed bg-gradient-to-r from-accent/5 to-transparent rounded-r-xl">
               "{debate.motion.text}"
             </blockquote>
 
             {debate?.motion?.frameworks?.length > 0 && (
               <div className="pt-2">
-                <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 tracking-widest uppercase mb-2.5">
+                <p className="text-[10px] font-bold text-muted-foreground tracking-widest uppercase mb-2.5">
                   {getTranslation(t, "debates.details.frameworks")}
                 </p>
                 <div className="flex flex-wrap gap-2">
@@ -222,7 +233,7 @@ export function DebateDetails({ debateId }: DebateDetailsProps) {
                     <Badge
                       key={fw.id}
                       variant="outline"
-                      className="text-xs px-3 py-1 font-bold bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 shadow-sm rounded-md"
+                      className="text-xs px-3 py-1 font-bold bg-card text-muted-foreground border-border shadow-sm rounded-md"
                       style={{
                         borderLeftWidth: "4px",
                         borderLeftColor: fw.color_hex || "#ff9544",
@@ -240,17 +251,17 @@ export function DebateDetails({ debateId }: DebateDetailsProps) {
         {/* ── Row 1: Status · Info · Quick Actions Console ── */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
           {/* Status Metric Panel */}
-          <Card className="border-0 shadow-sm ring-1 ring-slate-200 dark:ring-slate-800/80 bg-white dark:bg-slate-900 rounded-2xl overflow-hidden hover:-translate-y-1 transition-all duration-300">
+          <Card className="border-0 shadow-sm ring-1 ring-border bg-card rounded-2xl overflow-hidden hover:-translate-y-1 transition-all duration-300">
             <CardHeader className="pb-2 px-6 pt-6">
-              <CardTitle className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">
+              <CardTitle className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
                 {isCompleted ? (
                   <>
-                    <Award className="w-4 h-4 text-amber-500" />
+                    <Award className="w-4 h-4 text-warning" />
                     {getTranslation(t, "debates.details.result")}
                   </>
                 ) : (
                   <>
-                    <Clock className="w-4 h-4 text-orange-500" />
+                    <Clock className="w-4 h-4 text-accent" />
                     {getTranslation(t, "debates.details.status")}
                   </>
                 )}
@@ -259,10 +270,10 @@ export function DebateDetails({ debateId }: DebateDetailsProps) {
             <CardContent className="px-6 pb-6 flex flex-col justify-center min-h-[120px]">
               {isCompleted && debate.result ? (
                 <div className="flex flex-col items-center gap-3">
-                  <div className="w-12 h-12 rounded-2xl bg-amber-500/10 dark:bg-amber-500/20 flex items-center justify-center shadow-inner">
-                    <Trophy className="w-6 h-6 text-amber-600 dark:text-amber-400" />
+                  <div className="w-12 h-12 rounded-2xl bg-warning/10 flex items-center justify-center shadow-inner">
+                    <Trophy className="w-6 h-6 text-warning" />
                   </div>
-                  <p className="text-sm font-black text-emerald-600 dark:text-emerald-400 text-center tracking-wide">
+                  <p className="text-sm font-black text-success text-center tracking-wide">
                     {getTranslation(t, "debates.details.winnerTitle", {
                       side: debate.result.winning_side,
                     })}
@@ -270,19 +281,19 @@ export function DebateDetails({ debateId }: DebateDetailsProps) {
                 </div>
               ) : isLive ? (
                 <div className="flex flex-col items-center gap-3">
-                  <div className="w-12 h-12 rounded-2xl bg-rose-500/10 flex items-center justify-center animate-pulse">
-                    <Flame className="w-6 h-6 text-rose-500" />
+                  <div className="w-12 h-12 rounded-2xl bg-destructive/10 flex items-center justify-center animate-pulse">
+                    <Flame className="w-6 h-6 text-destructive" />
                   </div>
-                  <p className="text-sm font-black text-red-600 dark:text-red-400 uppercase tracking-widest">
+                  <p className="text-sm font-black text-destructive uppercase tracking-widest">
                     {getTranslation(t, "debates.details.liveNow")}
                   </p>
                 </div>
               ) : (
                 <div className="space-y-1 text-center md:text-left">
-                  <p className="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
+                  <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">
                     {getTranslation(t, "debates.details.scheduledFor")}
                   </p>
-                  <p className="text-sm font-black text-slate-800 dark:text-slate-200 leading-snug">
+                  <p className="text-sm font-black text-card-foreground leading-snug">
                     {new Date(debate.scheduled_at).toLocaleString()}
                   </p>
                 </div>
@@ -291,10 +302,10 @@ export function DebateDetails({ debateId }: DebateDetailsProps) {
           </Card>
 
           {/* Core Information Ledger */}
-          <Card className="border-0 shadow-sm ring-1 ring-slate-200 dark:ring-slate-800/80 bg-white dark:bg-slate-900 rounded-2xl overflow-hidden hover:-translate-y-1 transition-all duration-300">
+          <Card className="border-0 shadow-sm ring-1 ring-border bg-card rounded-2xl overflow-hidden hover:-translate-y-1 transition-all duration-300">
             <CardHeader className="pb-2 px-6 pt-6">
-              <CardTitle className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">
-                <Info className="w-4 h-4 text-orange-500" />
+              <CardTitle className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                <Info className="w-4 h-4 text-accent" />
                 {getTranslation(t, "debates.details.information")}
               </CardTitle>
             </CardHeader>
@@ -317,23 +328,23 @@ export function DebateDetails({ debateId }: DebateDetailsProps) {
               ].map(({ label, value }) => (
                 <div
                   key={label}
-                  className="flex justify-between items-center py-1 border-b border-slate-100 dark:border-slate-800/60 last:border-0"
+                  className="flex justify-between items-center py-1 border-b border-border/60 last:border-0"
                 >
-                  <span className="text-slate-400 dark:text-slate-500 text-xs font-semibold">
+                  <span className="text-muted-foreground text-xs font-semibold">
                     {label}
                   </span>
-                  <span className="font-bold text-slate-800 dark:text-slate-200 text-xs truncate max-w-[150px]">
+                  <span className="font-bold text-card-foreground text-xs truncate max-w-[150px]">
                     {value}
                   </span>
                 </div>
               ))}
               <div className="flex justify-between items-center pt-1.5">
-                <span className="text-slate-400 dark:text-slate-500 text-xs font-semibold">
+                <span className="text-muted-foreground text-xs font-semibold">
                   {getTranslation(t, "debates.details.tag")}
                 </span>
                 <Badge
                   variant="secondary"
-                  className="font-mono text-[10px] font-extrabold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-0 rounded-md px-2 py-0.5"
+                  className="font-mono text-[10px] font-extrabold bg-muted text-muted-foreground border-0 rounded-md px-2 py-0.5"
                 >
                   #{debate.tag}
                 </Badge>
@@ -342,10 +353,10 @@ export function DebateDetails({ debateId }: DebateDetailsProps) {
           </Card>
 
           {/* Dashboard Quick Actions Console */}
-          <Card className="border-0 shadow-sm ring-1 ring-slate-200 dark:ring-slate-800/80 bg-white dark:bg-slate-900 rounded-2xl overflow-hidden hover:-translate-y-1 transition-all duration-300">
+          <Card className="border-0 shadow-sm ring-1 ring-border bg-card rounded-2xl overflow-hidden hover:-translate-y-1 transition-all duration-300">
             <CardHeader className="pb-2 px-6 pt-6">
-              <CardTitle className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">
-                <Zap className="w-4 h-4 text-orange-500" />
+              <CardTitle className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                <Zap className="w-4 h-4 text-accent" />
                 {getTranslation(t, "debates.details.quickActions")}
               </CardTitle>
             </CardHeader>
@@ -353,24 +364,24 @@ export function DebateDetails({ debateId }: DebateDetailsProps) {
               {isScheduled && (
                 <Button
                   variant="outline"
-                  className="justify-start text-xs font-bold border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 h-10 rounded-xl transition-all shadow-sm gap-2"
+                  className="justify-start text-xs font-bold border-border hover:bg-muted h-10 rounded-xl transition-all shadow-sm gap-2"
                 >
-                  <CalendarPlus className="w-4 h-4 text-orange-500" />
+                  <CalendarPlus className="w-4 h-4 text-accent" />
                   {getTranslation(t, "debates.details.setReminder")}
                 </Button>
               )}
               <Button
                 variant="outline"
-                className="justify-start text-xs font-bold border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 h-10 rounded-xl transition-all shadow-sm gap-2"
+                className="justify-start text-xs font-bold border-border hover:bg-muted h-10 rounded-xl transition-all shadow-sm gap-2"
               >
-                <FileText className="w-4 h-4 text-blue-500" />
+                <FileText className="w-4 h-4 text-primary" />
                 {getTranslation(t, "debates.details.viewTranscript")}
               </Button>
               <Button
                 variant="outline"
-                className="justify-start text-xs font-bold border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 h-10 rounded-xl transition-all shadow-sm gap-2"
+                className="justify-start text-xs font-bold border-border hover:bg-muted h-10 rounded-xl transition-all shadow-sm gap-2"
               >
-                <UserCheck className="w-4 h-4 text-violet-500" />
+                <UserCheck className="w-4 h-4 text-chart-5" />
                 {getTranslation(t, "debates.details.manageParticipants")}
               </Button>
             </CardContent>
@@ -380,16 +391,16 @@ export function DebateDetails({ debateId }: DebateDetailsProps) {
         {/* ── Row 2: Structure + Participants Split view ── */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Timeline Phases/Structure Card */}
-          <Card className="border-0 shadow-sm ring-1 ring-slate-200 dark:ring-slate-800/80 bg-white dark:bg-slate-900 rounded-2xl overflow-hidden">
-            <CardHeader className="pb-4 px-6 pt-6 border-b border-slate-100 dark:border-slate-800/60">
-              <CardTitle className="flex items-center justify-between text-base font-bold text-slate-900 dark:text-white">
+          <Card className="border-0 shadow-sm ring-1 ring-border bg-card rounded-2xl overflow-hidden">
+            <CardHeader className="pb-4 px-6 pt-6 border-b border-border/60">
+              <CardTitle className="flex items-center justify-between text-base font-bold text-foreground">
                 <span className="flex items-center gap-2.5">
-                  <span className="w-8 h-8 rounded-lg bg-orange-500/10 dark:bg-orange-500/20 flex items-center justify-center flex-shrink-0">
-                    <LayoutGrid className="w-4 h-4 text-orange-600 dark:text-orange-400" />
+                  <span className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0">
+                    <LayoutGrid className="w-4 h-4 text-accent" />
                   </span>
                   {getTranslation(t, "debates.details.structure")}
                 </span>
-                <span className="text-xs font-bold text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800 px-2.5 py-1 rounded-md">
+                <span className="text-xs font-bold text-muted-foreground bg-muted px-2.5 py-1 rounded-md">
                   {getTranslation(t, "debates.details.minTotal")}
                   {": "}
                   {Math.floor(totalDuration / 60)}{" "}
@@ -404,19 +415,19 @@ export function DebateDetails({ debateId }: DebateDetailsProps) {
                   .map((phase, idx) => (
                     <div
                       key={phase.id}
-                      className="flex items-center gap-4 px-4 py-3 rounded-xl border border-slate-100 dark:border-slate-800/60 hover:bg-slate-50 dark:hover:bg-slate-800/40 dark:hover:ring-1 dark:hover:ring-orange-500/20 transition-all duration-200"
+                      className="flex items-center gap-4 px-4 py-3 rounded-xl border border-border/60 hover:bg-muted/60 dark:hover:ring-1 hover:ring-accent/20 transition-all duration-200"
                     >
-                      <div className="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-800/80 flex items-center justify-center text-xs font-bold text-slate-500 dark:text-slate-400 flex-shrink-0 border border-slate-200/40 dark:border-slate-700/40">
+                      <div className="w-7 h-7 rounded-lg bg-muted/80 flex items-center justify-center text-xs font-bold text-muted-foreground flex-shrink-0 border border-border/40">
                         {idx + 1}
                       </div>
 
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-bold text-slate-800 dark:text-slate-200 truncate">
+                        <p className="text-sm font-bold text-card-foreground truncate">
                           {phase.name}
                         </p>
                       </div>
 
-                      <span className="text-xs font-bold text-slate-400 dark:text-slate-500 flex-shrink-0">
+                      <span className="text-xs font-bold text-muted-foreground flex-shrink-0">
                         {Math.floor(phase.duration_seconds / 60)}{" "}
                         {getTranslation(t, "debates.details.min")}
                       </span>
@@ -425,10 +436,10 @@ export function DebateDetails({ debateId }: DebateDetailsProps) {
                         variant="outline"
                         className={`text-[10px] px-2.5 py-0.5 capitalize font-bold rounded-md tracking-wide flex-shrink-0 shadow-sm border ${
                           phase.status === "active"
-                            ? "bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20"
+                            ? "bg-destructive/10 text-destructive border-destructive/20"
                             : phase.status === "completed"
-                              ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20"
-                              : "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20" // pending
+                              ? "bg-success/10 text-success border-success/20"
+                              : "bg-warning/10 text-warning border-warning/20" // pending
                         }`}
                       >
                         {getTranslation(
@@ -443,11 +454,11 @@ export function DebateDetails({ debateId }: DebateDetailsProps) {
           </Card>
 
           {/* Interactive Participants Grid */}
-          <Card className="border-0 shadow-sm ring-1 ring-slate-200 dark:ring-slate-800/80 bg-white dark:bg-slate-900 rounded-2xl overflow-hidden">
-            <CardHeader className="pb-4 px-6 pt-6 border-b border-slate-100 dark:border-slate-800/60">
-              <CardTitle className="flex items-center gap-2.5 text-base font-bold text-slate-900 dark:text-white">
-                <span className="w-8 h-8 rounded-lg bg-blue-500/10 dark:bg-blue-500/20 flex items-center justify-center flex-shrink-0">
-                  <Users className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+          <Card className="border-0 shadow-sm ring-1 ring-border bg-card rounded-2xl overflow-hidden">
+            <CardHeader className="pb-4 px-6 pt-6 border-b border-border/60">
+              <CardTitle className="flex items-center gap-2.5 text-base font-bold text-foreground">
+                <span className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                  <Users className="w-4 h-4 text-primary" />
                 </span>
                 {getTranslation(t, "debates.details.participants", {
                   count: debate.participants.length,
@@ -462,9 +473,9 @@ export function DebateDetails({ debateId }: DebateDetailsProps) {
                     <div
                       key={p.id}
                       onClick={() => navigate({ to: `/users/${p.user.id}` })}
-                      className="group flex items-center gap-3 p-3.5 rounded-xl border border-slate-100 dark:border-slate-800/60 hover:bg-slate-50 dark:hover:bg-slate-900/60 hover:border-orange-500/30 dark:hover:border-orange-500/30 dark:hover:ring-1 dark:hover:ring-orange-500/20 transition-all duration-200 cursor-pointer shadow-sm hover:shadow"
+                      className="group flex items-center gap-3 p-3.5 rounded-xl border border-border/60 hover:bg-muted hover:border-accent/30 dark:hover:border-accent/30 dark:hover:ring-1 hover:ring-accent/20 transition-all duration-200 cursor-pointer shadow-sm hover:shadow"
                     >
-                      <Avatar className="w-10 h-10 flex-shrink-0 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm transform transition-transform duration-200 group-hover:scale-105">
+                      <Avatar className="w-10 h-10 flex-shrink-0 rounded-xl border border-border shadow-sm transform transition-transform duration-200 group-hover:scale-105">
                         <AvatarImage
                           src={p.user.avatar_url || ""}
                           alt={p.user.name}
@@ -481,10 +492,10 @@ export function DebateDetails({ debateId }: DebateDetailsProps) {
                       </Avatar>
 
                       <div className="min-w-0 flex-1">
-                        <p className="text-sm font-bold text-slate-800 dark:text-slate-200 truncate group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors">
+                        <p className="text-sm font-bold text-card-foreground truncate group-hover:text-accent transition-colors">
                           {p.user.name}
                         </p>
-                        <p className="text-[11px] font-bold text-slate-400 dark:text-slate-500 capitalize mt-0.5 tracking-wide">
+                        <p className="text-[11px] font-bold text-muted-foreground capitalize mt-0.5 tracking-wide">
                           {getTranslation(t, `users.roles.${p.user.role}`)}
                         </p>
                       </div>

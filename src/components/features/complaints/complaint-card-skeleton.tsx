@@ -2,7 +2,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function ComplaintCardSkeleton() {
   return (
-    <div className="relative flex flex-col h-full rounded-2xl overflow-hidden border border-border bg-card">
+    <div className="relative flex flex-col h-full w-full rounded-2xl overflow-hidden border border-border bg-card">
       {/* Accent bar */}
       <Skeleton className="h-1 w-full rounded-none" />
 

@@ -49,8 +49,11 @@ export function UserCardSkeleton({
         <div className="mx-5 mt-4 h-px bg-linear-to-r from-transparent via-border to-transparent" />
 
         {/* Stats */}
-        <div className="grid grid-cols-3 divide-x divide-border/60">
-          {[getTranslation(t, "users.cardSkeleton.likes"), getTranslation(t, "users.cardSkeleton.posts"), getTranslation(t, "users.cardSkeleton.views")].map((label) => (
+        <div className="grid grid-cols-2 divide-x divide-border/60">
+          {[
+            getTranslation(t, "users.cardSkeleton.likes"),
+            getTranslation(t, "users.cardSkeleton.views"),
+          ].map((label) => (
             <div
               key={label}
               className="flex flex-col items-center py-4 gap-1.5"

@@ -30,18 +30,18 @@ const positionClasses: Record<ToastPosition, string> = {
 
 const variantStyles = {
   default: "bg-card border border-border text-card-foreground",
-  success: "bg-card border border-green-500/40 text-card-foreground",
+  success: "bg-card border border-success/40 text-card-foreground",
   error: "bg-card border border-destructive/40 text-card-foreground",
-  warning: "bg-card border border-yellow-500/40 text-card-foreground",
-  info: "bg-card border border-blue-500/40 text-card-foreground",
+  warning: "bg-card border border-warning/40 text-card-foreground",
+  info: "bg-card border border-primary/40 text-card-foreground",
 };
 
 const variantIconColor = {
   default: "text-muted-foreground",
-  success: "text-green-500",
+  success: "text-success",
   error: "text-destructive",
-  warning: "text-yellow-500",
-  info: "text-blue-500",
+  warning: "text-warning",
+  info: "text-primary",
 };
 
 const defaultIcons = {

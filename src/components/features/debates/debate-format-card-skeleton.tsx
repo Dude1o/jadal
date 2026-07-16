@@ -4,48 +4,58 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function DebateFormatCardSkeleton() {
   return (
-    <Card className="overflow-hidden">
-      <CardHeader className="pb-4">
+    <Card className="relative w-full max-w-sm flex flex-col overflow-hidden border border-border shadow-md bg-card">
+      {/* Top accent gradient */}
+      <div className="absolute inset-x-0 top-0 h-1.5 bg-muted" />
+
+      <CardHeader className="relative pb-3 pt-6 px-6">
         <div className="flex items-start justify-between">
-          <div className="space-y-2 flex-1">
-            <Skeleton className="h-6 w-3/4" />
-            <Skeleton className="h-4 w-11/12" />
+          <div className="space-y-1.5 flex-1 min-w-0 pr-3">
+            <Skeleton className="h-5 w-3/4 rounded-md" />
+            <Skeleton className="h-3.5 w-11/12 rounded-md" />
+            <Skeleton className="h-3.5 w-2/3 rounded-md" />
           </div>
-          <Skeleton className="h-5 w-16 rounded-full" />
+          <Skeleton className="flex-shrink-0 h-10 w-10 rounded-xl" />
         </div>
       </CardHeader>
 
-      <CardContent className="space-y-5">
-        {/* Stats Row */}
-        <div className="grid grid-cols-3 gap-4">
-          {Array.from({ length: 3 }).map((_, i) => (
-            <div
-              key={i}
-              className="flex flex-col items-center text-center space-y-2"
-            >
-              <Skeleton className="h-9 w-12" />
-              <Skeleton className="h-3 w-16" />
+      <CardContent className="flex-1 flex flex-col px-6 pb-6 pt-0 space-y-5">
+        {/* Stats row */}
+        <div className="grid grid-cols-2 gap-3">
+          <div className="rounded-xl bg-muted/50 border border-border p-3 space-y-2">
+            <div className="flex items-center gap-2">
+              <Skeleton className="h-4 w-4 rounded" />
+              <Skeleton className="h-3 w-14 rounded-md" />
             </div>
-          ))}
-        </div>
-
-        <Skeleton className="h-px w-full" />
-
-        {/* Phases Preview */}
-        <div className="space-y-2">
-          <Skeleton className="h-4 w-24" />
-          <div className="flex flex-wrap gap-2">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <Skeleton key={i} className="h-6 w-20 rounded-full" />
-            ))}
+            <Skeleton className="h-7 w-8 rounded-md" />
+          </div>
+          <div className="rounded-xl bg-muted/50 border border-border p-3 space-y-2">
+            <div className="flex items-center gap-2">
+              <Skeleton className="h-4 w-4 rounded" />
+              <Skeleton className="h-3 w-14 rounded-md" />
+            </div>
+            <Skeleton className="h-7 w-8 rounded-md" />
           </div>
         </div>
 
-        {/* Actions */}
-        <div className="flex gap-2 pt-2">
-          <Skeleton className="h-9 flex-1" />
-          <Skeleton className="h-9 w-9" />
-          <Skeleton className="h-9 w-9" />
+        {/* Quick phase preview */}
+        <div className="space-y-2">
+          <Skeleton className="h-3 w-16 rounded-md" />
+          <div className="flex flex-wrap gap-1.5">
+            <Skeleton className="h-5 w-16 rounded-full" />
+            <Skeleton className="h-5 w-20 rounded-full" />
+            <Skeleton className="h-5 w-14 rounded-full" />
+            <Skeleton className="h-5 w-8 rounded-full" />
+          </div>
+        </div>
+
+        <Skeleton className="h-px w-full rounded-none" />
+
+        {/* Action buttons */}
+        <div className="mt-auto flex gap-2 pt-1">
+          <Skeleton className="h-9 flex-1 rounded-md" />
+          <Skeleton className="h-9 w-9 rounded-md" />
+          <Skeleton className="h-9 w-9 rounded-md" />
         </div>
       </CardContent>
     </Card>

@@ -376,7 +376,7 @@ const AppSidebar = () => {
                   openDialog();
                 }}
               >
-                <LogOutIcon className="transition-colors group-hover:text-red-600" />
+                <LogOutIcon className="transition-colors group-hover:text-destructive" />
                 <span>{getTranslation(t, "navigation.sidebar.logout")}</span>
               </DropdownMenuItem>
             </DropdownMenuContent>

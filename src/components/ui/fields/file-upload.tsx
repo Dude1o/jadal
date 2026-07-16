@@ -194,9 +194,9 @@ export function FileUploaderField({
               </p>
 
               <div className="flex items-center gap-1.5 mt-2">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
+                <CheckCircle2 className="w-3.5 h-3.5 text-success" />
 
-                <span className="text-[11px] uppercase tracking-wider font-bold text-emerald-600 dark:text-emerald-400">
+                <span className="text-[11px] uppercase tracking-wider font-bold text-success">
                   {current
                     ? getTranslation(t, "common.fileUpload.status.ready")
                     : getTranslation(t, "common.fileUpload.status.preserved")}

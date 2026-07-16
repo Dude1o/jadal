@@ -848,6 +848,7 @@
       "issues": "مشاكل",
       "types": {
         "mcq": "اختيار متعدد",
+        "open_text": "نص",
         "text": "نص",
         "rating": "تقييم"
       },
@@ -933,6 +934,10 @@
     "statuses": {
       "active": "نشط",
       "inactive": "غير نشط"
+    },
+    "assignmentTypes": {
+      "manual": "يدوي",
+      "random": "عشوائي"
     },
     "empty": {
       "noData": "لا توجد فرق بعد. أنشئ فريقاً للبدء.",

@@ -152,7 +152,7 @@ export function UserCard({
                 <AlertDialogFooter>
                   <AlertDialogCancel
                     variant="ghost"
-                    className="hover:bg-gray-300 hover:text-black dark:hover:bg-gray-700 dark:hover:text-white"
+                    className="hover:bg-muted hover:text-foreground"
                   >
                     {getTranslation(t, "complaints.dialog.cancel")}
                   </AlertDialogCancel>
@@ -160,10 +160,10 @@ export function UserCard({
                     variant="ghost"
                     className={
                       activeAction === "ban"
-                        ? "bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20 hover:bg-red-500/20"
+                        ? "bg-destructive/10 text-destructive border border-destructive/20 hover:bg-destructive/20"
                         : activeAction === "suspend"
-                          ? "bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 hover:bg-amber-500/20"
-                          : "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20"
+                          ? "bg-warning/10 text-warning border border-warning/20 hover:bg-warning/20"
+                          : "bg-success/10 text-success border border-success/20 hover:bg-success/20"
                     }
                     onClick={(e) => {
                       e.stopPropagation();
@@ -199,7 +199,7 @@ export function UserCard({
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
                   align="end"
-                  className="w-[180px] rounded-xl p-1.5 shadow-xl border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md"
+                  className="w-[180px] rounded-xl p-1.5 shadow-xl border-border bg-card/80 backdrop-blur-md"
                 >
                   <DropdownMenuLabel>
                     {getTranslation(t, "common.labels.actions")}
@@ -207,7 +207,7 @@ export function UserCard({
                   <DropdownMenuSeparator />
 
                   <DropdownMenuItem
-                    className="group gap-2"
+                    className="group gap-2 text-chart-6 focus:text-chart-6 focus:bg-chart-6/10"
                     onClick={(e) => {
                       e.stopPropagation();
                       setTimeout(() => {
@@ -228,12 +228,12 @@ export function UserCard({
                       }, 0);
                     }}
                   >
-                    <Edit className="mr-2 h-4 w-4 group-hover:text-shadow-gray-300" />
+                    <Edit className="mr-2 h-4 w-4 group-hover:text-muted-foreground" />
                     {getTranslation(t, "common.actions.edit")}
                   </DropdownMenuItem>
 
                   <DropdownMenuItem
-                    className="group gap-2 text-destructive focus:text-destructive focus:bg-red-500/10 dark:focus:bg-red-500/10"
+                    className="group gap-2 text-destructive focus:text-destructive focus:bg-destructive/10"
                     onClick={(e) => {
                       e.stopPropagation();
                       setTimeout(() => {
@@ -258,13 +258,13 @@ export function UserCard({
                       }, 0);
                     }}
                   >
-                    <Trash className="mr-2 h-4 w-4 group-hover:text-shadow-red-600" />
+                    <Trash className="mr-2 h-4 w-4 group-hover:text-destructive" />
                     {getTranslation(t, "common.actions.delete")}
                   </DropdownMenuItem>
 
                   {user.status !== "banned" && (
                     <DropdownMenuItem
-                      className="group gap-2 text-violet-600 dark:text-violet-400 focus:text-violet-600 dark:focus:text-violet-400 focus:bg-violet-500/10 dark:focus:bg-violet-500/10"
+                      className="group gap-2 text-destructive focus:text-destructive focus:bg-destructive/10"
                       onClick={(e) => {
                         e.stopPropagation();
                         setActiveAction("ban");
@@ -277,7 +277,7 @@ export function UserCard({
 
                   {user.status !== "suspended" && (
                     <DropdownMenuItem
-                      className="group gap-2 text-orange-600 dark:text-orange-400 focus:text-orange-600 dark:focus:text-orange-400 focus:bg-orange-500/10 dark:focus:bg-orange-500/10"
+                      className="group gap-2 text-warning focus:text-warning focus:bg-warning/10"
                       onClick={(e) => {
                         e.stopPropagation();
                         setActiveAction("suspend");
@@ -290,7 +290,7 @@ export function UserCard({
 
                   {user.status !== "active" && (
                     <DropdownMenuItem
-                      className="group gap-2 text-emerald-600 dark:text-emerald-400 focus:text-emerald-600 dark:focus:text-emerald-400 focus:bg-emerald-500/10 dark:focus:bg-emerald-500/10"
+                      className="group gap-2 text-success focus:text-success focus:bg-success/10"
                       onClick={(e) => {
                         e.stopPropagation();
                         setActiveAction("activate");
@@ -350,7 +350,7 @@ export function UserCard({
             },
             {
               label: getTranslation(t, "users.card.status"),
-              value: user.status,
+              value: getTranslation(t, `users.statuses.${user.status}`),
             },
           ].map(({ label, value }) => (
             <div

@@ -30,7 +30,7 @@ export default function DebateMotionFrameworkCard({
 
   return (
     <Card
-      className="group relative overflow-hidden border border-slate-200 dark:border-slate-800 shadow-sm bg-white dark:bg-slate-900 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/50 dark:hover:shadow-slate-800/50"
+      className="group relative overflow-hidden border border-border shadow-sm bg-card transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/10"
       style={{
         background: `linear-gradient(135deg, ${accentColor}08 0%, ${accentColor}03 40%, transparent 100%)`,
       }}
@@ -49,11 +49,11 @@ export default function DebateMotionFrameworkCard({
             style={{ backgroundColor: accentColor }}
           />
           <div className="min-w-0 space-y-1">
-            <h3 className="font-bold text-lg text-slate-900 dark:text-white leading-tight line-clamp-2">
+            <h3 className="font-bold text-lg text-card-foreground leading-tight line-clamp-2">
               {framework.name}
             </h3>
             {framework.color_hex && (
-              <p className="font-mono text-xs text-slate-500 dark:text-slate-400">
+              <p className="font-mono text-xs text-muted-foreground">
                 {framework.color_hex}
               </p>
             )}
@@ -61,7 +61,7 @@ export default function DebateMotionFrameworkCard({
         </div>
       </CardHeader>
 
-      <CardContent className="px-6 pb-2 text-sm text-slate-500 dark:text-slate-400">
+      <CardContent className="px-6 pb-2 text-sm text-muted-foreground">
         {framework.created_at
           ? format(new Date(framework.created_at), "dd MMM yyyy")
           : getTranslation(t, "common.labels.unknown")}
@@ -71,7 +71,7 @@ export default function DebateMotionFrameworkCard({
         <Button
           variant="outline"
           size="sm"
-          className="flex-1 border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 font-medium"
+          className="flex-1 border-border hover:bg-muted font-medium"
           onClick={() => onEdit(framework)}
         >
           <Edit className="w-4 h-4 mr-2" />

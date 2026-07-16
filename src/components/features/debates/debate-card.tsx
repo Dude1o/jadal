@@ -128,7 +128,7 @@ export function DebateCard({
             <DropdownMenuSeparator />
 
             <DropdownMenuItem
-              className="group gap-2"
+              className="group gap-2 text-chart-6 focus:text-chart-6 focus:bg-chart-6/10"
               onClick={(e) => {
                 e.stopPropagation();
                 setTimeout(() => {
@@ -153,7 +153,7 @@ export function DebateCard({
             </DropdownMenuItem>
 
             <DropdownMenuItem
-              className="group gap-2 text-destructive"
+              className="group gap-2 text-destructive focus:text-destructive focus:bg-destructive/10"
               onClick={(e) => {
                 e.stopPropagation();
                 setTimeout(() => {
@@ -177,7 +177,7 @@ export function DebateCard({
                 }, 0);
               }}
             >
-              <Trash className="mr-2 h-4 w-4 group-hover:text-red-600" />
+              <Trash className="mr-2 h-4 w-4 group-hover:text-destructive" />
               {getTranslation(t, "common.actions.delete")}
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -254,7 +254,8 @@ export function DebateCard({
           </div>
           <div className="text-center">
             <p className="text-accent font-bold min-[1301px]:font-black text-[8px] min-[1301px]:text-[10px] tracking-[0.2em] mt-1 min-[1301px]:mt-2 opacity-80">
-              {proposition?.name ?? getTranslation(t, "debates.card.proposition")}
+              {proposition?.name ??
+                getTranslation(t, "debates.card.proposition")}
             </p>
           </div>
         </div>
@@ -330,8 +331,8 @@ function getParticipantBySide(
   if (!participant) return undefined;
 
   return {
-    name: participant.name,
+    name: participant.user.name,
     side,
-    avatar: participant.avatar_url,
+    avatar: participant.user.avatar_url,
   };
 }

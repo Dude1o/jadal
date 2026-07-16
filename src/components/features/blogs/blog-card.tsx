@@ -13,12 +13,21 @@ import {
   rejectBlogMutationOptions,
 } from "@/api/mutation-options";
 import { blogKeys } from "@/lib/constants";
-import { ReadMore } from "@/components/common/read-more";
+import { Spinner } from "@/components/ui/spinner";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 interface BlogCardProps {
   blog: BlogPost;
   variant?: "feed" | "compact";
 }
+
+const EXCERPT_MAX_LENGTH = 150;
 
 export function BlogCard({ blog, variant = "feed" }: BlogCardProps) {
   const { t, i18n } = useTranslation();
@@ -28,6 +37,10 @@ export function BlogCard({ blog, variant = "feed" }: BlogCardProps) {
   const currentTimeRef = useRef(Date.now());
 
   const excerpt = blog.excerpt || "";
+  const isExcerptTruncated = excerpt.length > EXCERPT_MAX_LENGTH;
+  const truncatedExcerpt = isExcerptTruncated
+    ? excerpt.slice(0, EXCERPT_MAX_LENGTH).trimEnd() + "…"
+    : excerpt;
 
   const displayTime = useMemo(() => {
     const postDate = new Date(blog.published_at ?? blog.created_at);
@@ -122,14 +135,37 @@ export function BlogCard({ blog, variant = "feed" }: BlogCardProps) {
             {blog.title}
           </h2>
 
-          {/* Excerpt with See More / See Less */}
+          {/* Excerpt — "See More" opens a dialog with the full text */}
           {excerpt && (
-            <ReadMore
-              text={excerpt}
-              maxLength={150}
-              readMoreLabel={getTranslation(t, "common.labels.seeMore")}
-              showLessLabel={getTranslation(t, "common.labels.seeLess")}
-            />
+            <div className="mb-3">
+              <p className="text-sm text-muted-foreground">
+                {truncatedExcerpt}
+              </p>
+              {isExcerptTruncated && (
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <button
+                      type="button"
+                      onClick={(e) => e.stopPropagation()}
+                      className="text-xs font-medium text-primary hover:underline mt-1"
+                    >
+                      {getTranslation(t, "common.labels.seeMore")}
+                    </button>
+                  </DialogTrigger>
+                  <DialogContent
+                    className="max-w-lg"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <DialogHeader>
+                      <DialogTitle>{blog.title}</DialogTitle>
+                    </DialogHeader>
+                    <p className="text-sm text-foreground whitespace-pre-wrap leading-relaxed">
+                      {excerpt}
+                    </p>
+                  </DialogContent>
+                </Dialog>
+              )}
+            </div>
           )}
 
           {/* Categories */}
@@ -152,15 +188,21 @@ export function BlogCard({ blog, variant = "feed" }: BlogCardProps) {
               <button
                 onClick={handleApprove}
                 disabled={isLoading}
-                className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-xs font-medium bg-green-500/10 text-green-600 hover:bg-green-500/20 border border-green-500/30"
+                className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-xs font-medium bg-success/10 text-success hover:bg-success/20 border border-success/30"
               >
-                <Check className="h-4 w-4" />
-                {getTranslation(t, "blogs.messages.approveAction")}
+                {isLoading ? (
+                  <Spinner className="h-4 w-4 text-success" />
+                ) : (
+                  <>
+                    <Check className="h-4 w-4" />
+                    {getTranslation(t, "blogs.messages.approveAction")}
+                  </>
+                )}
               </button>
               <button
                 onClick={handleRejectClick}
                 disabled={isLoading}
-                className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-xs font-medium bg-red-500/10 text-red-600 hover:bg-red-500/20 border border-red-500/30"
+                className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-xs font-medium bg-destructive/10 text-destructive hover:bg-destructive/20 border border-destructive/30"
               >
                 <X className="h-4 w-4" />
                 {getTranslation(t, "blogs.messages.rejectAction")}
@@ -171,11 +213,16 @@ export function BlogCard({ blog, variant = "feed" }: BlogCardProps) {
           {/* Reject Form */}
           {showRejectForm && (
             <div className="mt-auto pt-4 border-t border-border flex flex-col gap-3">
-              <label className="text-xs font-medium">{getTranslation(t, "blogs.card.reviewerComment")}</label>
+              <label className="text-xs font-medium">
+                {getTranslation(t, "blogs.card.reviewerComment")}
+              </label>
               <textarea
                 value={reviewerComment}
                 onChange={(e) => setReviewerComment(e.target.value)}
-                placeholder={getTranslation(t, "blogs.card.rejectionPlaceholder")}
+                placeholder={getTranslation(
+                  t,
+                  "blogs.card.rejectionPlaceholder",
+                )}
                 className="w-full px-3 py-2 rounded-lg text-sm border bg-background border-border resize-none"
                 rows={3}
                 disabled={isRejectPending}
@@ -184,10 +231,16 @@ export function BlogCard({ blog, variant = "feed" }: BlogCardProps) {
                 <button
                   onClick={handleRejectSubmit}
                   disabled={isRejectPending || !reviewerComment.trim()}
-                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-xs font-medium bg-red-500/10 text-red-600 border border-red-500/30"
+                  className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-xs font-medium bg-destructive/10 text-destructive border border-destructive/30 ${!reviewerComment.trim() ? "opacity-50 cursor-not-allowed" : ""}`}
                 >
-                  <X className="h-4 w-4" />
-                  {getTranslation(t, "blogs.card.confirmReject")}
+                  {isLoading ? (
+                    <Spinner className="h-4 w-4 text-destructive" />
+                  ) : (
+                    <>
+                      <X className="h-4 w-4" />
+                      {getTranslation(t, "blogs.card.confirmReject")}
+                    </>
+                  )}
                 </button>
                 <button
                   onClick={handleCancelReject}
@@ -203,15 +256,15 @@ export function BlogCard({ blog, variant = "feed" }: BlogCardProps) {
           {/* Approved State */}
           {isApproved && (
             <div className="mt-auto pt-4 border-t border-border">
-              <div className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-xs font-medium bg-green-500/10 text-green-600 border border-green-500/30 mb-3">
+              <div className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-xs font-medium bg-success/10 text-success border border-success/30 mb-3">
                 <Check className="h-4 w-4" />
                 {getTranslation(t, "blogs.messages.approveLabel")}
               </div>
               {/* Stats */}
               <div className="grid grid-cols-3 gap-2">
-                <div className="flex flex-col items-center gap-1 rounded-lg bg-blue-500/5 border border-blue-500/20 p-3">
-                  <Eye className="h-4 w-4 text-blue-600" />
-                  <span className="text-sm font-semibold text-blue-600">
+                <div className="flex flex-col items-center gap-1 rounded-lg bg-primary/5 border border-primary/20 p-3">
+                  <Eye className="h-4 w-4 text-primary" />
+                  <span className="text-sm font-semibold text-primary">
                     {formatNumber(blog.views ?? 0)}
                   </span>
                   <span className="text-[10px] text-muted-foreground">
@@ -227,9 +280,9 @@ export function BlogCard({ blog, variant = "feed" }: BlogCardProps) {
                     {getTranslation(t, "blogs.card.likes")}
                   </span>
                 </div>
-                <div className="flex flex-col items-center gap-1 rounded-lg bg-orange-500/5 border border-orange-500/20 p-3">
-                  <ThumbsDown className="h-4 w-4 text-orange-600" />
-                  <span className="text-sm font-semibold text-orange-600">
+                <div className="flex flex-col items-center gap-1 rounded-lg bg-accent/5 border border-accent/20 p-3">
+                  <ThumbsDown className="h-4 w-4 text-accent" />
+                  <span className="text-sm font-semibold text-accent">
                     {formatNumber(blog.dislikes ?? 0)}
                   </span>
                   <span className="text-[10px] text-muted-foreground">
@@ -243,12 +296,12 @@ export function BlogCard({ blog, variant = "feed" }: BlogCardProps) {
           {/* Rejected State */}
           {isRejected && (
             <div className="mt-auto pt-4 border-t border-border">
-              <div className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-xs font-medium bg-red-500/10 text-red-600 border border-red-500/30">
+              <div className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-xs font-medium bg-destructive/10 text-destructive border border-destructive/30">
                 <X className="h-4 w-4" />
                 {getTranslation(t, "blogs.messages.rejectLabel")}
               </div>
               {blog.reviewer_comment && (
-                <div className="mt-3 p-3 rounded-lg bg-red-500/5 border border-red-500/20 text-xs">
+                <div className="mt-3 p-3 rounded-lg bg-destructive/5 border border-destructive/20 text-xs">
                   <p className="font-medium text-muted-foreground mb-1">
                     {getTranslation(t, "blogs.card.reviewerCommentLabel")}:
                   </p>
