@@ -42,3 +42,31 @@ export type BlogPostStatus =
   | "rejected";
 
 export type SurveyQuestionType = "mcq" | "rating" | "open_text";
+
+export type LeaderboardBoard =
+  | "most_improved"
+  | "win_rate"
+  | "avg_score"
+  | "most_active";
+
+export type ImprovementBand =
+  | "strong_upward"
+  | "improving"
+  | "stable"
+  | "regressing"
+  | "sharp_decline";
+
+export type ChurnRisk = "churn_risk" | "ramping_up" | "stable";
+
+export type TargetRole = "debater" | "trainer" | "judge" | "chair";
+
+export type ComplaintStatusBreakdown = Partial<Record<ComplaintStatus, number>>;
+
+export type StatTrend = "up" | "down" | "neutral";
+
+export type StatVariant =
+  | "default"
+  | "accent"
+  | "destructive"
+  | "success"
+  | "warning";

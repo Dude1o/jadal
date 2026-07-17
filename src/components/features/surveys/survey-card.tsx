@@ -16,11 +16,7 @@ import getTime, {
   isClosed,
   isUrgent,
 } from "@/lib/utils";
-import type {
-  Survey,
-  SurveyQuestion,
-  SurveyResponse,
-} from "@/types/survey/survey.type";
+import type { Survey, SurveyQuestion, SurveyResponse } from "@/types";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "@tanstack/react-router";

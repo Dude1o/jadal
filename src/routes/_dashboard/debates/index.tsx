@@ -3,7 +3,6 @@ import NotFoundPage from "@/components/common/not-found";
 import DebateListSkeleton from "@/components/features/debates/debate-list-skeleton";
 import { createFileRoute } from "@tanstack/react-router";
 import z from "zod";
-import { debatesQueryOptions } from "@/api/query-options";
 
 const searchSchema = z.object({
   state: z
@@ -31,18 +30,7 @@ export const Route = createFileRoute("/_dashboard/debates/")({
     topic: search.topic,
     view: search.view,
   }),
-  loader: (
-    { context: { queryClient }, deps }, // ← add this
-  ) =>
-    queryClient.ensureQueryData(
-      debatesQueryOptions({
-        search: deps.search,
-        status: deps.state,
-        tag: deps.topic,
-        page: deps.page,
-        perPage: 12,
-      }),
-    ),
+
   component: RouteComponent,
   pendingComponent: DebateListSkeleton,
   notFoundComponent: NotFoundPage,

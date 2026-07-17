@@ -8,6 +8,7 @@ import {
   debateKeys,
   debateMotionFrameworkKeys,
   debateMotionKeys,
+  statisticKeys,
   surveyKeys,
   teamKeys,
   userKeys,
@@ -30,6 +31,11 @@ import type {
   SurveyResponse,
   DebateStatus,
   UserRole,
+  FrameworkFairness,
+  ComplaintAccountability,
+  EngagementChurn,
+  Leaderboard,
+  PlatformHealth,
 } from "@/types";
 import { queryOptions } from "@tanstack/react-query";
 
@@ -296,8 +302,6 @@ export const blogTagsQueryOptions = () =>
 export const teamsQueryOptions = (
   params: {
     search?: string;
-    page?: number;
-    perPage?: number;
     status?: TeamStatus;
     type?: "manual" | "random";
   } = {},
@@ -305,14 +309,12 @@ export const teamsQueryOptions = (
   queryOptions<PaginatedApiResponse<Team>>({
     queryKey: teamKeys.list(params),
     queryFn: async () => {
-      const { search, status, type, page = 1, perPage = 10 } = params;
+      const { search, status, type } = params;
       const response = await api.get<PaginatedApiResponse<Team>>("/teams", {
         params: {
           search: search || undefined,
           status,
-          type,
-          page,
-          per_page: perPage,
+          is_random: type === "random",
         },
       });
 
@@ -405,6 +407,160 @@ export const complaintQueryOptions = (id: number) =>
         `/admin/complaints/${id}`,
       );
       return response.data.data; // Extract the data array
+    },
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 30,
+  });
+
+export const fairnessStatisticsQueryOptions = (
+  params: {
+    from?: string; // "YYYY-MM"
+    to?: string; // "YYYY-MM"
+    formats?: number[];
+    min_n_debates?: number;
+  } = {},
+) =>
+  queryOptions<FrameworkFairness>({
+    queryKey: statisticKeys.list(params),
+    queryFn: async () => {
+      const response = await api.get<ApiResponse<FrameworkFairness>>(
+        `/admin/stats/framework-fairness`,
+        {
+          params: {
+            from: params.from,
+            to: params.to,
+            formats: params.formats?.join(","),
+            min_n_debates: params.min_n_debates,
+          },
+        },
+      );
+      return response.data.data;
+    },
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 30,
+  });
+
+export const leaderboardStatisticsQueryOptions = (params?: {
+  board: "most_improved" | "win_rate" | "avg_score" | "most_active";
+  from?: string;
+  to?: string;
+  formats?: number[];
+  limit?: number;
+  min_n_debates?: number;
+}) =>
+  queryOptions<Leaderboard>({
+    queryKey: statisticKeys.leaderboard(params),
+    queryFn: async () => {
+      const response = await api.get<ApiResponse<Leaderboard>>(
+        `/admin/stats/leaderboard`,
+        {
+          params: {
+            board: params.board,
+            from: params.from,
+            to: params.to,
+            formats: params.formats?.join(","),
+            limit: params.limit,
+            min_n_debates: params.min_n_debates,
+          },
+        },
+      );
+      return response.data.data;
+    },
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 30,
+  });
+
+export const platformHealthStatisticsQueryOptions = (
+  params: {
+    from?: string;
+    to?: string;
+    formats?: number[];
+    group_by?: "none" | "year" | "month";
+    series?: "none" | "role" | "debate_format";
+  } = {},
+) =>
+  queryOptions<PlatformHealth>({
+    queryKey: statisticKeys.platformHealth(params),
+    queryFn: async () => {
+      const response = await api.get<ApiResponse<PlatformHealth>>(
+        `/admin/stats/platform-health`,
+        {
+          params: {
+            from: params.from,
+            to: params.to,
+            formats: params.formats?.join(","),
+            group_by: params.group_by,
+            series: params.series,
+          },
+        },
+      );
+      return response.data.data;
+    },
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 30,
+  });
+
+export const engagementChurnStatisticsQueryOptions = (
+  params: {
+    // NOTE: no from/to/formats — this stat runs on rolling day windows
+    // anchored to now, not calendar filters.
+    recent_window_days?: number;
+    baseline_window_days?: number;
+    churn_threshold_days?: number;
+    risk_filter?: "churn_risk" | "ramping_up" | "all";
+    page?: number;
+    per_page?: number;
+  } = {},
+) =>
+  queryOptions<EngagementChurn>({
+    queryKey: statisticKeys.engagementChurn(params),
+    queryFn: async () => {
+      const response = await api.get<ApiResponse<EngagementChurn>>(
+        `/admin/stats/engagement-churn`,
+        {
+          params: {
+            recent_window_days: params.recent_window_days,
+            baseline_window_days: params.baseline_window_days,
+            churn_threshold_days: params.churn_threshold_days,
+            risk_filter: params.risk_filter,
+            page: params.page,
+            per_page: params.per_page,
+          },
+        },
+      );
+      return response.data.data;
+    },
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 30,
+  });
+
+export const complaintAccountabilityStatisticsQueryOptions = (
+  params: {
+    from?: string;
+    to?: string;
+    formats?: number[];
+    target_role?: "debater" | "trainer" | "judge" | "chair";
+    status?: "open" | "under_review" | "resolved" | "dismissed";
+    min_debates_involved?: number;
+  } = {},
+) =>
+  queryOptions<ComplaintAccountability>({
+    queryKey: statisticKeys.complaintAccountability(params),
+    queryFn: async () => {
+      const response = await api.get<ApiResponse<ComplaintAccountability>>(
+        `/admin/stats/complaint-accountability`,
+        {
+          params: {
+            from: params.from,
+            to: params.to,
+            formats: params.formats?.join(","),
+            target_role: params.target_role,
+            status: params.status,
+            min_debates_involved: params.min_debates_involved,
+          },
+        },
+      );
+      return response.data.data;
     },
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 30,

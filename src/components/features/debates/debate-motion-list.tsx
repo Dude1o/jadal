@@ -36,6 +36,7 @@ import DebateMotionFrameworkForm from "./debate-motion-framework-form";
 import { debateMotionOrderColumns } from "./columns/debate-motion-order-columns";
 import { AppToolbar } from "@/components/layout/toolbar/app-toolbar";
 import Pagination from "@/components/common/pagination";
+import { useSettingsStore } from "@/store/use-settings-store";
 
 type Props = {
   view?: "cards" | "table";
@@ -44,7 +45,7 @@ type Props = {
 };
 
 export default function DebateMotionList({
-  view = "cards",
+  view = useSettingsStore.getState().view,
   search = "",
   page = 1,
 }: Props) {

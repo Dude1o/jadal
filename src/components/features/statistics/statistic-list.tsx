@@ -1,117 +1,48 @@
-import { StatisticCard, type Statistic } from "@/components/features/statistics/statistic-card";
-import {
-  Users,
-  ShoppingCart,
-  DollarSign,
-  TrendingUp,
-  Star,
-  Activity,
-  Package,
-  AlertCircle,
-} from "lucide-react";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { getTranslation } from "@/lib/utils";
-import type { TFunction } from "i18next";
-
-const getSampleStats = (t: TFunction): Statistic[] => [
-  {
-    id: "1",
-    label: getTranslation(t, "statistics.totalRevenue"),
-    value: 84320,
-    prefix: "$",
-    trend: "up",
-    trendValue: "+18.2%",
-    trendLabel: getTranslation(t, "statistics.vsLastMonth"),
-    icon: DollarSign,
-    variant: "success",
-    description: getTranslation(t, "statistics.acrossAllChannels"),
-  },
-  {
-    id: "2",
-    label: getTranslation(t, "statistics.activeUsers"),
-    value: 12540,
-    trend: "up",
-    trendValue: "+5.7%",
-    trendLabel: getTranslation(t, "statistics.vsLastWeek"),
-    icon: Users,
-    variant: "default",
-    description: getTranslation(t, "statistics.registeredAccounts"),
-  },
-  {
-    id: "3",
-    label: getTranslation(t, "statistics.newOrders"),
-    value: 3287,
-    trend: "down",
-    trendValue: "-3.1%",
-    trendLabel: getTranslation(t, "statistics.vsYesterday"),
-    icon: ShoppingCart,
-    variant: "accent",
-    description: getTranslation(t, "statistics.pendingFulfillment"),
-  },
-  {
-    id: "4",
-    label: getTranslation(t, "statistics.avgRating"),
-    value: 94,
-    suffix: "%",
-    trend: "up",
-    trendValue: "+1.4%",
-    trendLabel: getTranslation(t, "statistics.satisfactionScore"),
-    icon: Star,
-    variant: "warning",
-    description: getTranslation(t, "statistics.basedOnReviews"),
-  },
-  {
-    id: "5",
-    label: getTranslation(t, "statistics.conversionRate"),
-    value: 7,
-    suffix: "%",
-    trend: "up",
-    trendValue: "+0.8%",
-    trendLabel: getTranslation(t, "statistics.vsLastQuarter"),
-    icon: TrendingUp,
-    variant: "success",
-    description: getTranslation(t, "statistics.visitorToCustomer"),
-  },
-  {
-    id: "6",
-    label: getTranslation(t, "statistics.serverUptime"),
-    value: 99,
-    suffix: "%",
-    trend: "neutral",
-    trendValue: getTranslation(t, "statistics.stable"),
-    icon: Activity,
-    variant: "default",
-    description: getTranslation(t, "statistics.thirtyDayAverage"),
-  },
-  {
-    id: "7",
-    label: getTranslation(t, "statistics.productsListed"),
-    value: 1862,
-    trend: "up",
-    trendValue: "+42",
-    trendLabel: getTranslation(t, "statistics.thisWeek"),
-    icon: Package,
-    variant: "accent",
-    description: getTranslation(t, "statistics.acrossAllCategories"),
-  },
-  {
-    id: "8",
-    label: getTranslation(t, "statistics.openIssues"),
-    value: 23,
-    trend: "down",
-    trendValue: "-8",
-    trendLabel: getTranslation(t, "statistics.resolvedToday"),
-    icon: AlertCircle,
-    variant: "destructive",
-    description: getTranslation(t, "statistics.requiresAttention"),
-  },
-];
+import { StatisticSection } from "./statistic-section";
+import {
+  frameworkToStatistic,
+  leaderboardToStatistics,
+  platformHealthToStatistics,
+  engagementChurnToStatistics,
+  complaintAccountabilityToStatistics,
+  formatRelativeTime,
+  getSampleStats,
+} from "../../../lib/utils";
+import type {
+  ComplaintAccountability,
+  EngagementChurn,
+  FrameworkFairness,
+  Leaderboard,
+  PlatformHealth,
+  QueryLike,
+  Statistic,
+} from "@/types";
 
 interface StatisticListProps {
   stats?: Statistic[];
   title?: string;
   subtitle?: string;
   animate?: boolean;
+
+  frameworkFairness?: QueryLike<FrameworkFairness>;
+  leaderboard?: QueryLike<Leaderboard>;
+  platformHealth?: QueryLike<PlatformHealth>;
+  engagementChurn?: QueryLike<EngagementChurn>;
+  complaintAccountability?: QueryLike<ComplaintAccountability>;
+}
+
+interface SectionSpec {
+  key: string;
+  title: string;
+  subtitle?: string;
+  freshness?: string;
+  isLoading: boolean;
+  isError: boolean;
+  emptyMessage: string;
+  stats: Statistic[];
 }
 
 export function StatisticList({
@@ -119,84 +50,151 @@ export function StatisticList({
   title,
   subtitle,
   animate = true,
+  frameworkFairness,
+  leaderboard,
+  platformHealth,
+  engagementChurn,
+  complaintAccountability,
 }: StatisticListProps) {
   const { t } = useTranslation();
-  const defaultStats = getSampleStats(t);
-  const resolvedStats = stats ?? defaultStats;
-  const resolvedTitle = title ?? getTranslation(t, "statistics.overview");
-  const resolvedSubtitle = subtitle ?? getTranslation(t, "statistics.keyMetrics");
+
+  const sections = useMemo<SectionSpec[]>(() => {
+    const built: SectionSpec[] = [];
+
+    if (frameworkFairness) {
+      built.push({
+        key: "framework-fairness",
+        title: getTranslation(t, "statistics.frameworkFairness"),
+        subtitle: frameworkFairness.data
+          ? getTranslation(t, "statistics.frameworkFairnessSubtitle", {
+              keyMetrics: getTranslation(t, "statistics.keyMetrics"),
+              minDebates: frameworkFairness.data.min_n_debates,
+            })
+          : undefined,
+        isLoading: frameworkFairness.isLoading,
+        isError: frameworkFairness.isError,
+        emptyMessage: getTranslation(t, "statistics.noFrameworks"),
+        stats: frameworkFairness.data
+          ? frameworkFairness.data.frameworks.map((framework) =>
+              frameworkToStatistic(framework, t),
+            )
+          : [],
+      });
+    }
+
+    if (leaderboard) {
+      built.push({
+        key: "leaderboard",
+        title: getTranslation(t, "statistics.leaderboard"),
+        subtitle: leaderboard.data
+          ? getTranslation(t, "statistics.leaderboardSubtitle", {
+              keyMetrics: getTranslation(t, "statistics.keyMetrics"),
+              minDebates: leaderboard.data.min_n_debates,
+            })
+          : undefined,
+        isLoading: leaderboard.isLoading,
+        isError: leaderboard.isError,
+        emptyMessage: getTranslation(t, "statistics.noLeaderboardEntries"),
+        stats: leaderboard.data
+          ? leaderboardToStatistics(leaderboard.data, t)
+          : [],
+      });
+    }
+
+    if (platformHealth) {
+      built.push({
+        key: "platform-health",
+        title: getTranslation(t, "statistics.platformHealth"),
+        subtitle: platformHealth.data
+          ? getTranslation(t, "statistics.platformHealthSubtitle", {
+              keyMetrics: getTranslation(t, "statistics.keyMetrics"),
+            })
+          : undefined,
+        isLoading: platformHealth.isLoading,
+        isError: platformHealth.isError,
+        emptyMessage: getTranslation(t, "statistics.noActivity"),
+        stats: platformHealth.data
+          ? platformHealthToStatistics(platformHealth.data, t)
+          : [],
+      });
+    }
+
+    if (engagementChurn) {
+      built.push({
+        key: "engagement-churn",
+        title: getTranslation(t, "statistics.engagementChurn"),
+        subtitle: engagementChurn.data
+          ? getTranslation(t, "statistics.engagementChurnSubtitle", {
+              keyMetrics: getTranslation(t, "statistics.keyMetrics"),
+              total: engagementChurn.data.meta.total,
+            })
+          : undefined,
+        freshness: engagementChurn.data
+          ? formatRelativeTime(engagementChurn.data.generated_at, t)
+          : undefined,
+        isLoading: engagementChurn.isLoading,
+        isError: engagementChurn.isError,
+        emptyMessage: getTranslation(t, "statistics.noDebaters"),
+        stats: engagementChurn.data
+          ? engagementChurnToStatistics(engagementChurn.data, t)
+          : [],
+      });
+    }
+
+    if (complaintAccountability) {
+      built.push({
+        key: "complaint-accountability",
+        title: getTranslation(t, "statistics.complaintAccountability"),
+        subtitle:
+          complaintAccountability.data?.unattributed_total &&
+          complaintAccountability.data.unattributed_total > 0
+            ? getTranslation(t, "statistics.unattributedComplaints", {
+                count: complaintAccountability.data.unattributed_total,
+              })
+            : undefined,
+        isLoading: complaintAccountability.isLoading,
+        isError: complaintAccountability.isError,
+        emptyMessage: getTranslation(t, "statistics.noExposureEntries"),
+        stats: complaintAccountability.data
+          ? complaintAccountabilityToStatistics(
+              complaintAccountability.data,
+              t,
+            )
+          : [],
+      });
+    }
+
+    if (built.length > 0) return built;
+
+    // Fallback: If no stats props are passed, return legacy sample metric section
+    return [
+      {
+        key: "sample",
+        title: title ?? getTranslation(t, "statistics.overview"),
+        subtitle: subtitle ?? getTranslation(t, "statistics.keyMetrics"),
+        isLoading: false,
+        isError: false,
+        emptyMessage: getTranslation(t, "statistics.noData"),
+        stats: stats ?? getSampleStats(t),
+      },
+    ];
+  }, [
+    t,
+    frameworkFairness,
+    leaderboard,
+    platformHealth,
+    engagementChurn,
+    complaintAccountability,
+    stats,
+    title,
+    subtitle,
+  ]);
+
   return (
-    <div className="min-h-screen py-16 px-6">
-      <section className="w-full" style={{ fontFamily: "var(--font-sans)" }}>
-        {/* ── Section header ── */}
-        {(resolvedTitle || resolvedSubtitle) && (
-          <div className="mb-6 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-1">
-            <div>
-              {resolvedTitle && (
-                <h2
-                  className="text-2xl font-bold tracking-tight"
-                  style={{
-                    color: "var(--foreground)",
-                    fontFamily: "var(--font-serif)",
-                  }}
-                >
-                  {resolvedTitle}
-                </h2>
-              )}
-              {resolvedSubtitle && (
-                <p
-                  className="text-sm mt-0.5"
-                  style={{ color: "var(--muted-foreground)" }}
-                >
-                  {resolvedSubtitle}
-                </p>
-              )}
-            </div>
-
-            {/* Live indicator */}
-            <div className="flex items-center gap-2 self-start sm:self-auto">
-              <span className="relative flex h-2 w-2">
-                <span
-                  className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
-                  style={{ background: "var(--success)" }}
-                />
-                <span
-                  className="relative inline-flex rounded-full h-2 w-2"
-                  style={{ background: "var(--success)" }}
-                />
-              </span>
-              <span
-                className="text-xs font-medium"
-                style={{ color: "var(--muted-foreground)" }}
-              >
-                {getTranslation(t, "statistics.liveData")}
-              </span>
-            </div>
-          </div>
-        )}
-
-        {/* ── Responsive grid ── */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {resolvedStats.map((stat, i) => (
-            <div
-              key={stat.id}
-              style={{
-                animationDelay: `${i * 70}ms`,
-                animation: "statFadeIn 0.4s ease both",
-              }}
-            >
-              <StatisticCard stat={stat} animate={animate} />
-            </div>
-          ))}
-        </div>
-
-        <style>{`
-        @keyframes statFadeIn {
-          from { opacity: 0; transform: translateY(12px) scale(0.98); }
-          to   { opacity: 1; transform: translateY(0)   scale(1);    }
-        }
-      `}</style>
-      </section>
+    <div className="min-h-screen space-y-12 px-6 py-12 md:space-y-16 lg:px-8">
+      {sections.map((section) => (
+        <StatisticSection {...section} key={section.key} animate={animate} />
+      ))}
     </div>
   );
 }

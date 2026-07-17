@@ -9,6 +9,7 @@ import {
   Settings2,
   CheckCircle2,
   Palette,
+  Mail,
 } from "lucide-react";
 
 import {
@@ -29,9 +30,12 @@ import {
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getTranslation } from "@/lib/utils";
 import { useSettingsStore } from "@/store/use-settings-store";
+import { useAuthStore } from "@/store/use-auth-store";
+import { useNavigate } from "@tanstack/react-router";
 
 export default function Settings() {
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
   const { view, setView, language, setLanguage, theme, setTheme } =
     useSettingsStore();
 
@@ -39,6 +43,8 @@ export default function Settings() {
     setLanguage(lang);
     i18n.changeLanguage(lang);
   };
+
+  const user = useAuthStore.getState().user;
 
   return (
     <div className="container max-w-4xl py-16 px-6 space-y-10 animate-fade-in-up">
@@ -59,12 +65,10 @@ export default function Settings() {
           {/* Top animated bar */}
           <CardHeader className="pb-4">
             <CardTitle className="flex items-center gap-2 text-primary">
-              <Settings2 className="h-5 w-5 text-accent" />
-              {getTranslation(t, "settings.appearance.title")}
+              <Mail className="h-5 w-5 text-accent" />
+              {getTranslation(t, "auth.login.email")}
             </CardTitle>
-            <CardDescription>
-              {getTranslation(t, "settings.appearance.description")}
-            </CardDescription>
+            <CardDescription>{user?.email}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-0 divide-y divide-border/50">
             {/* 1. Page View Preference */}
@@ -79,7 +83,12 @@ export default function Settings() {
               </div>
               <Tabs
                 value={view}
-                onValueChange={(v) => setView(v as "cards" | "table")}
+                onValueChange={(v) => {
+                  navigate({
+                    search: (prev) => ({ ...prev, view: v }),
+                  });
+                  setView(v as "cards" | "table");
+                }}
                 className="w-full md:w-[260px]"
               >
                 <TabsList className="grid w-full grid-cols-2 p-1 bg-muted/50 border border-border">
@@ -123,12 +132,14 @@ export default function Settings() {
                     value="en"
                     className="focus:bg-jade-muted focus:text-jade-dark font-medium"
                   >
-                    {getTranslation(t, "settings.language.en")}</SelectItem>
+                    {getTranslation(t, "settings.language.en")}
+                  </SelectItem>
                   <SelectItem
                     value="ar"
                     className="focus:bg-jade-muted focus:text-jade-dark font-medium"
                   >
-                    {getTranslation(t, "settings.language.ar")}</SelectItem>
+                    {getTranslation(t, "settings.language.ar")}
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -147,7 +158,11 @@ export default function Settings() {
                 {[
                   { id: "light", icon: Sun, label: "settings.theme.light" },
                   { id: "dark", icon: Moon, label: "settings.theme.dark" },
-                  { id: "system", icon: Monitor, label: "settings.theme.system" },
+                  {
+                    id: "system",
+                    icon: Monitor,
+                    label: "settings.theme.system",
+                  },
                 ].map((item) => (
                   <button
                     key={item.id}

@@ -18,12 +18,10 @@ import { TEAM_STATUSES } from "@/lib/constants";
 import type { TeamMember, User } from "@/types";
 import { AlertCircle } from "lucide-react";
 
-type AssignmentType = "manual" | "random";
 type TeamStatus = "active" | "inactive";
 
 interface TeamFormValues {
   name: string;
-  assignment_type: AssignmentType;
   leader: User;
   status: TeamStatus;
   members: TeamMember[];
@@ -53,11 +51,6 @@ export default function TeamForm({
   const formDefaultValues: TeamFormValues = useMemo(
     () => ({
       name: team?.name ?? defaultValues?.name ?? "",
-      assignment_type: (team
-        ? team.is_random
-          ? "random"
-          : "manual"
-        : (defaultValues?.assignment_type ?? "manual")) as AssignmentType,
       leader: team?.leader.id
         ? String(team.leader.id)
         : (defaultValues?.leader.id ?? null),
@@ -85,7 +78,7 @@ export default function TeamForm({
   };
 
   const leaderField: FieldConfig<TeamFormValues> = {
-    name: "leader_id",
+    name: "leader",
     label: `${getTranslation(t, "teams.form.fields.leader")} *`,
     type: "async-select",
     queryOptions: () =>
@@ -99,35 +92,6 @@ export default function TeamForm({
         !value?.trim()
           ? getTranslation(t, "teams.validation.leaderIsRequired")
           : undefined,
-    },
-    onChange: (value, currentValues, { setFieldValue }) => {
-      if (!value) {
-        // Optional: clear leader from members if leader is cleared
-        setFieldValue(
-          "members",
-          (currentValues.members || []).filter(
-            (id) => id !== currentValues.leader_id,
-          ),
-        );
-        return;
-      }
-
-      const leaderId = String(value);
-      let members = [...(currentValues.members || [])];
-
-      // Remove old leader (if different)
-      if (currentValues.leader_id && currentValues.leader_id !== leaderId) {
-        members = members.filter(
-          (id) => String(id) !== String(currentValues.leader_id),
-        );
-      }
-
-      // Add new leader if not present
-      if (!members.includes(leaderId)) {
-        members.push(leaderId);
-      }
-
-      setFieldValue("members", members);
     },
   };
 
@@ -148,22 +112,6 @@ export default function TeamForm({
     },
   };
 
-  const assignmentField: FieldConfig<TeamFormValues> = {
-    name: "assignment_type",
-    label: getTranslation(t, "teams.form.fields.assignmentType"),
-    type: "select",
-    options: () => [
-      {
-        label: getTranslation(t, "teams.form.options.manual"),
-        value: "manual",
-      },
-      {
-        label: getTranslation(t, "teams.form.options.random"),
-        value: "random",
-      },
-    ],
-  };
-
   const teamMembersField: FieldConfig<TeamFormValues> = {
     name: "members",
     label: getTranslation(t, "teams.form.fields.teamMembers") + "*",
@@ -175,22 +123,15 @@ export default function TeamForm({
     getOptionLabel: (user: User) => user.name,
     getOptionValue: (user: User) => String(user.id),
     validators: {
-      onChange: ({ value, fieldApi }) => {
-        const leader = fieldApi.form.getFieldValue("leader_id");
+      onChange: ({ value }) => {
         if (!value || value.length === 0) {
           return getTranslation(t, "teams.validation.teamMembersRequired");
-        }
-        if (leader && !value.includes(String(leader))) {
-          return getTranslation(t, "teams.validation.leaderMustBeMember");
         }
         return undefined;
       },
-      onSubmit: ({ value, values }) => {
+      onSubmit: ({ value }) => {
         if (!value || value.length === 0) {
           return getTranslation(t, "teams.validation.teamMembersRequired");
-        }
-        if (values.leader_id && !value.includes(String(values.leader_id))) {
-          return getTranslation(t, "teams.validation.leaderMustBeMember");
         }
         return undefined;
       },
@@ -222,16 +163,15 @@ export default function TeamForm({
         </div>
       ),
     },
-    { kind: "fields", columns: 2, fields: [statusField, assignmentField] },
+    { kind: "fields", columns: 1, fields: [statusField] },
   ];
 
   const handleSubmit = async (values: TeamFormValues) => {
     const payload = {
       name: values.name,
-      is_random: values.assignment_type === "random",
-      leader_id: values.leader_id ? Number(values.leader_id) : null,
+      leader_id: values.leader ? Number(values.leader) : null,
       status: values.status,
-      member_ids: values.members.map(Number),
+      members: values.members.map(Number),
     };
     await onSubmit?.(payload);
   };

@@ -286,15 +286,6 @@ const AppSidebar = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent align={isRTL() ? "start" : "end"}>
               <DropdownMenuItem
-                className={cn(
-                  "flex items-center gap-2",
-                  isRTL() && "flex-row-reverse",
-                )}
-              >
-                <CircleUserIcon />
-                <span>{getTranslation(t, "navigation.sidebar.account")}</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem
                 className="hover:bg-muted hover:text-foreground"
                 asChild
               >

@@ -2,7 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Zap, Crown, Edit, MoreHorizontal, Trash } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import type { Debate } from "@/types/debate/debate.type";
+import type { Debate } from "@/types";
 import {
   DropdownMenu,
   DropdownMenuContent,

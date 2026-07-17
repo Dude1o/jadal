@@ -22,7 +22,7 @@ import {
   changeUserStatusMutationOptions,
 } from "@/api/mutation-options";
 
-import type { User, UserStatus } from "@/types";
+import type { User, UserRole, UserStatus } from "@/types";
 
 import AppHeader from "@/components/common/app-header";
 import NoItems from "@/components/common/no-items";
@@ -34,7 +34,7 @@ import DeleteItem from "@/components/common/delete-item";
 import { userOrderColumns } from "./columns/user-order-columns";
 import Pagination from "@/components/common/pagination";
 import { Ban, Pause, Play } from "lucide-react";
-import type { UserRole } from "../../../types/shared/enums";
+import { useSettingsStore } from "@/store/use-settings-store";
 
 type Props = {
   role?: UserRole;
@@ -45,7 +45,7 @@ type Props = {
 
 export function UserList({
   role = undefined,
-  view = "cards",
+  view = useSettingsStore.getState().view,
   search = "",
   page = 1,
 }: Props) {
@@ -86,6 +86,7 @@ export function UserList({
       perPage: 12,
     }),
   );
+
   // Users array from backend response structure
   const usersList = realUsersResponse?.data ?? [];
 

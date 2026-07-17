@@ -28,21 +28,20 @@ import {
   editTeamMutationOptions,
 } from "@/api/mutation-options";
 import Pagination from "@/components/common/pagination";
+import { useSettingsStore } from "@/store/use-settings-store";
 
 type Props = {
   status?: TeamStatus;
   type?: "random" | "manual";
   view?: "cards" | "table";
   search?: string;
-  page?: number;
 };
 
 export function TeamList({
   status,
   type,
-  view = "cards",
+  view = useSettingsStore.getState().view,
   search = "",
-  page = 1,
 }: Props) {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -64,7 +63,6 @@ export function TeamList({
       search: (prev) => ({
         ...prev,
         search: debouncedSearch || undefined,
-        page: 1,
       }),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -75,8 +73,6 @@ export function TeamList({
       search: debouncedSearch || undefined,
       status: status || undefined,
       type: type || undefined,
-      page,
-      perPage: 12,
     }),
   );
 
@@ -166,7 +162,6 @@ export function TeamList({
                 search: (prev) => ({
                   ...prev,
                   [id]: value || undefined,
-                  page: 1,
                 }),
               });
             }}
@@ -176,7 +171,6 @@ export function TeamList({
                 to: "/teams",
                 search: (prev) => ({
                   view: prev.view,
-                  page: 1,
                 }),
               });
             }}
@@ -201,7 +195,6 @@ export function TeamList({
                     search: undefined,
                     status: undefined,
                     type: undefined,
-                    page: 1,
                   }),
                 });
               }}
@@ -209,19 +202,6 @@ export function TeamList({
             />
           ) : (
             <>
-              {realTeamsResponse.meta?.last_page > 1 && (
-                <Pagination
-                  currentPage={realTeamsResponse.meta?.current_page}
-                  lastPage={realTeamsResponse.meta?.last_page}
-                  onPageChange={(newPage) => {
-                    navigate({
-                      to: "/teams",
-                      search: (prev) => ({ ...prev, page: newPage }),
-                    });
-                    window.scrollTo({ top: 0, behavior: "smooth" });
-                  }}
-                />
-              )}
               <div className="mt-5 grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
                 {teamsList.map((team) => (
                   <TeamCard
@@ -237,14 +217,12 @@ export function TeamList({
         </>
       ) : (
         <DataTable
-          key={`teams-table-${status || "all"}-${type || "all"}-${page}`}
+          key={`teams-table-${status || "all"}-${type || "all"}`}
           title={getTranslation(t, "teams.plural")}
           queryOptions={teamsQueryOptions({
             search: debouncedSearch || undefined,
             status: status || undefined,
             type: type || undefined,
-            page,
-            perPage: 12,
           })}
           columns={teamOrderColumns(t)}
           filterKey="name"
@@ -256,7 +234,6 @@ export function TeamList({
               search: (prev) => ({
                 ...prev,
                 search: value || undefined,
-                page: 1,
               }),
             });
           }}
@@ -292,12 +269,20 @@ export function TeamList({
           onPageChange={(newPage) => {
             navigate({
               to: "/teams",
-              search: (prev) => ({ ...prev, page: newPage }),
+              search: (prev) => ({ ...prev }),
             });
           }}
           initialFilters={[
             { id: "status", value: status ?? "" },
-            { id: "type", value: type ?? "" },
+            {
+              id: "is_random",
+              value:
+                type === "manual"
+                  ? false
+                  : type === "random"
+                    ? true
+                    : undefined,
+            },
           ]}
           facetedFilters={[
             {
@@ -306,7 +291,7 @@ export function TeamList({
               options: TEAM_STATUSES,
             },
             {
-              columnId: "type",
+              columnId: "is_random",
               title: getTranslation(t, "common.labels.assignmentTypes"),
               options: TEAM_TYPES,
             },
@@ -317,7 +302,6 @@ export function TeamList({
               search: (prev) => ({
                 ...prev,
                 [id]: value || undefined,
-                page: 1,
               }),
             });
           }}
@@ -325,7 +309,7 @@ export function TeamList({
             setLocalSearch("");
             navigate({
               to: "/teams",
-              search: (prev) => ({ view: prev.view, page: 1 }),
+              search: (prev) => ({ view: prev.view }),
             });
           }}
         />

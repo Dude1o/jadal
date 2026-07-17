@@ -45,6 +45,7 @@ import { debateOrderColumns } from "./columns/debate-order-columns";
 import { useUpdate } from "@/hooks/api/use-update";
 import Pagination from "@/components/common/pagination";
 import { useData } from "@/hooks/api/use-data";
+import { useSettingsStore } from "@/store/use-settings-store";
 
 type Props = {
   state?: DebateStatus;
@@ -57,7 +58,7 @@ type Props = {
 export default function DebateList({
   state,
   topic,
-  view = "cards",
+  view = useSettingsStore.getState().view,
   search = "",
   page = 1,
 }: Props) {

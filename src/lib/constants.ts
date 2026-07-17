@@ -234,6 +234,52 @@ export const complaintKeys = {
 };
 
 /**
+ * STATISTICS
+ */
+export const statisticKeys = {
+  all: ["statistics"] as const,
+  list: (params?: {
+    from?: string; // "YYYY-MM"
+    to?: string; // "YYYY-MM"
+    formats?: number[];
+    min_n_debates?: number;
+  }) => [...statisticKeys.all, "framework-fairness", { ...params }] as const,
+  leaderboard: (params: {
+    board: "most_improved" | "win_rate" | "avg_score" | "most_active";
+    from?: string;
+    to?: string;
+    formats?: number[];
+    limit?: number;
+    min_n_debates?: number;
+  }) => [...statisticKeys.all, "leaderboard", { ...params }] as const,
+  platformHealth: (params?: {
+    from?: string;
+    to?: string;
+    formats?: number[];
+    group_by?: "none" | "year" | "month";
+    series?: "none" | "role" | "debate_format";
+  }) => [...statisticKeys.all, "platform-health", { ...params }] as const,
+  engagementChurn: (params?: {
+    recent_window_days?: number;
+    baseline_window_days?: number;
+    churn_threshold_days?: number;
+    risk_filter?: "churn_risk" | "ramping_up" | "all";
+    page?: number;
+    per_page?: number;
+  }) => [...statisticKeys.all, "engagement-churn", { ...params }] as const,
+  complaintAccountability: (params?: {
+    from?: string;
+    to?: string;
+    formats?: number[];
+    target_role?: "debater" | "trainer" | "judge" | "chair";
+    status?: "open" | "under_review" | "resolved" | "dismissed";
+    min_debates_involved?: number;
+  }) =>
+    [...statisticKeys.all, "complaint-accountability", { ...params }] as const,
+  detail: (id: string) => [...statisticKeys.all, id] as const,
+};
+
+/**
  * CATEGORIES
  */
 export const categoryKeys = {

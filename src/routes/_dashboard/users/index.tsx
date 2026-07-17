@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
-import { teamsQueryOptions } from "@/api/query-options";
 import { UserList } from "@/components/features/users/user-list";
 import UserListSkeleton from "@/components/features/users/user-list-skeleton";
 
@@ -19,17 +18,6 @@ export const Route = createFileRoute("/_dashboard/users/")({
     view: search.view,
     page: search.page,
   }),
-  loader: (
-    { context: { queryClient }, deps }, // ← add this
-  ) =>
-    queryClient.ensureQueryData(
-      teamsQueryOptions({
-        search: deps.search,
-        role: deps.role,
-        page: deps.page,
-        perPage: 12,
-      }),
-    ),
   component: RouteComponent,
   pendingComponent: UserListSkeleton,
 });

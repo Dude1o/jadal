@@ -32,6 +32,7 @@ import DebateMotionFrameworkCard from "./debate-motion-framework-card";
 import DeleteItem from "@/components/common/delete-item";
 import DebateMotionFrameworkForm from "./debate-motion-framework-form";
 import { debateMotionFrameworkOrderColumns } from "./columns/debate-motion-framework-order-columns";
+import { useSettingsStore } from "@/store/use-settings-store";
 
 type Props = {
   view?: "cards" | "table";
@@ -40,7 +41,7 @@ type Props = {
 };
 
 export default function DebateMotionFrameworkList({
-  view = "cards",
+  view = useSettingsStore.getState().view,
   search = "",
   page = 1,
 }: Props) {
