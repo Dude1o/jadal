@@ -138,6 +138,8 @@ export const debateKeys = {
   }) => [...debateKeys.all, { ...params }] as const,
 
   detail: (id?: string) => [...debateKeys.all, "detail", id] as const,
+  registrations: (debateId: number) =>
+    [...debateKeys.all, "registrations", debateId] as const,
 };
 
 /**

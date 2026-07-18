@@ -1,0 +1,370 @@
+{
+  "info": {
+    "name": "Jadal — Admin Platform Statistics",
+    "description": "Admin-only platform-wide statistics (5 stats × JSON + Excel export) plus the updated complaint submission endpoint.\n\nSetup: set `base_url` (no trailing slash) and `admin_token` (Sanctum token of a user with role=admin) in the collection variables. All stats endpoints return 403 for non-admins.\n\nJSON envelope: `{ success, message, data }`. Export endpoints return an .xlsx download — in Postman use **Send and Download** (arrow next to Send).\n\nResponses are server-cached ~10 minutes per endpoint+filter combination.\n\nFull reference: ADMIN_STATS_API_DOCS.md in the repo.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      { "key": "token", "value": "{{admin_token}}", "type": "string" }
+    ]
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:8000", "type": "string" },
+    { "key": "admin_token", "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "1 — Framework Fairness",
+      "item": [
+        {
+          "name": "Framework fairness (JSON)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/stats/framework-fairness?min_n_debates=5",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "stats", "framework-fairness"],
+              "query": [
+                { "key": "min_n_debates", "value": "5", "description": "Default 5. Below this a framework is never flagged (still listed)." },
+                { "key": "from", "value": "2026-01", "description": "YYYY-MM inclusive lower bound on debates.scheduled_at", "disabled": true },
+                { "key": "to", "value": "2026-07", "description": "YYYY-MM inclusive upper bound (must be >= from)", "disabled": true },
+                { "key": "formats", "value": "1,2", "description": "CSV of debate_formats.id", "disabled": true }
+              ]
+            },
+            "description": "Detects frameworks whose motions structurally favor one side.\n\nimbalance_score = |prop_win_rate − 0.5| × 2 (0 = fair, 1 = one-sided). flagged = imbalance > 0.3 AND n_debates >= min_n_debates. Draws count in n_debates but are a win for neither side.\n\nA debate counts once per framework its motion carries (many-to-many fan-out) — summing n_debates across frameworks may exceed the platform total. Sorted flagged-first, then imbalance desc.\n\nNote: group_by is NOT accepted here (no time dimension in the response)."
+          }
+        },
+        {
+          "name": "Framework fairness (Excel export)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/admin/stats/framework-fairness/export?min_n_debates=5",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "stats", "framework-fairness", "export"],
+              "query": [
+                { "key": "min_n_debates", "value": "5", "description": "Same params as the JSON endpoint" },
+                { "key": "from", "value": "2026-01", "disabled": true },
+                { "key": "to", "value": "2026-07", "disabled": true },
+                { "key": "formats", "value": "1,2", "disabled": true }
+              ]
+            },
+            "description": "Same filters as the JSON endpoint; returns jadal-framework-fairness-YYYYMMDD-HHMM.xlsx. Flagged rows come pre-highlighted. Use Send and Download."
+          }
+        }
+      ]
+    },
+    {
+      "name": "2 — Platform Leaderboards",
+      "item": [
+        {
+          "name": "Leaderboard — most_improved",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/stats/leaderboard?board=most_improved&limit=10&min_n_debates=3",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "stats", "leaderboard"],
+              "query": [
+                { "key": "board", "value": "most_improved", "description": "REQUIRED: most_improved | win_rate | avg_score | most_active" },
+                { "key": "limit", "value": "10", "description": "Default 10, max 50" },
+                { "key": "min_n_debates", "value": "3", "description": "Default 3 — debaters below this are excluded entirely" },
+                { "key": "from", "value": "2026-01", "disabled": true },
+                { "key": "to", "value": "2026-07", "disabled": true },
+                { "key": "formats", "value": "1", "disabled": true }
+              ]
+            },
+            "description": "Runs the SAME Improvement Index math as the mobile per-debater endpoint (same buckets/regression/weights/bands) for every debater, then ranks.\n\nvalue = improvement index; band = strong_upward | improving | stable | regressing | sharp_decline (band only on this board).\n\nThis board excludes draws and additionally requires >= 3 distinct active months (or years on long spans) — debaters without a computable trend are omitted."
+          }
+        },
+        {
+          "name": "Leaderboard — win_rate",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/stats/leaderboard?board=win_rate&limit=10&min_n_debates=3",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "stats", "leaderboard"],
+              "query": [
+                { "key": "board", "value": "win_rate" },
+                { "key": "limit", "value": "10" },
+                { "key": "min_n_debates", "value": "3" },
+                { "key": "from", "value": "2026-01", "disabled": true },
+                { "key": "to", "value": "2026-07", "disabled": true },
+                { "key": "formats", "value": "1", "disabled": true }
+              ]
+            },
+            "description": "value = wins / completed debates as debater (0..1 fraction). Draws count in the denominator, no band field."
+          }
+        },
+        {
+          "name": "Leaderboard — avg_score",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/stats/leaderboard?board=avg_score&limit=10&min_n_debates=3",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "stats", "leaderboard"],
+              "query": [
+                { "key": "board", "value": "avg_score" },
+                { "key": "limit", "value": "10" },
+                { "key": "min_n_debates", "value": "3" },
+                { "key": "from", "value": "2026-01", "disabled": true },
+                { "key": "to", "value": "2026-07", "disabled": true },
+                { "key": "formats", "value": "1", "disabled": true }
+              ]
+            },
+            "description": "value = average speech score on the platform's 0..100 scale (all of the debater's scored stages, draws included)."
+          }
+        },
+        {
+          "name": "Leaderboard — most_active",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/stats/leaderboard?board=most_active&limit=10&min_n_debates=3",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "stats", "leaderboard"],
+              "query": [
+                { "key": "board", "value": "most_active" },
+                { "key": "limit", "value": "10" },
+                { "key": "min_n_debates", "value": "3" },
+                { "key": "from", "value": "2026-01", "disabled": true },
+                { "key": "to", "value": "2026-07", "disabled": true },
+                { "key": "formats", "value": "1", "disabled": true }
+              ]
+            },
+            "description": "value = integer count of completed debates as debater in the window."
+          }
+        },
+        {
+          "name": "Leaderboard (Excel export)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/admin/stats/leaderboard/export?board=most_improved&limit=10&min_n_debates=3",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "stats", "leaderboard", "export"],
+              "query": [
+                { "key": "board", "value": "most_improved", "description": "REQUIRED — the board name is baked into the sheet + filename" },
+                { "key": "limit", "value": "10" },
+                { "key": "min_n_debates", "value": "3" },
+                { "key": "from", "value": "2026-01", "disabled": true },
+                { "key": "to", "value": "2026-07", "disabled": true },
+                { "key": "formats", "value": "1", "disabled": true }
+              ]
+            },
+            "description": "Returns jadal-leaderboard-<board>-YYYYMMDD-HHMM.xlsx. Use Send and Download."
+          }
+        }
+      ]
+    },
+    {
+      "name": "3 — Platform Growth & Health",
+      "item": [
+        {
+          "name": "Platform health (JSON)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/stats/platform-health?group_by=month&from=2026-01&to=2026-07&series=none",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "stats", "platform-health"],
+              "query": [
+                { "key": "group_by", "value": "month", "description": "none (default, single 'all' bucket) | year | month" },
+                { "key": "from", "value": "2026-01", "description": "Strongly recommended with group_by=month — unbounded month series over >24 months history returns 422" },
+                { "key": "to", "value": "2026-07" },
+                { "key": "series", "value": "none", "description": "none | role (adds by_role) | debate_format (adds by_format per bucket)" },
+                { "key": "formats", "value": "1,2", "description": "CSV of debate_formats.id — filters the debate metrics", "disabled": true }
+              ]
+            },
+            "description": "The admin homepage pulse-check: new users by role, debates created/completed/cancelled (+ cancellation_breakdown), completion_rate, avg_debates_per_active_debater — per time bucket.\n\nDating: new_users & debates_created by created_at; completed/cancelled/participation by scheduled_at — so completion_rate CAN exceed 1 in a bucket (don't clamp). Ratios are null when the denominator is 0. Empty buckets are omitted.\n\n422 month guard: group_by=month without explicit from+to is rejected when platform history spans more than 24 months."
+          }
+        },
+        {
+          "name": "Platform health (Excel export)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/admin/stats/platform-health/export?group_by=month&from=2026-01&to=2026-07&series=none",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "stats", "platform-health", "export"],
+              "query": [
+                { "key": "group_by", "value": "month" },
+                { "key": "from", "value": "2026-01" },
+                { "key": "to", "value": "2026-07" },
+                { "key": "series", "value": "none", "description": "debate_format adds indented per-format sub-rows under each bucket" },
+                { "key": "formats", "value": "1,2", "disabled": true }
+              ]
+            },
+            "description": "Returns jadal-platform-health-YYYYMMDD-HHMM.xlsx (one row per bucket). Use Send and Download."
+          }
+        }
+      ]
+    },
+    {
+      "name": "4 — Engagement & Churn Risk",
+      "item": [
+        {
+          "name": "Engagement & churn (JSON)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/stats/engagement-churn?risk_filter=all&page=1&per_page=25",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "stats", "engagement-churn"],
+              "query": [
+                { "key": "risk_filter", "value": "all", "description": "all (default) | churn_risk | ramping_up" },
+                { "key": "page", "value": "1", "description": "Default 1" },
+                { "key": "per_page", "value": "25", "description": "Default 25, max 100" },
+                { "key": "recent_window_days", "value": "30", "description": "Default 30 — the 'recent activity' window", "disabled": true },
+                { "key": "baseline_window_days", "value": "90", "description": "Default 90 — baseline window immediately before the recent one", "disabled": true },
+                { "key": "churn_threshold_days", "value": "30", "description": "Default 30 — quiet longer than this ⇒ churn candidate", "disabled": true }
+              ]
+            },
+            "description": "Every debater with >=1 completed debate, classified churn_risk / ramping_up / stable. Rolling day-windows anchored to now — the universal from/to/group_by/formats filters do NOT apply here.\n\nchurn_risk = quiet > threshold AND had baseline activity; ramping_up = recent per-day rate > 1.5× baseline per-day rate (any recent activity with a zero baseline counts); else stable.\n\nPaginated (meta.page/per_page/total), ordered most-urgent-first (churn risks, longest-quiet first)."
+          }
+        },
+        {
+          "name": "Engagement & churn (Excel export)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/admin/stats/engagement-churn/export?risk_filter=all",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "stats", "engagement-churn", "export"],
+              "query": [
+                { "key": "risk_filter", "value": "all", "description": "Applies to the export too" },
+                { "key": "recent_window_days", "value": "30", "disabled": true },
+                { "key": "baseline_window_days", "value": "90", "disabled": true },
+                { "key": "churn_threshold_days", "value": "30", "disabled": true }
+              ]
+            },
+            "description": "Contains EVERY matching row — page/per_page are ignored on the export. churn_risk rows pre-highlighted. Returns jadal-engagement-churn-YYYYMMDD-HHMM.xlsx. Use Send and Download."
+          }
+        }
+      ]
+    },
+    {
+      "name": "5 — Complaint & Accountability",
+      "item": [
+        {
+          "name": "Complaint accountability (JSON)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/stats/complaint-accountability?min_debates_involved=3",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "stats", "complaint-accountability"],
+              "query": [
+                { "key": "min_debates_involved", "value": "3", "description": "Default 3 — entries with less exposure are hidden" },
+                { "key": "target_role", "value": "judge", "description": "debater | trainer | judge | chair", "disabled": true },
+                { "key": "status", "value": "open", "description": "open | under_review | resolved | dismissed", "disabled": true },
+                { "key": "from", "value": "2026-01", "description": "Bounds complaint created_at AND the exposure window (scheduled_at)", "disabled": true },
+                { "key": "to", "value": "2026-07", "disabled": true },
+                { "key": "formats", "value": "1", "description": "Applies to the exposure denominator only", "disabled": true }
+              ]
+            },
+            "description": "complaints_per_100_debates = complaints against the user / completed debates where they held that capacity × 100. One entry per (user, capacity) pair; 'chair' = judge rows with is_chair=true.\n\nunattributed_total = legacy complaints with no target recorded (excluded from per-person figures).\n\navg_time_to_last_update_hours_approx is an APPROXIMATION (updated_at − created_at on currently resolved/dismissed rows — no resolved_at column exists). Sorted by the per-100 rate desc."
+          }
+        },
+        {
+          "name": "Complaint accountability (Excel export)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/admin/stats/complaint-accountability/export?min_debates_involved=3",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "stats", "complaint-accountability", "export"],
+              "query": [
+                { "key": "min_debates_involved", "value": "3" },
+                { "key": "target_role", "value": "judge", "disabled": true },
+                { "key": "status", "value": "open", "disabled": true },
+                { "key": "from", "value": "2026-01", "disabled": true },
+                { "key": "to", "value": "2026-07", "disabled": true },
+                { "key": "formats", "value": "1", "disabled": true }
+              ]
+            },
+            "description": "Same filters as the JSON endpoint; the unattributed count is appended at the bottom of the sheet. Returns jadal-complaint-accountability-YYYYMMDD-HHMM.xlsx. Use Send and Download."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Complaints — updated submission",
+      "item": [
+        {
+          "name": "File complaint WITH target (new fields)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"description\": \"The chair repeatedly interrupted our second speaker.\",\n    \"debate_id\": 113,\n    \"target_user_id\": 42,\n    \"target_role\": \"chair\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/complaints",
+              "host": ["{{base_url}}"],
+              "path": ["api", "complaints"]
+            },
+            "description": "Existing endpoint, any authenticated user (not admin-only — swap the token if testing as a debater).\n\nNEW optional fields: target_user_id (must exist in users) + target_role (debater | trainer | judge | chair). They are a PAIR — sending one without the other returns 422. Omitting both keeps legacy behavior, but such complaints only ever appear in unattributed_total on the accountability dashboard.\n\nThe response (ComplaintResource) now includes target_user_id, target_role, and target_user (null on legacy rows)."
+          }
+        },
+        {
+          "name": "File complaint WITHOUT target (legacy shape, still valid)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"description\": \"General issue with how the debate was scheduled.\",\n    \"debate_id\": 113\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/complaints",
+              "host": ["{{base_url}}"],
+              "path": ["api", "complaints"]
+            },
+            "description": "Pre-existing request shape — unchanged and still works (201). Stored with target_user_id/target_role = null → counted only in unattributed_total on the accountability stat."
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,6 +1,9 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
+  Ban,
+  Pause,
+  Play,
   Mail,
   Calendar,
   Shield,
@@ -16,6 +19,7 @@ import {
   Activity,
   Sliders,
   Award,
+  Trash,
 } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
@@ -30,17 +34,89 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 
-import type { UserRole, UserStatus } from "@/types";
+import type { User, UserRole, UserStatus } from "@/types";
 import { UserDetailsSkeleton } from "./user-details-skeleton";
 import { userQueryOptions } from "@/api/query-options";
 import { useTranslation } from "react-i18next";
 import { getTranslation, isRTL } from "@/lib/utils.ts";
+import { dialog, toast } from "@/services";
+import { userKeys } from "@/lib/constants";
+import {
+  editUserMutationOptions,
+  deleteUserMutationOptions,
+  changeUserStatusMutationOptions,
+} from "@/api/mutation-options";
+import { useUpdate } from "@/hooks/api/use-update";
+import { useDelete } from "@/hooks/api/use-delete";
+import UserForm from "./user-form";
+import DeleteItem from "@/components/common/delete-item";
 
 export function UserDetails({ userId }: { userId: number }) {
-  const [isEditing, setIsEditing] = useState(false);
   const { t } = useTranslation();
+  const queryClient = useQueryClient();
 
   const { data: user, isLoading, isError } = useQuery(userQueryOptions(userId));
+
+  const { mutate: updateUser } = useUpdate({
+    mutationOptions: editUserMutationOptions(),
+    queryKey: userKeys.list(),
+    getDetailKey: (id) => userKeys.detail(String(id)),
+    successMessage: getTranslation(t, "users.messages.updated"),
+    errorMessage: getTranslation(t, "users.messages.updateError"),
+  });
+
+  const { mutate: deleteUser } = useDelete({
+    mutationOptions: deleteUserMutationOptions(),
+    queryKey: userKeys.list(),
+    successMessage: getTranslation(t, "users.messages.deleted"),
+    errorMessage: getTranslation(t, "users.messages.deleteError"),
+  });
+
+  const changeStatus = useMutation({
+    ...changeUserStatusMutationOptions(),
+    onSuccess: (_data, variables) => {
+      queryClient.invalidateQueries({ queryKey: userKeys.detail(String(variables.id)) });
+      queryClient.invalidateQueries({ queryKey: userKeys.list() });
+      toast.success(getTranslation(t, "users.messages.statusUpdated"));
+    },
+    onError: (err) => {
+      toast.error(
+        err instanceof Error ? err.message : getTranslation(t, "users.messages.statusUpdateError"),
+      );
+    },
+  });
+
+  const handleUpdateUser = async (values: Partial<User>) => {
+    await updateUser({ id: userId, data: values });
+  };
+
+  const handleDeleteUser = async () => {
+    await deleteUser(userId);
+  };
+
+  const handleChangeStatus = (status: UserStatus) => {
+    const id = dialog.open({
+      title: getTranslation(t, "common.actions.confirm"),
+      description: getTranslation(t, `users.messages.confirmStatusChange`, { status }),
+      children: (
+        <div className="flex items-center gap-2 pt-2">
+          <Button variant="outline" onClick={() => dialog.close(id)}>
+            {getTranslation(t, "common.actions.cancel")}
+          </Button>
+          <Button
+            variant="destructive"
+            onClick={() => {
+              changeStatus.mutate({ id: userId, status });
+              dialog.close(id);
+            }}
+          >
+            {getTranslation(t, "common.actions.confirm")}
+          </Button>
+        </div>
+      ),
+      closable: true,
+    });
+  };
 
   if (isLoading) return <UserDetailsSkeleton />;
 
@@ -115,7 +191,21 @@ export function UserDetails({ userId }: { userId: number }) {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => setIsEditing(!isEditing)}
+              onClick={() => {
+                const id = dialog.open({
+                  title: getTranslation(t, "common.actions.edit"),
+                  children: (
+                    <UserForm
+                      user_id={userId}
+                      onSubmit={(values) => {
+                        handleUpdateUser(values);
+                        dialog.close(id);
+                      }}
+                    />
+                  ),
+                  closable: true,
+                });
+              }}
               className="gap-2 rounded-xl bg-card border-border shadow-sm hover:bg-muted text-sm font-semibold h-10 px-4 transition-all"
             >
               <Edit className="w-4 h-4 text-muted-foreground" />
@@ -145,15 +235,54 @@ export function UserDetails({ userId }: { userId: number }) {
                 </DropdownMenuItem>
                 <DropdownMenuSeparator className="bg-muted" />
                 {user.status !== "suspended" && (
-                  <DropdownMenuItem className="rounded-lg py-2 cursor-pointer text-warning focus:text-warning focus:bg-warning/10 font-medium">
+                  <DropdownMenuItem
+                    className="rounded-lg py-2 cursor-pointer text-warning focus:text-warning focus:bg-warning/10 font-medium"
+                    onClick={() => handleChangeStatus("suspended")}
+                  >
                     {getTranslation(t, "users.details.suspendAccount")}
                   </DropdownMenuItem>
                 )}
                 {user.status !== "banned" && (
-                  <DropdownMenuItem className="rounded-lg py-2 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 font-medium">
+                  <DropdownMenuItem
+                    className="rounded-lg py-2 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 font-medium"
+                    onClick={() => handleChangeStatus("banned")}
+                  >
                     {getTranslation(t, "users.details.banAccount")}
                   </DropdownMenuItem>
                 )}
+                {user.status !== "active" && (
+                  <DropdownMenuItem
+                    className="rounded-lg py-2 cursor-pointer text-success focus:text-success focus:bg-success/10 font-medium"
+                    onClick={() => handleChangeStatus("active")}
+                  >
+                    <Play className="w-4 h-4 mr-2" />
+                    {getTranslation(t, "common.actions.activate")}
+                  </DropdownMenuItem>
+                )}
+                <DropdownMenuSeparator className="bg-muted" />
+                <DropdownMenuItem
+                  className="rounded-lg py-2 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 font-medium"
+                  onClick={() => {
+                    const id = dialog.open({
+                      title: getTranslation(t, "common.actions.delete"),
+                      children: (
+                        <DeleteItem
+                          itemName={getTranslation(t, "users.single")}
+                          gender="male"
+                          onDelete={() => {
+                            handleDeleteUser();
+                            dialog.close(id);
+                          }}
+                          onCancel={() => dialog.close(id)}
+                        />
+                      ),
+                      closable: true,
+                    });
+                  }}
+                >
+                  <Trash className="w-4 h-4 mr-2" />
+                  {getTranslation(t, "common.actions.delete")}
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
@@ -402,6 +531,7 @@ export function UserDetails({ userId }: { userId: number }) {
               <Button
                 variant="outline"
                 className="justify-start text-xs font-bold border-border hover:bg-muted h-11 rounded-xl transition-all shadow-sm gap-2"
+                onClick={() => toast.info(getTranslation(t, "common.comingSoon"))}
               >
                 <MessageSquare className="w-4 h-4 text-accent" />
                 {getTranslation(t, "users.details.sendMessage")}
@@ -409,6 +539,7 @@ export function UserDetails({ userId }: { userId: number }) {
               <Button
                 variant="outline"
                 className="justify-start text-xs font-bold border-border hover:bg-muted h-11 rounded-xl transition-all shadow-sm gap-2"
+                onClick={() => toast.info(getTranslation(t, "common.comingSoon"))}
               >
                 <Zap className="w-4 h-4 text-accent" />
                 {getTranslation(t, "users.details.viewActivity")}
@@ -416,6 +547,7 @@ export function UserDetails({ userId }: { userId: number }) {
               <Button
                 variant="outline"
                 className="justify-start text-xs font-bold border-border hover:bg-muted h-11 rounded-xl transition-all shadow-sm gap-2"
+                onClick={() => toast.info(getTranslation(t, "common.comingSoon"))}
               >
                 <Shield className="w-4 h-4 text-chart-5" />
                 {getTranslation(t, "users.details.managePermissions")}
@@ -423,6 +555,7 @@ export function UserDetails({ userId }: { userId: number }) {
               <Button
                 variant="outline"
                 className="justify-start text-xs font-bold border-border hover:bg-muted h-11 rounded-xl transition-all shadow-sm gap-2"
+                onClick={() => toast.info(getTranslation(t, "common.comingSoon"))}
               >
                 <Award className="w-4 h-4 text-success" />
                 {getTranslation(t, "users.details.viewDebates")}

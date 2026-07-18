@@ -36,6 +36,7 @@ import type {
   EngagementChurn,
   Leaderboard,
   PlatformHealth,
+  DebateRegistrations,
 } from "@/types";
 import { queryOptions } from "@tanstack/react-query";
 
@@ -103,8 +104,6 @@ export const debatesQueryOptions = (
             search: search || undefined,
             status: status || undefined,
             tag: tag || undefined,
-            page,
-            per_page: perPage,
           },
         },
       );
@@ -564,4 +563,18 @@ export const complaintAccountabilityStatisticsQueryOptions = (
     },
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 30,
+  });
+
+export const debateRegistrationsQueryOptions = (debateId: number) =>
+  queryOptions<DebateRegistrations>({
+    queryKey: debateKeys.registrations(debateId),
+    queryFn: async () => {
+      const response = await api.get<ApiResponse<DebateRegistrations>>(
+        `/debates/${debateId}/registrations`,
+      );
+      return response.data.data;
+    },
+    enabled: !!debateId,
+    staleTime: 1000 * 60 * 2,
+    gcTime: 1000 * 60 * 10,
   });

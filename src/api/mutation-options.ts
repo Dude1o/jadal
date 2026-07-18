@@ -13,8 +13,10 @@ import {
   approveRejectBlogApi,
   approveRejectComplaintApi,
   changeUserStatusApi,
+  announceDebateApi,
 } from "@/services/api";
 import type { LoginPayload } from "@/services/api/auth";
+import type { AnnouncePayload } from "@/services/api/announce-debate";
 import {
   blogKeys,
   categoryKeys,
@@ -86,8 +88,10 @@ export const createDebateFormatMutationOptions = () =>
 
 export const editDebateFormatMutationOptions = () =>
   mutationOptions({
-    mutationFn: (variables: { id: string | number; data: Partial<Debate> }) =>
-      debateFormatsApi.update(variables.id, variables.data),
+    mutationFn: (variables: {
+      id: string | number;
+      data: Partial<DebateFormat>;
+    }) => debateFormatsApi.update(variables.id, variables.data),
     mutationKey: [debateFormatKeys.all, debateFormatKeys.detail],
   });
 
@@ -268,4 +272,11 @@ export const changeUserStatusMutationOptions = () =>
 export const loginMutationOptions = () =>
   mutationOptions({
     mutationFn: (payload: LoginPayload) => authApi.login(payload),
+  });
+
+export const announceDebateMutationOptions = () =>
+  mutationOptions({
+    mutationFn: (variables: { debateId: number; payload: AnnouncePayload }) =>
+      announceDebateApi.action(variables.debateId, variables.payload),
+    mutationKey: [...debateKeys.all, "announce"],
   });

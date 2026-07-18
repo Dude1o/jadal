@@ -3,6 +3,7 @@
     "actions": {
       "save": "Save",
       "cancel": "Cancel",
+      "announce": "Announce",
       "edit": "Edit",
       "delete": "Delete",
       "activate": "Activate",
@@ -19,7 +20,9 @@
       "addItem": "Add Item",
       "submit": "Submit",
       "close": "Close",
-      "share": "Share"
+      "share": "Share",
+      "comingSoon": "Coming soon",
+      "confirm": "Confirm"
     },
     "labels": {
       "actions": "Actions",
@@ -211,7 +214,12 @@
       "teamsSelected": "Teams Selected",
       "live": "Live",
       "completed": "Completed",
-      "cancelled": "Cancelled"
+      "cancelled": "Cancelled",
+      "frameworkFairness": "Framework Fairness",
+      "leaderboard": "Leaderboard",
+      "platformHealth": "Platform Health",
+      "engagementChurn": "Engagement & Churn",
+      "complaintAccountability": "Complaint Accountability"
     },
     "view": {
       "cards": "Cards",
@@ -239,7 +247,10 @@
       "deleteError": "Failed to delete user",
       "suspendError": "Failed to suspend user",
       "banError": "Failed to ban user",
-      "activateError": "Failed to activate user"
+      "activateError": "Failed to activate user",
+      "statusUpdated": "User status updated successfully",
+      "statusUpdateError": "Failed to update user status",
+      "confirmStatusChange": "Are you sure you want to change this user's status to {{status}}?"
     },
     "roles": {
       "all": "Users",
@@ -359,9 +370,13 @@
       "created": "Debate created successfully",
       "updated": "Debate updated successfully",
       "deleted": "Debate deleted successfully",
+      "announced": "Debate announced successfully!",
+      "announceError": "Failed to announce debate",
+      "maxTwoTeams": "You can select at most 2 teams",
       "createError": "Failed to create debate",
       "updateError": "Failed to update debate",
-      "deleteError": "Failed to delete debate"
+      "deleteError": "Failed to delete debate",
+      "comingSoon": "Coming soon"
     },
     "statuses": {
       "scheduled": "Scheduled",
@@ -402,7 +417,9 @@
     "form": {
       "sections": {
         "info": "Info",
-        "scheduleAndStatus": "Schedule & Status"
+        "scheduleAndStatus": "Schedule & Status",
+        "judges": "Judges",
+        "teams": "Teams"
       },
       "fields": {
         "title": "Title",
@@ -410,7 +427,15 @@
         "format": "Format",
         "motion": "Motion",
         "description": "Description",
-        "scheduledAt": "Scheduled At"
+        "scheduledAt": "Scheduled At",
+        "judges": "Select Judges",
+        "teamOne": "First Team",
+        "teamTwo": "Second Team",
+        "confirmAnnounce": "Confirm & Announce",
+        "registeredTeam": "Registered Team",
+        "buildFromSolo": "Build from Solo",
+        "selectTeam": "Select Team",
+        "selectSolos": "Select Solo Applicants"
       }
     },
     "validation": {
@@ -420,7 +445,10 @@
       "formatRequired": "Format is required",
       "motionRequired": "Motion is required",
       "scheduledAtRequired": "Scheduled date is required",
-      "statusRequired": "Status is required"
+      "statusRequired": "Status is required",
+      "judgesRequired": "Please select at least one judge",
+      "teamRequired": "Please select a team",
+      "solosRequired": "Please select at least one solo applicant"
     },
     "result": {
       "noResult": "No result",
@@ -460,7 +488,18 @@
         "completed": "Completed"
       },
       "minTotal": "Total Minutes",
-      "min": "Minutes"
+      "min": "Minutes",
+      "announceLineUp": "Announce Line-up",
+      "announceDescription": "Select judges and teams from registered participants to announce the debate line-up.",
+      "selectJudges": "Select Judges",
+      "selectTeams": "Select Teams",
+      "soloApplicants": "Solo Applicants",
+      "noJudges": "No judges have registered yet.",
+      "noTeams": "No teams have registered yet.",
+      "confirmAnnounce": "Confirm & Announce",
+      "judgeCount": "judge(s) selected",
+      "teamCount": "team(s) selected",
+      "soloCount": "solo applicant(s) registered"
     }
   },
   "debateFormats": {
@@ -1094,7 +1133,64 @@
     "noData": "No data available.",
     "updated": "Updated {{freshness}}",
     "failedToLoadSection": "Failed to Load Section",
-    "loadErrorDescription": "There was an error pulling the latest information. Please reload the dashboard or try again later."
+    "loadErrorDescription": "There was an error pulling the latest information. Please reload the dashboard or try again later.",
+    "tabs": {
+      "frameworkFairness": "Framework Fairness",
+      "leaderboard": "Leaderboard",
+      "platformHealth": "Platform Growth & Health",
+      "engagementChurn": "Engagement & Churn Risk",
+      "complaintAccountability": "Complaint & Accountability"
+    },
+    "filters": {
+      "from": "From",
+      "to": "To",
+      "formats": "Format",
+      "minDebates": "Min Debates",
+      "limit": "Limit",
+      "board": "Board",
+      "groupBy": "Group By",
+      "series": "Series",
+      "riskFilter": "Risk Filter",
+      "targetRole": "Target Role",
+      "status": "Status",
+      "advancedSettings": "Advanced Settings",
+      "recentWindow": "Recent Window (days)",
+      "baselineWindow": "Baseline Window (days)",
+      "churnThreshold": "Churn Threshold (days)",
+      "boardOptions": {
+        "most_improved": "Most Improved",
+        "win_rate": "Win Rate",
+        "avg_score": "Avg Score",
+        "most_active": "Most Active"
+      },
+      "groupByOptions": {
+        "none": "None (single bucket)",
+        "year": "Year",
+        "month": "Month"
+      },
+      "seriesOptions": {
+        "none": "None",
+        "role": "By Role",
+        "debate_format": "By Debate Format"
+      },
+      "riskFilterOptions": {
+        "all": "All",
+        "churn_risk": "At Risk",
+        "ramping_up": "Ramping Up"
+      },
+      "targetRoleOptions": {
+        "debater": "Debater",
+        "trainer": "Trainer",
+        "judge": "Judge",
+        "chair": "Chair"
+      },
+      "statusOptions": {
+        "open": "Open",
+        "under_review": "Under Review",
+        "resolved": "Resolved",
+        "dismissed": "Dismissed"
+      }
+    }
   },
   "home": {
     "welcome": "Welcome",

@@ -145,23 +145,17 @@ export function DataTable<TData, TValue>({
   );
 
   const { data: queryResponse } = useSuspenseQuery({
+    queryKey: queryOptions?.queryKey ?? ["__static_data_noop__"],
+    queryFn: queryOptions?.queryFn ?? (async () => null),
     ...queryOptions,
-    enabled: !!queryOptions,
   });
 
   const tableData = queryOptions
     ? (queryResponse?.data ?? [])
     : (staticData ?? []);
-  const totalItems = queryOptions
-    ? (queryResponse?.meta?.total ?? tableData?.length)
-    : tableData.length;
-  const currentPage = queryOptions
-    ? (queryResponse?.meta?.current_page ?? 1)
-    : 1;
-  const lastPage = queryOptions ? (queryResponse?.meta?.last_page ?? 1) : 1;
 
   const [pageSize, setPageSize] = useState(12);
-  const pageIndex = queryOptions ? currentPage - 1 : 0;
+  const [localPageIndex, setLocalPageIndex] = useState(0);
 
   // Handle async filters safely
   const asyncFilters = useMemo(
@@ -232,7 +226,7 @@ export function DataTable<TData, TValue>({
                       e.stopPropagation();
                       customAction.action(item);
                     }}
-                    className={`gap-2 ${getActionColorClasses(customAction.color)}`} // 👈
+                    className={`gap-2 ${getActionColorClasses(customAction.color)}`}
                   >
                     {customAction.icon}
                     {customAction.label}
@@ -263,7 +257,7 @@ export function DataTable<TData, TValue>({
                     e.stopPropagation();
                     onDelete?.(item);
                   }}
-                  className="gap-2 text-destructive focus:text-destructive focus:bg-destructive/10" // 👈 Updated
+                  className="gap-2 text-destructive focus:text-destructive focus:bg-destructive/10"
                 >
                   <Trash className="h-4 w-4" />
                   {getTranslation(t, "common.actions.delete")}
@@ -284,18 +278,28 @@ export function DataTable<TData, TValue>({
     state: {
       sorting,
       columnFilters,
-      pagination: { pageIndex, pageSize },
+      pagination: {
+        pageIndex: queryOptions
+          ? (queryResponse?.meta?.current_page ?? 1) - 1
+          : localPageIndex,
+        pageSize,
+      },
     },
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     onPaginationChange: (updater) => {
-      if (typeof updater === "function") {
-        const nextState = updater({ pageIndex, pageSize });
-        setPageSize(nextState.pageSize);
+      const prev = {
+        pageIndex: queryOptions
+          ? (queryResponse?.meta?.current_page ?? 1) - 1
+          : localPageIndex,
+        pageSize,
+      };
+      const nextState = typeof updater === "function" ? updater(prev) : updater;
+      setPageSize(nextState.pageSize);
+      if (queryOptions) {
         onPageChange?.(nextState.pageIndex + 1);
       } else {
-        setPageSize(updater.pageSize);
-        onPageChange?.(updater.pageIndex + 1);
+        setLocalPageIndex(nextState.pageIndex);
       }
     },
     getCoreRowModel: getCoreRowModel(),
@@ -303,8 +307,23 @@ export function DataTable<TData, TValue>({
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     manualPagination: !!queryOptions,
-    pageCount: queryOptions ? lastPage : undefined,
+    pageCount: queryOptions ? (queryResponse?.meta?.last_page ?? 1) : undefined,
   });
+
+  // Derived pagination display values.
+  // For static/local data these now come from the table's own filtered
+  // row model and page count, instead of being hardcoded to 1.
+  const filteredRowCount = table.getFilteredRowModel().rows.length;
+
+  const totalItems = queryOptions
+    ? (queryResponse?.meta?.total ?? tableData?.length)
+    : filteredRowCount;
+  const currentPage = queryOptions
+    ? (queryResponse?.meta?.current_page ?? 1)
+    : localPageIndex + 1;
+  const lastPage = queryOptions
+    ? (queryResponse?.meta?.last_page ?? 1)
+    : table.getPageCount();
 
   useEffect(() => {
     if (filterValue !== undefined) {

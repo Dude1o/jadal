@@ -12,6 +12,8 @@ import { authApi } from "./auth";
 import { approveRejectBlogApi } from "./approve-reject-blog";
 import { approveRejectComplaintApi } from "./resolve-reject-complaint";
 import { changeUserStatusApi } from "./change-user-status";
+import { announceDebateApi } from "./announce-debate";
+import { debateRegistrationsApi } from "./debate-registrations";
 
 export const usersApi = createCrudApi<User>("/admin/users");
 export const debatesApi = createCrudApi<Debate>("/admin/debates");
@@ -32,4 +34,6 @@ export {
   approveRejectBlogApi,
   approveRejectComplaintApi,
   changeUserStatusApi,
+  announceDebateApi,
+  debateRegistrationsApi,
 };

@@ -22,6 +22,7 @@ import {
   Quote,
   Flame,
   LayoutGrid,
+  Megaphone,
 } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -37,9 +38,23 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { debateQueryOptions } from "@/api/query-options";
+import type { Debate } from "@/types";
 import { useTranslation } from "react-i18next";
 import { getTranslation, isRTL } from "@/lib/utils";
 import { useNavigate } from "@tanstack/react-router";
+import { dialog, toast } from "@/services";
+import { debateKeys } from "@/lib/constants";
+import {
+  editDebateMutationOptions,
+  deleteDebateMutationOptions,
+  announceDebateMutationOptions,
+} from "@/api/mutation-options";
+import { useUpdate } from "@/hooks/api/use-update";
+import { useDelete } from "@/hooks/api/use-delete";
+import { useCreate } from "@/hooks/api/use-create";
+import DebateForm from "./debate-form";
+import DeleteItem from "@/components/common/delete-item";
+import AnnounceForm from "./announce-form";
 
 interface DebateDetailsProps {
   debateId: number;
@@ -49,6 +64,39 @@ export function DebateDetails({ debateId }: DebateDetailsProps) {
   const [isJoining, setIsJoining] = useState(false);
   const { t } = useTranslation();
   const navigate = useNavigate();
+
+  const { mutate: announceDebate } = useCreate({
+    mutationOptions: announceDebateMutationOptions(),
+    queryKey: debateKeys.detail(String(debateId)),
+    successMessage: getTranslation(t, "debates.messages.announced"),
+    errorMessage: getTranslation(t, "debates.messages.announceError"),
+  });
+
+  const { mutate: updateDebate } = useUpdate({
+    mutationOptions: editDebateMutationOptions(),
+    queryKey: debateKeys.list(),
+    getDetailKey: (id) => debateKeys.detail(String(id)),
+    successMessage: getTranslation(t, "debates.messages.updated"),
+    errorMessage: getTranslation(t, "debates.messages.updateError"),
+  });
+
+  const { mutate: deleteDebate } = useDelete({
+    mutationOptions: deleteDebateMutationOptions(),
+    queryKey: debateKeys.list(),
+    successMessage: getTranslation(t, "debates.messages.deleted"),
+    errorMessage: getTranslation(t, "debates.messages.deleteError"),
+  });
+
+  const handleUpdateDebate = async (
+    id: string | number,
+    values: Partial<Debate>,
+  ) => {
+    await updateDebate({ id, data: values });
+  };
+
+  const handleDeleteDebate = async (id: string | number) => {
+    await deleteDebate(id);
+  };
 
   const { data: debate } = useSuspenseQuery(debateQueryOptions(debateId));
 
@@ -118,11 +166,47 @@ export function DebateDetails({ debateId }: DebateDetailsProps) {
                 align="end"
                 className="w-52 rounded-xl p-1.5 shadow-xl border-border bg-card/80 backdrop-blur-md"
               >
-                <DropdownMenuItem className="rounded-lg py-2 cursor-pointer font-medium">
+                <DropdownMenuItem
+                  className="rounded-lg py-2 cursor-pointer font-medium"
+                  onClick={() => {
+                    const id = dialog.open({
+                      title: getTranslation(t, "debates.actions.edit"),
+                      children: (
+                        <DebateForm
+                          debate_id={debate.id}
+                          onSubmit={(values) => {
+                            handleUpdateDebate(debate.id, values);
+                            dialog.close(id);
+                          }}
+                        />
+                      ),
+                      closable: true,
+                    });
+                  }}
+                >
                   {getTranslation(t, "debates.details.editDebate")}
                 </DropdownMenuItem>
                 <DropdownMenuSeparator className="bg-muted" />
-                <DropdownMenuItem className="rounded-lg py-2 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 font-medium">
+                <DropdownMenuItem
+                  className="rounded-lg py-2 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 font-medium"
+                  onClick={() => {
+                    const id = dialog.open({
+                      title: getTranslation(t, "debates.actions.delete"),
+                      children: (
+                        <DeleteItem
+                          itemName={getTranslation(t, "debates.single")}
+                          gender="female"
+                          onDelete={() => {
+                            handleDeleteDebate(debate.id);
+                            dialog.close(id);
+                          }}
+                          onCancel={() => dialog.close(id)}
+                        />
+                      ),
+                      closable: true,
+                    });
+                  }}
+                >
                   {getTranslation(t, "debates.details.cancelDebate")}
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -187,7 +271,38 @@ export function DebateDetails({ debateId }: DebateDetailsProps) {
                 </div>
               </div>
 
-              <div className="flex-shrink-0 self-start md:self-auto pt-2 md:pt-0">
+              <div className="flex-shrink-0 self-start md:self-auto pt-2 md:pt-0 flex flex-wrap gap-2">
+                {isScheduled && (
+                  <Button
+                    onClick={() => {
+                      const id = dialog.open({
+                        title: getTranslation(
+                          t,
+                          "debates.details.announceLineUp",
+                        ),
+                        description: getTranslation(
+                          t,
+                          "debates.details.announceDescription",
+                        ),
+                        size: "lg",
+                        closable: true,
+                        children: (
+                          <AnnounceForm
+                            debateId={debateId}
+                            onSubmit={async (payload) => {
+                              announceDebate({ debateId, payload: payload });
+                            }}
+                            onCancel={() => dialog.close(id)}
+                          />
+                        ),
+                      });
+                    }}
+                    className="w-full sm:w-auto bg-accent hover:bg-accent/90 text-accent-foreground shadow-md rounded-xl h-11 px-6 font-bold tracking-wide gap-2 transition-all"
+                  >
+                    <Megaphone className="w-5 h-5" />
+                    {getTranslation(t, "debates.details.announceLineUp")}
+                  </Button>
+                )}
                 {isLive && (
                   <Button
                     onClick={() => setIsJoining(true)}
@@ -316,6 +431,10 @@ export function DebateDetails({ debateId }: DebateDetailsProps) {
                   value: debate.created_by.name,
                 },
                 {
+                  label: getTranslation(t, "debates.form.fields.format"),
+                  value: debate.format?.name,
+                },
+                {
                   label: getTranslation(t, "debates.details.scheduledAt"),
                   value: new Date(debate.scheduled_at).toLocaleDateString(),
                 },
@@ -325,19 +444,21 @@ export function DebateDetails({ debateId }: DebateDetailsProps) {
                     count: Math.floor(totalDuration / 60),
                   }),
                 },
-              ].map(({ label, value }) => (
-                <div
-                  key={label}
-                  className="flex justify-between items-center py-1 border-b border-border/60 last:border-0"
-                >
-                  <span className="text-muted-foreground text-xs font-semibold">
-                    {label}
-                  </span>
-                  <span className="font-bold text-card-foreground text-xs truncate max-w-[150px]">
-                    {value}
-                  </span>
-                </div>
-              ))}
+              ].map(({ label, value }) =>
+                value ? (
+                  <div
+                    key={label}
+                    className="flex justify-between items-center py-1 border-b border-border/60 last:border-0"
+                  >
+                    <span className="text-muted-foreground text-xs font-semibold">
+                      {label}
+                    </span>
+                    <span className="font-bold text-card-foreground text-xs truncate max-w-[150px]">
+                      {value}
+                    </span>
+                  </div>
+                ) : null,
+              )}
               <div className="flex justify-between items-center pt-1.5">
                 <span className="text-muted-foreground text-xs font-semibold">
                   {getTranslation(t, "debates.details.tag")}
@@ -349,6 +470,16 @@ export function DebateDetails({ debateId }: DebateDetailsProps) {
                   #{debate.tag}
                 </Badge>
               </div>
+              {debate.description && (
+                <div className="pt-3 border-t border-border/60">
+                  <p className="text-muted-foreground text-xs font-semibold mb-1">
+                    {getTranslation(t, "debates.form.fields.description")}
+                  </p>
+                  <p className="text-card-foreground text-xs leading-relaxed">
+                    {debate.description}
+                  </p>
+                </div>
+              )}
             </CardContent>
           </Card>
 
@@ -365,6 +496,9 @@ export function DebateDetails({ debateId }: DebateDetailsProps) {
                 <Button
                   variant="outline"
                   className="justify-start text-xs font-bold border-border hover:bg-muted h-10 rounded-xl transition-all shadow-sm gap-2"
+                  onClick={() =>
+                    toast.info(getTranslation(t, "debates.messages.comingSoon"))
+                  }
                 >
                   <CalendarPlus className="w-4 h-4 text-accent" />
                   {getTranslation(t, "debates.details.setReminder")}
@@ -373,6 +507,9 @@ export function DebateDetails({ debateId }: DebateDetailsProps) {
               <Button
                 variant="outline"
                 className="justify-start text-xs font-bold border-border hover:bg-muted h-10 rounded-xl transition-all shadow-sm gap-2"
+                onClick={() =>
+                  toast.info(getTranslation(t, "debates.messages.comingSoon"))
+                }
               >
                 <FileText className="w-4 h-4 text-primary" />
                 {getTranslation(t, "debates.details.viewTranscript")}
@@ -380,6 +517,9 @@ export function DebateDetails({ debateId }: DebateDetailsProps) {
               <Button
                 variant="outline"
                 className="justify-start text-xs font-bold border-border hover:bg-muted h-10 rounded-xl transition-all shadow-sm gap-2"
+                onClick={() =>
+                  toast.info(getTranslation(t, "debates.messages.comingSoon"))
+                }
               >
                 <UserCheck className="w-4 h-4 text-chart-5" />
                 {getTranslation(t, "debates.details.manageParticipants")}

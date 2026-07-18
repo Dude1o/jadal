@@ -1,6 +1,13 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Zap, Crown, Edit, MoreHorizontal, Trash } from "lucide-react";
+import {
+  Zap,
+  Crown,
+  Edit,
+  MoreHorizontal,
+  Trash,
+  Megaphone,
+} from "lucide-react";
 import { useTranslation } from "react-i18next";
 import type { Debate } from "@/types";
 import {
@@ -17,6 +24,7 @@ import { useDialogStore } from "@/services";
 import DeleteItem from "@/components/common/delete-item";
 import type { DebateResult } from "@/types";
 import { useNavigate } from "@tanstack/react-router";
+import AnnounceForm from "./announce-form";
 
 export interface DebateCardParticipant {
   name: string;
@@ -32,6 +40,7 @@ export interface DebateCardProps {
   result?: DebateResult | null;
   onEdit?: (id, values) => void;
   onDelete?: (id) => void;
+  onAnnounce?: (id) => void;
 }
 
 export function DebateCard({
@@ -41,6 +50,7 @@ export function DebateCard({
   result: propResult,
   onEdit,
   onDelete,
+  onAnnounce,
 }: DebateCardProps) {
   const dialog = useDialogStore();
   const { t, i18n } = useTranslation();
@@ -126,6 +136,39 @@ export function DebateCard({
               {getTranslation(t, "common.labels.actions")}
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
+
+            <DropdownMenuItem
+              className="group gap-2 text-chart-6 focus:text-chart-6 focus:bg-chart-6/10"
+              onClick={(e) => {
+                e.stopPropagation();
+                setTimeout(() => {
+                  const id = dialog.open({
+                    title: getTranslation(t, "debates.details.announceLineUp"),
+                    description: getTranslation(
+                      t,
+                      "debates.details.announceDescription",
+                    ),
+                    size: "lg",
+                    closable: true,
+                    children: (
+                      <AnnounceForm
+                        debateId={debate.id}
+                        onSubmit={async (payload) => {
+                          onAnnounce({
+                            debateId: debate.id,
+                            payload: payload,
+                          });
+                        }}
+                        onCancel={() => dialog.close(id)}
+                      />
+                    ),
+                  });
+                }, 0);
+              }}
+            >
+              <Megaphone className="mr-2 h-4 w-4 group-hover:text-muted-foreground" />
+              {getTranslation(t, "common.actions.announce")}
+            </DropdownMenuItem>
 
             <DropdownMenuItem
               className="group gap-2 text-chart-6 focus:text-chart-6 focus:bg-chart-6/10"

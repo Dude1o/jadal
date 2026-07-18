@@ -12,6 +12,7 @@ export * from "./debate/debate-participant.type";
 export * from "./debate/debate-phase.type";
 export * from "./debate/debate-result.type";
 export * from "./debate/debate.type";
+export * from "./debate/debate-registration.type";
 export * from "./debate/motion.type";
 
 export * from "./feedback/feedback.type";

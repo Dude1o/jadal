@@ -3,7 +3,7 @@
 
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useSuspenseQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   ArrowLeft,
   Clock,
@@ -46,7 +46,17 @@ import getTime, {
   isRTL,
 } from "@/lib/utils";
 import { surveyQueryOptions } from "@/api/query-options";
-import type { SurveyQuestion } from "@/types";
+import {
+  editSurveyMutationOptions,
+  deleteSurveyMutationOptions,
+} from "@/api/mutation-options";
+import type { Survey, SurveyQuestion } from "@/types";
+import { dialog, toast } from "@/services";
+import { surveyKeys } from "@/lib/constants";
+import { useUpdate } from "@/hooks/api/use-update";
+import { useDelete } from "@/hooks/api/use-delete";
+import SurveyForm from "./survey-form";
+import DeleteItem from "@/components/common/delete-item";
 
 // ────────────────────────────────────────────────────────────
 // Sub‑components
@@ -189,8 +199,32 @@ export function SurveyDetails({ surveyId, onBack }: SurveyDetailsProps) {
   const [startTime] = useState(() => Date.now());
   const { t } = useTranslation();
   const rtl = isRTL();
+  const queryClient = useQueryClient();
 
   const { data: survey } = useSuspenseQuery(surveyQueryOptions(surveyId));
+
+  const { mutate: updateSurvey } = useUpdate({
+    mutationOptions: editSurveyMutationOptions(),
+    queryKey: surveyKeys.list(),
+    getDetailKey: (id) => surveyKeys.detail(String(id)),
+    successMessage: getTranslation(t, "surveys.messages.updated"),
+    errorMessage: getTranslation(t, "surveys.messages.updateError"),
+  });
+
+  const { mutate: deleteSurvey } = useDelete({
+    mutationOptions: deleteSurveyMutationOptions(),
+    queryKey: surveyKeys.list(),
+    successMessage: getTranslation(t, "surveys.messages.deleted"),
+    errorMessage: getTranslation(t, "surveys.messages.deleteError"),
+  });
+
+  const handleUpdateSurvey = async (values: Partial<Survey>) => {
+    await updateSurvey({ id: surveyId, data: values });
+  };
+
+  const handleDeleteSurvey = async () => {
+    await deleteSurvey(surveyId);
+  };
 
   if (!survey) return null;
 
@@ -255,16 +289,57 @@ export function SurveyDetails({ surveyId, onBack }: SurveyDetailsProps) {
                 align="end"
                 className="w-52 p-1.5 rounded-xl border-border/80"
               >
-                <DropdownMenuItem className="rounded-lg gap-2 cursor-pointer font-medium">
+                <DropdownMenuItem
+                  className="rounded-lg gap-2 cursor-pointer font-medium"
+                  onClick={() => {
+                    const id = dialog.open({
+                      title: getTranslation(t, "common.actions.edit"),
+                      children: (
+                        <SurveyForm
+                          survey_id={surveyId}
+                          onSubmit={(values) => {
+                            handleUpdateSurvey(values);
+                            dialog.close(id);
+                          }}
+                          onCancel={() => dialog.close(id)}
+                        />
+                      ),
+                      closable: true,
+                      size: "lg",
+                    });
+                  }}
+                >
                   <Edit className="w-4 h-4 text-muted-foreground" />
                   {getTranslation(t, "common.actions.edit")}
                 </DropdownMenuItem>
-                <DropdownMenuItem className="rounded-lg gap-2 cursor-pointer font-medium">
+                <DropdownMenuItem
+                  className="rounded-lg gap-2 cursor-pointer font-medium"
+                  onClick={() => toast.info(getTranslation(t, "common.actions.comingSoon"))}
+                >
                   <Share2 className="w-4 h-4 text-muted-foreground" />
                   {getTranslation(t, "common.actions.share")}
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem className="rounded-lg gap-2 text-destructive focus:text-destructive focus:bg-destructive/10 cursor-pointer font-medium">
+                <DropdownMenuItem
+                  className="rounded-lg gap-2 text-destructive focus:text-destructive focus:bg-destructive/10 cursor-pointer font-medium"
+                  onClick={() => {
+                    const id = dialog.open({
+                      title: getTranslation(t, "common.actions.delete"),
+                      children: (
+                        <DeleteItem
+                          itemName={getTranslation(t, "surveys.single")}
+                          gender="male"
+                          onDelete={() => {
+                            handleDeleteSurvey();
+                            dialog.close(id);
+                          }}
+                          onCancel={() => dialog.close(id)}
+                        />
+                      ),
+                      closable: true,
+                    });
+                  }}
+                >
                   <Trash2 className="w-4 h-4" />
                   {getTranslation(t, "common.actions.delete")}
                 </DropdownMenuItem>
@@ -465,6 +540,23 @@ export function SurveyDetails({ surveyId, onBack }: SurveyDetailsProps) {
                 <Button
                   variant="outline"
                   className="w-full justify-start gap-3 rounded-xl border-border text-card-foreground font-semibold text-sm h-11 bg-card hover:bg-muted/60 transition-colors shadow-xs"
+                  onClick={() => {
+                    const id = dialog.open({
+                      title: getTranslation(t, "common.actions.edit"),
+                      children: (
+                        <SurveyForm
+                          survey_id={surveyId}
+                          onSubmit={(values) => {
+                            handleUpdateSurvey(values);
+                            dialog.close(id);
+                          }}
+                          onCancel={() => dialog.close(id)}
+                        />
+                      ),
+                      closable: true,
+                      size: "lg",
+                    });
+                  }}
                 >
                   <Edit className="w-4 h-4 text-muted-foreground shrink-0" />
                   {getTranslation(t, "common.actions.edit")}
@@ -472,6 +564,7 @@ export function SurveyDetails({ surveyId, onBack }: SurveyDetailsProps) {
                 <Button
                   variant="outline"
                   className="w-full justify-start gap-3 rounded-xl border-border text-card-foreground font-semibold text-sm h-11 bg-card hover:bg-muted/60 transition-colors shadow-xs"
+                  onClick={() => toast.info(getTranslation(t, "common.actions.comingSoon"))}
                 >
                   <Share2 className="w-4 h-4 text-muted-foreground shrink-0" />
                   {getTranslation(t, "common.actions.share")}

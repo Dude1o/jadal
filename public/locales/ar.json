@@ -3,6 +3,7 @@
     "actions": {
       "save": "حفظ",
       "cancel": "إلغاء",
+      "announce": "إعلان",
       "edit": "تعديل",
       "delete": "حذف",
       "activate": "تفعيل",
@@ -19,7 +20,9 @@
       "addItem": "إضافة عنصر",
       "submit": "إرسال",
       "close": "إغلاق",
-      "share": "مشاركة"
+      "share": "مشاركة",
+      "comingSoon": "قريباً",
+      "confirm": "تأكيد"
     },
     "labels": {
       "actions": "الإجراءات",
@@ -211,7 +214,12 @@
       "teamsSelected": "تم اختيار الفرق",
       "live": "مباشر",
       "completed": "مكتملة",
-      "cancelled": "ملغاة"
+      "cancelled": "ملغاة",
+      "frameworkFairness": "إنصاف الأطر",
+      "leaderboard": "لوحة المتصدرين",
+      "platformHealth": "حالة المنصة",
+      "engagementChurn": "التفاعل والتراجع",
+      "complaintAccountability": "المساءلة عن الشكاوى"
     },
     "view": {
       "cards": "البطاقات",
@@ -239,7 +247,10 @@
       "deleteError": "فشل حذف المستخدم",
       "suspendError": "فشل وقف المستخدم",
       "banError": "فشل حظر المستخدم",
-      "activateError": "فشل تفعيل المستخدم"
+      "activateError": "فشل تفعيل المستخدم",
+      "statusUpdated": "تم تحديث حالة المستخدم بنجاح",
+      "statusUpdateError": "فشل تحديث حالة المستخدم",
+      "confirmStatusChange": "هل أنت متأكد أنك تريد تغيير حالة هذا المستخدم إلى {{status}}؟"
     },
     "roles": {
       "all": "الأدوار",
@@ -354,9 +365,13 @@
       "created": "تم إنشاء المناظرة بنجاح",
       "updated": "تم تحديث المناظرة بنجاح",
       "deleted": "تم حذف المناظرة بنجاح",
+      "announced": "تم الإعلان عن المناظرة بنجاح!",
+      "announceError": "فشل الإعلان عن المناظرة",
+      "maxTwoTeams": "يمكنك اختيار فريقين كحد أقصى",
       "createError": "فشل إنشاء المناظرة",
       "updateError": "فشل تحديث المناظرة",
-      "deleteError": "فشل حذف المناظرة"
+      "deleteError": "فشل حذف المناظرة",
+      "comingSoon": "قريباً"
     },
     "statuses": {
       "scheduled": "مجدولة",
@@ -397,7 +412,9 @@
     "form": {
       "sections": {
         "info": "المعلومات",
-        "scheduleAndStatus": "الجدولة والحالة"
+        "scheduleAndStatus": "الجدولة والحالة",
+        "judges": "الحكام",
+        "teams": "الفرق"
       },
       "fields": {
         "title": "العنوان",
@@ -405,7 +422,15 @@
         "format": "النمط",
         "motion": "الموضوع",
         "description": "الوصف",
-        "scheduledAt": "موعد الجدولة"
+        "scheduledAt": "موعد الجدولة",
+        "judges": "اختر الحكام",
+        "teamOne": "الفريق الأول",
+        "teamTwo": "الفريق الثاني",
+        "confirmAnnounce": "تأكيد والإعلان",
+        "registeredTeam": "فريق مسجل",
+        "buildFromSolo": "تكوين من الأفراد",
+        "selectTeam": "اختر الفريق",
+        "selectSolos": "اختر المتقدمين الأفراد"
       }
     },
     "validation": {
@@ -415,7 +440,10 @@
       "formatRequired": "صيغة النقاش مطلوبة",
       "motionRequired": "موضوع النقاش مطلوب",
       "scheduledAtRequired": "تاريخ الجلسة مطلوب",
-      "statusRequired": "الحالة مطلوبة"
+      "statusRequired": "الحالة مطلوبة",
+      "judgesRequired": "يرجى اختيار حكم واحد على الأقل",
+      "teamRequired": "يرجى اختيار فريق",
+      "solosRequired": "يرجى اختيار متقدم فردي واحد على الأقل"
     },
     "result": {
       "noResult": "لا توجد نتيجة",
@@ -455,7 +483,18 @@
         "completed": "مكتملة"
       },
       "minTotal": "المدة الإجمالية",
-      "min": "دقائق"
+      "min": "دقائق",
+      "announceLineUp": "الإعلان عن التشكيلة",
+      "announceDescription": "اختر الحكام والفرق من المسجلين للإعلان عن تشكيلة المناظرة.",
+      "selectJudges": "اختر الحكام",
+      "selectTeams": "اختر الفرق",
+      "soloApplicants": "المتقدمون الأفراد",
+      "noJudges": "لم يسجل أي حكم بعد.",
+      "noTeams": "لم تسجل أي فرق بعد.",
+      "confirmAnnounce": "تأكيد والإعلان",
+      "judgeCount": "حكم (حكام) محددون",
+      "teamCount": "فريق (فرق) محددة",
+      "soloCount": "متقدم (متقدمون) فردي"
     }
   },
   "debateFormats": {
@@ -1092,7 +1131,64 @@
     "noData": "لا توجد بيانات متاحة.",
     "updated": "تم التحديث {{freshness}}",
     "failedToLoadSection": "فشل تحميل القسم",
-    "loadErrorDescription": "حدث خطأ أثناء جلب أحدث المعلومات. يرجى إعادة تحميل لوحة المعلومات أو المحاولة لاحقاً."
+    "loadErrorDescription": "حدث خطأ أثناء جلب أحدث المعلومات. يرجى إعادة تحميل لوحة المعلومات أو المحاولة لاحقاً.",
+    "tabs": {
+      "frameworkFairness": "إنصاف الأطر",
+      "leaderboard": "لوحة المتصدرين",
+      "platformHealth": "نمو المنصة وصحتها",
+      "engagementChurn": "التفاعل وخطر التراجع",
+      "complaintAccountability": "المساءلة عن الشكاوى"
+    },
+    "filters": {
+      "from": "من",
+      "to": "إلى",
+      "formats": "الصيغة",
+      "minDebates": "الحد الأدنى للمناظرات",
+      "limit": "الحد الأقصى",
+      "board": "اللوحة",
+      "groupBy": "التجميع حسب",
+      "series": "السلسلة",
+      "riskFilter": "فلتر المخاطر",
+      "targetRole": "الدور المستهدف",
+      "status": "الحالة",
+      "advancedSettings": "إعدادات متقدمة",
+      "recentWindow": "النافذة الحديثة (أيام)",
+      "baselineWindow": "النافذة الأساسية (أيام)",
+      "churnThreshold": "حد التراجع (أيام)",
+      "boardOptions": {
+        "most_improved": "الأكثر تحسناً",
+        "win_rate": "معدل الفوز",
+        "avg_score": "متوسط الدرجات",
+        "most_active": "الأكثر نشاطاً"
+      },
+      "groupByOptions": {
+        "none": "بدون (فترة واحدة)",
+        "year": "سنة",
+        "month": "شهر"
+      },
+      "seriesOptions": {
+        "none": "بدون",
+        "role": "حسب الدور",
+        "debate_format": "حسب صيغة المناظرة"
+      },
+      "riskFilterOptions": {
+        "all": "الكل",
+        "churn_risk": "معرض للخطر",
+        "ramping_up": "في تصاعد"
+      },
+      "targetRoleOptions": {
+        "debater": "متناظر",
+        "trainer": "مدرب",
+        "judge": "حكم",
+        "chair": "رئيس"
+      },
+      "statusOptions": {
+        "open": "مفتوحة",
+        "under_review": "قيد المراجعة",
+        "resolved": "تم الحل",
+        "dismissed": "مرفوضة"
+      }
+    }
   },
   "home": {
     "welcome": "مرحباً بك",

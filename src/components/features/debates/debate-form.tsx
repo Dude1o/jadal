@@ -21,7 +21,7 @@ interface DebateFormValues {
   title: string;
   tag: string;
   description: string;
-  status: DebateStatus;
+  status?: DebateStatus;
   format_id: number;
   motion_id: number;
   scheduled_at: string;
@@ -40,6 +40,7 @@ export default function DebateForm({
   onSubmit,
   onCancel,
 }: DebateFormProps) {
+  const isEditing = debate_id != null;
   const { data: debate, isLoading: debateLoading } = useData<Debate>(
     debateQueryOptions(debate_id ?? 0),
   );
@@ -51,9 +52,9 @@ export default function DebateForm({
     title: debate?.title ?? defaultValues?.title ?? "",
     tag: debate?.tag ?? defaultValues?.tag ?? "",
     description: debate?.description ?? defaultValues?.description ?? "",
-    status: (debate?.status ??
-      defaultValues?.status ??
-      "scheduled") as DebateStatus,
+    status: isEditing
+      ? (debate?.status ?? defaultValues?.status ?? "scheduled")
+      : undefined,
     format_id: debate?.format?.id ?? defaultValues?.format?.id ?? 0,
     motion_id: debate?.motion.id ?? defaultValues?.motion?.id ?? 0,
     scheduled_at: debate?.scheduled_at ?? defaultValues?.scheduled_at ?? "",
@@ -219,8 +220,10 @@ export default function DebateForm({
     },
     {
       kind: "fields",
-      columns: 2,
-      fields: [scheduledAtField, statusField],
+      columns: isEditing ? 2 : 1,
+      fields: isEditing
+        ? [scheduledAtField, statusField]
+        : [scheduledAtField],
     },
   ];
 

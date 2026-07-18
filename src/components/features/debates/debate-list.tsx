@@ -23,6 +23,7 @@ import {
   deleteDebateMutationOptions,
   createDebateFormatMutationOptions,
   createDebateMotionMutationOptions,
+  announceDebateMutationOptions,
 } from "@/api/mutation-options";
 
 import type {
@@ -46,6 +47,8 @@ import { useUpdate } from "@/hooks/api/use-update";
 import Pagination from "@/components/common/pagination";
 import { useData } from "@/hooks/api/use-data";
 import { useSettingsStore } from "@/store/use-settings-store";
+import { Megaphone } from "lucide-react";
+import AnnounceForm from "./announce-form";
 
 type Props = {
   state?: DebateStatus;
@@ -94,8 +97,6 @@ export default function DebateList({
       search: debouncedSearch || undefined,
       status: state || undefined,
       tag: topic || undefined,
-      page,
-      perPage: 12,
     }),
   );
 
@@ -108,6 +109,13 @@ export default function DebateList({
     queryKey: debateKeys.list(),
     successMessage: getTranslation(t, "debates.messages.created"),
     errorMessage: getTranslation(t, "debates.messages.createError"),
+  });
+
+  const { mutate: announceDebate } = useCreate({
+    mutationOptions: announceDebateMutationOptions(),
+    queryKey: debateKeys.list(),
+    successMessage: getTranslation(t, "debates.messages.announced"),
+    errorMessage: getTranslation(t, "debates.messages.announceError"),
   });
 
   const { mutate: updateDebate } = useUpdate({
@@ -346,7 +354,7 @@ export default function DebateList({
             />
           ) : (
             <>
-              {realDebatesResponse.meta.last_page > 1 && (
+              {/* {realDebatesResponse.meta.last_page > 1 && (
                 <Pagination
                   currentPage={realDebatesResponse?.meta?.current_page}
                   lastPage={realDebatesResponse?.meta?.last_page}
@@ -365,7 +373,7 @@ export default function DebateList({
                     });
                   }}
                 />
-              )}
+              )} */}
 
               <div className="mt-5 grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 justify-items-center items-stretch">
                 {filteredDebates.map((debate) => (
@@ -374,6 +382,7 @@ export default function DebateList({
                     debate={debate}
                     onEdit={handleUpdateDebate}
                     onDelete={handleDeleteDebate}
+                    onAnnounce={announceDebate}
                   />
                 ))}
               </div>
@@ -384,13 +393,7 @@ export default function DebateList({
         <DataTable
           key={`debates-table-${state || "all"}-${topic || "all"}-${page}`}
           title={getTranslation(t, "debates.all")}
-          queryOptions={debatesQueryOptions({
-            search: debouncedSearch || undefined,
-            status: state || undefined,
-            tag: topic || undefined,
-            page,
-            perPage: 12,
-          })}
+          data={debatesList}
           onSearchChange={(value) => {
             setLocalSearch(value);
             navigate({
@@ -448,6 +451,36 @@ export default function DebateList({
               });
             }, 0);
           }}
+          onActions={[
+            {
+              icon: <Megaphone className="h-4 w-4" />,
+              color: "emerald",
+              label: getTranslation(t, "common.actions.announce"),
+              action: (debate) => {
+                const id = dialog.open({
+                  title: getTranslation(t, "debates.details.announceLineUp"),
+                  description: getTranslation(
+                    t,
+                    "debates.details.announceDescription",
+                  ),
+                  size: "lg",
+                  closable: true,
+                  children: (
+                    <AnnounceForm
+                      debateId={debate.id}
+                      onSubmit={async (payload) => {
+                        announceDebate({
+                          debateId: debate.id,
+                          payload: payload,
+                        });
+                      }}
+                      onCancel={() => dialog.close(id)}
+                    />
+                  ),
+                });
+              },
+            },
+          ]}
           initialFilters={[
             {
               id: "status",

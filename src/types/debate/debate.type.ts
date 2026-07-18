@@ -1,5 +1,6 @@
 import type { DebateStatus } from "../shared/enums";
 import type { User } from "../user/user.type";
+import type { DebateFormat } from "./debate-format.type";
 import type { DebatePhase } from "./debate-phase.type";
 import type { DebateResult } from "./debate-result.type";
 import type { Motion } from "./motion.type";
@@ -10,7 +11,7 @@ export interface Debate {
   tag: string;
   status: DebateStatus;
   livekit_room_name: string;
-  format: number;
+  format: DebateFormat;
   motion: Motion;
   scheduled_at: string;
   created_by: User;
