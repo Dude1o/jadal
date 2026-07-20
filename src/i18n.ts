@@ -14,7 +14,7 @@ i18n
     debug: import.meta.env.DEV,
 
     backend: {
-      loadPath: "/locales/{{lng}}.json",
+      loadPath: `${import.meta.env.BASE_URL}locales/{{lng}}.json`,
     },
 
     interpolation: {
