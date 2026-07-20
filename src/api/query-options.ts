@@ -1,4 +1,4 @@
-import api from "@/lib/axios";
+import { http as api } from "@/services/api/http";
 import {
   blogCategoryKeys,
   blogKeys,
