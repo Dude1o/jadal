@@ -64,7 +64,7 @@ export function StatisticCard({ stat, animate = true }: StatisticCardProps) {
   return (
     <div
       className={cn(
-        "group relative flex min-h-[160px] flex-col justify-between rounded-2xl border bg-card p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg",
+        "group relative flex min-h-[140px] sm:min-h-[160px] flex-col justify-between rounded-2xl border bg-card p-4 sm:p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg",
         stat.badge ? "border-destructive/30" : "border-border",
         styles.glow,
       )}
@@ -89,7 +89,7 @@ export function StatisticCard({ stat, animate = true }: StatisticCardProps) {
           )}
           <div
             className={cn(
-              "flex h-9 w-9 items-center justify-center rounded-xl border transition-transform duration-300 group-hover:scale-105",
+              "flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-xl border transition-transform duration-300 group-hover:scale-105",
               styles.iconBg,
             )}
           >
@@ -100,7 +100,7 @@ export function StatisticCard({ stat, animate = true }: StatisticCardProps) {
 
       {/* Row 2: Metrics block */}
       <div className="mt-2 space-y-1">
-        <div className="flex items-baseline gap-0.5 font-serif text-3xl font-bold tracking-tight text-card-foreground">
+        <div className="flex items-baseline gap-0.5 font-serif text-2xl sm:text-3xl font-bold tracking-tight text-card-foreground">
           {stat.prefix && (
             <span className="text-lg font-semibold text-muted-foreground mr-0.5 select-none">
               {stat.prefix}

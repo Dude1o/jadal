@@ -27,7 +27,7 @@ export function StatisticTabs({ activeTab, onTabChange }: StatisticTabsProps) {
         {TAB_DEFS.map((tab) => {
           const Icon = tab.icon;
           return (
-            <TabsTrigger key={tab.value} value={tab.value} className="flex-1 min-w-[130px]">
+            <TabsTrigger key={tab.value} value={tab.value} className="flex-1 min-w-[100px] sm:min-w-[130px]">
               <Icon />
               <span>{getTranslation(t, tab.labelKey)}</span>
             </TabsTrigger>
