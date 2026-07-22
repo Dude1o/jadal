@@ -12,6 +12,7 @@ import { useSettingsStore } from "./store/use-settings-store";
 
 const router = createRouter({
   routeTree,
+  basepath: import.meta.env.BASE_URL,
   context: { queryClient },
   defaultNotFoundComponent: NotFoundPage,
 });
