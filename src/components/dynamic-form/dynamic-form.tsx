@@ -24,7 +24,8 @@ export type FieldType =
   | "async-multi-select"
   | "array"
   | "color"
-  | "survey";
+  | "survey"
+  | "datetime";
 
 export type Validator<TValue = any> = (value: TValue) => string | undefined;
 
@@ -273,6 +274,10 @@ export default function DynamicForm<TValues extends Record<string, any>>({
                       case "date":
                         return (
                           <field.DatePickerField label={cfg.label ?? ""} />
+                        );
+                      case "datetime":
+                        return (
+                          <field.DateTimePickerField label={cfg.label ?? ""} />
                         );
                       case "file":
                         return (

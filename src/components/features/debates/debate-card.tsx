@@ -116,6 +116,11 @@ export function DebateCard({
         <h2 className="text-xl min-[1301px]:text-3xl font-black text-foreground text-center uppercase tracking-tighter [text-shadow:2px_2px_0_var(--background)] min-[1301px]:[text-shadow:3px_3px_0_var(--background)] leading-none mt-1 px-2">
           {debate.title}
         </h2>
+        {debate.description && (
+          <p className="text-[10px] min-[1301px]:text-xs font-semibold text-muted-foreground text-center line-clamp-2 max-w-xs px-2">
+            {debate.description}
+          </p>
+        )}
       </div>
 
       {/* Actions Menu */}
@@ -137,38 +142,43 @@ export function DebateCard({
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
 
-            <DropdownMenuItem
-              className="group gap-2 text-chart-6 focus:text-chart-6 focus:bg-chart-6/10"
-              onClick={(e) => {
-                e.stopPropagation();
-                setTimeout(() => {
-                  const id = dialog.open({
-                    title: getTranslation(t, "debates.details.announceLineUp"),
-                    description: getTranslation(
-                      t,
-                      "debates.details.announceDescription",
-                    ),
-                    size: "lg",
-                    closable: true,
-                    children: (
-                      <AnnounceForm
-                        debateId={debate.id}
-                        onSubmit={async (payload) => {
-                          onAnnounce({
-                            debateId: debate.id,
-                            payload: payload,
-                          });
-                        }}
-                        onCancel={() => dialog.close(id)}
-                      />
-                    ),
-                  });
-                }, 0);
-              }}
-            >
-              <Megaphone className="mr-2 h-4 w-4 group-hover:text-muted-foreground" />
-              {getTranslation(t, "common.actions.announce")}
-            </DropdownMenuItem>
+            {debate.status === "scheduled" && (
+              <DropdownMenuItem
+                className="group gap-2 text-chart-6 focus:text-chart-6 focus:bg-chart-6/10"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setTimeout(() => {
+                    const id = dialog.open({
+                      title: getTranslation(
+                        t,
+                        "debates.details.announceLineUp",
+                      ),
+                      description: getTranslation(
+                        t,
+                        "debates.details.announceDescription",
+                      ),
+                      size: "lg",
+                      closable: true,
+                      children: (
+                        <AnnounceForm
+                          debateId={debate.id}
+                          onSubmit={async (payload) => {
+                            onAnnounce({
+                              debateId: debate.id,
+                              payload: payload,
+                            });
+                          }}
+                          onCancel={() => dialog.close(id)}
+                        />
+                      ),
+                    });
+                  }, 0);
+                }}
+              >
+                <Megaphone className="mr-2 h-4 w-4 group-hover:text-muted-foreground" />
+                {getTranslation(t, "common.actions.announce")}
+              </DropdownMenuItem>
+            )}
 
             <DropdownMenuItem
               className="group gap-2 text-chart-6 focus:text-chart-6 focus:bg-chart-6/10"

@@ -144,7 +144,7 @@ export default function DebateForm({
   const scheduledAtField: FieldConfig<DebateFormValues> = {
     name: "scheduled_at",
     label: `${getTranslation(t, "debates.form.fields.scheduledAt")} *`,
-    type: "date",
+    type: "datetime",
     validators: {
       onChange: ({ value }) =>
         !value
@@ -220,10 +220,13 @@ export default function DebateForm({
     },
     {
       kind: "fields",
-      columns: isEditing ? 2 : 1,
-      fields: isEditing
-        ? [scheduledAtField, statusField]
-        : [scheduledAtField],
+      columns: 1,
+      fields: [scheduledAtField],
+    },
+    {
+      kind: "fields",
+      columns: 1,
+      fields: isEditing ? [statusField] : [],
     },
   ];
 

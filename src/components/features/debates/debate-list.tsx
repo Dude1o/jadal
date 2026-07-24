@@ -479,6 +479,7 @@ export default function DebateList({
                   ),
                 });
               },
+              show: (debate) => debate.status === "scheduled",
             },
           ]}
           initialFilters={[

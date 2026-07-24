@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/command";
 import { Button } from "@/components/ui/button";
 import { Check, ChevronsUpDown, X } from "lucide-react";
-import { cn, truncate } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
 import { getTranslation } from "@/lib/utils";
 import { Spinner } from "../spinner";
@@ -79,12 +79,16 @@ export function AsyncSelectField<T>({
             aria-expanded={open}
             onBlur={field.handleBlur}
             disabled={isLoading}
-            className="w-full justify-between border-2 border-secondary font-normal"
-            title={selectedLabel ?? undefined}
+            className="w-full justify-between border-2 border-secondary font-normal h-auto min-h-10"
           >
-            <span className={cn(!selectedLabel && "text-muted-foreground")}>
+            <span
+              className={cn(
+                "text-left whitespace-normal break-words",
+                !selectedLabel && "text-muted-foreground",
+              )}
+            >
               {selectedLabel
-                ? truncate(selectedLabel)
+                ? selectedLabel
                 : (placeholder ?? getTranslation(t, "common.actions.select"))}
             </span>
             <div className="flex items-center gap-1 ml-2 shrink-0">

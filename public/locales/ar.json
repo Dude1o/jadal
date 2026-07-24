@@ -430,7 +430,12 @@
         "registeredTeam": "فريق مسجل",
         "buildFromSolo": "تكوين من الأفراد",
         "selectTeam": "اختر الفريق",
-        "selectSolos": "اختر المتقدمين الأفراد"
+        "selectSolos": "اختر المتقدمين الأفراد",
+        "viewMembers": "عرض {{count}} أعضاء",
+        "teamMembers": "أعضاء الفريق",
+        "randomTeam": "فريق عشوائي",
+        "generateRandom": "توليد",
+        "clickToGenerate": "اضغط على توليد لتعيين الأعضاء"
       }
     },
     "validation": {

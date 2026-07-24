@@ -435,7 +435,12 @@
         "registeredTeam": "Registered Team",
         "buildFromSolo": "Build from Solo",
         "selectTeam": "Select Team",
-        "selectSolos": "Select Solo Applicants"
+        "selectSolos": "Select Solo Applicants",
+        "viewMembers": "View {{count}} members",
+        "teamMembers": "Team Members",
+        "randomTeam": "Random Team",
+        "generateRandom": "Generate",
+        "clickToGenerate": "Click generate to assign members"
       }
     },
     "validation": {

@@ -436,7 +436,7 @@ export function DebateDetails({ debateId }: DebateDetailsProps) {
                 },
                 {
                   label: getTranslation(t, "debates.details.scheduledAt"),
-                  value: new Date(debate.scheduled_at).toLocaleDateString(),
+                  value: new Date(debate.scheduled_at).toLocaleString(),
                 },
                 {
                   label: getTranslation(t, "debates.details.totalDuration"),

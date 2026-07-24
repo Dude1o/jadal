@@ -15,6 +15,7 @@ import { FileUploaderField } from "./file-upload";
 import { ArrayField } from "./array-field";
 import { ColorField } from "./color-field";
 import { SurveyBuilderField } from "./survey-builder-field";
+import { DateTimePickerField } from "./date-time-picker";
 
 export const { fieldContext, formContext, useFieldContext, useFormContext } =
   createFormHookContexts();
@@ -38,6 +39,7 @@ export const { useAppForm, withForm } = createFormHook({
     ColorField,
     SurveyBuilderField,
     AsyncMultiSelectField,
+    DateTimePickerField,
   },
   formComponents: {},
 });
