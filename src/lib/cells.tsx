@@ -33,8 +33,8 @@ const roleStyles: Record<string, string> = {
 };
 
 const teamAssignmentStyles: Record<string, string> = {
-  random: "bg-accent/15 text-accent-foreground",
-  manual: "bg-primary/15 text-primary-foreground",
+  random: "bg-secondary/15 text-accent",
+  manual: "bg-primary/15 text-secondary-foreground",
 };
 
 export const Cell = {

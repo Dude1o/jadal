@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
-import { getTranslation } from "@/lib/utils";
+import { getTranslation, isDebateAnnouncable } from "@/lib/utils";
 import {
   debateMotionFrameworksQueryOptions,
   debatesQueryOptions,
@@ -47,7 +47,7 @@ import { useUpdate } from "@/hooks/api/use-update";
 import Pagination from "@/components/common/pagination";
 import { useData } from "@/hooks/api/use-data";
 import { useSettingsStore } from "@/store/use-settings-store";
-import { Megaphone } from "lucide-react";
+import { Megaphone, X } from "lucide-react";
 import AnnounceForm from "./announce-form";
 
 type Props = {
@@ -126,6 +126,14 @@ export default function DebateList({
     errorMessage: getTranslation(t, "debates.messages.updateError"),
   });
 
+  const { mutate: cancelDebateMutation } = useUpdate({
+    mutationOptions: editDebateMutationOptions(),
+    queryKey: debateKeys.list(),
+    getDetailKey: (id) => debateKeys.detail(String(id)),
+    successMessage: getTranslation(t, "debates.messages.cancelled"),
+    errorMessage: getTranslation(t, "debates.messages.cancelError"),
+  });
+
   const { mutate: deleteDebate } = useDelete({
     mutationOptions: deleteDebateMutationOptions(),
     queryKey: debateKeys.list(),
@@ -170,6 +178,10 @@ export default function DebateList({
     values: Partial<Debate>,
   ) => {
     await updateDebate({ id, data: values });
+  };
+
+  const handleCancelDebate = async (id: string | number) => {
+    await cancelDebateMutation({ id, data: { status: "cancelled" as const } });
   };
 
   const handleDeleteDebate = async (id: string | number) => {
@@ -382,6 +394,7 @@ export default function DebateList({
                     debate={debate}
                     onEdit={handleUpdateDebate}
                     onDelete={handleDeleteDebate}
+                    onCancel={handleCancelDebate}
                     onAnnounce={announceDebate}
                   />
                 ))}
@@ -478,7 +491,16 @@ export default function DebateList({
                     />
                   ),
                 });
+                dialog.close(id);
               },
+              show: (debate) =>
+                debate.status === "scheduled" && isDebateAnnouncable(debate.id),
+            },
+            {
+              icon: <X className="h-4 w-4" />,
+              color: "red",
+              label: getTranslation(t, "common.actions.cancel"),
+              action: (debate) => handleCancelDebate(debate.id),
               show: (debate) => debate.status === "scheduled",
             },
           ]}

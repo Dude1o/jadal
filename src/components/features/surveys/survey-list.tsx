@@ -117,8 +117,6 @@ export function SurveyList({ status = "", search = "", page = 1 }: Props) {
     id: number;
     data: Partial<Survey>;
   }) => {
-    debugger;
-
     await updateSurvey(variables);
   };
 

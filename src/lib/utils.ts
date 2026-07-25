@@ -41,6 +41,7 @@ import type {
   StatTrend,
   Statistic,
 } from "@/types";
+import { debateRegistrationsQueryOptions } from "@/api/query-options";
 
 export const getSampleStats = (t: TFunction): Statistic[] => [
   {
@@ -520,3 +521,16 @@ export const useMergeSearch = () => {
     };
   };
 };
+
+export function isDebateAnnouncable(debateId: number) {
+  const { data: registrations } = useQuery(
+    debateRegistrationsQueryOptions(debateId),
+  );
+
+  return (
+    registrations?.judges?.length >= 1 &&
+    ((registrations?.solo?.length >= 3 && registrations?.teams?.length >= 1) ||
+      registrations?.teams?.length >= 2 ||
+      registrations?.solo?.length >= 6)
+  );
+}

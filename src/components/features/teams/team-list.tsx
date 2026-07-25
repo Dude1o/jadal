@@ -15,8 +15,10 @@ import { useDialogStore } from "@/services";
 import { DataTable } from "@/components/data-table/data-table";
 import { teamOrderColumns } from "./columns/team-order-columns";
 import TeamForm from "./team-form";
+import TeamDetails from "./team-details";
 import { TEAM_STATUSES, TEAM_TYPES, teamKeys } from "@/lib/constants";
 import DeleteItem from "@/components/common/delete-item";
+import { Eye } from "lucide-react";
 import { useDebounce } from "@/hooks/use-debounce";
 import { teamsQueryOptions } from "@/api/query-options";
 import { useCreate } from "@/hooks/api/use-create";
@@ -266,6 +268,19 @@ export function TeamList({
               ),
             });
           }}
+          onActions={[
+            {
+              icon: <Eye className="h-4 w-4" />,
+              label: getTranslation(t, "common.actions.view"),
+              action: (team) => {
+                dialog.open({
+                  title: getTranslation(t, "teams.single"),
+                  children: <TeamDetails team_id={team.id} />,
+                  closable: true,
+                });
+              },
+            },
+          ]}
           onPageChange={(newPage) => {
             navigate({
               to: "/teams",
@@ -274,15 +289,7 @@ export function TeamList({
           }}
           initialFilters={[
             { id: "status", value: status ?? "" },
-            {
-              id: "is_random",
-              value:
-                type === "manual"
-                  ? false
-                  : type === "random"
-                    ? true
-                    : undefined,
-            },
+            { id: "type", value: type || undefined },
           ]}
           facetedFilters={[
             {
@@ -291,7 +298,7 @@ export function TeamList({
               options: TEAM_STATUSES,
             },
             {
-              columnId: "is_random",
+              columnId: "type",
               title: getTranslation(t, "common.labels.assignmentTypes"),
               options: TEAM_TYPES,
             },

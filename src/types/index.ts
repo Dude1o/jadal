@@ -24,6 +24,7 @@ export * from "./survey/survey.type";
 
 export * from "./team/team.type";
 export * from "./team/team-member.type";
+export * from "./team/team-admin.type";
 
 export * from "./user/user.type";
 

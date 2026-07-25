@@ -29,7 +29,6 @@ export const createCrudApi = <T, Create = Partial<T>, Update = Partial<T>>(
 
   update: async (id, payload) => {
     const { data } = await http.put(`${baseUrl}/${id}`, payload);
-    debugger;
 
     return data;
   },

@@ -1,10 +1,17 @@
 import { useTranslation } from "react-i18next";
 import { getTranslation } from "@/lib/utils";
-import { ToolbarFilters, type ToolbarFilter } from "@/components/layout/toolbar/toolbar-filter";
+import {
+  ToolbarFilters,
+  type ToolbarFilter,
+} from "@/components/layout/toolbar/toolbar-filter";
 import { debateFormatsQueryOptions } from "@/api/query-options";
 import type { DebateFormat } from "@/types";
 
-function formatOptions(t: ReturnType<typeof useTranslation>["t"], prefix: string, map: Record<string, string>): { label: string; value: string }[] {
+function formatOptions(
+  t: ReturnType<typeof useTranslation>["t"],
+  prefix: string,
+  map: Record<string, string>,
+): { label: string; value: string }[] {
   return Object.entries(map).map(([value]) => ({
     label: getTranslation(t, `${prefix}.${value}` as any),
     value,
@@ -25,6 +32,7 @@ function FilterBar({ defs, onFilterChange, onResetFilters }: FilterBarProps) {
         filters={defs}
         onChange={onFilterChange}
         onReset={onResetFilters}
+        showAllLabel={false}
       />
     </div>
   );
@@ -45,7 +53,11 @@ interface FFProps {
   onResetFilters: () => void;
 }
 
-export function FrameworkFairnessFilters({ values, onFilterChange, onResetFilters }: FFProps) {
+export function FrameworkFairnessFilters({
+  values,
+  onFilterChange,
+  onResetFilters,
+}: FFProps) {
   const { t } = useTranslation();
   const defs: ToolbarFilter[] = [
     {
@@ -63,12 +75,18 @@ export function FrameworkFairnessFilters({ values, onFilterChange, onResetFilter
       id: "ff_formats",
       label: getTranslation(t, "statistics.filters.formats"),
       value: values.ff_formats,
-      options: debateFormatsQueryOptions as unknown as (() => any),
+      options: debateFormatsQueryOptions as unknown as () => any,
       getOptionLabel: (item: DebateFormat) => item.name,
       getOptionValue: (item: DebateFormat) => item.id,
     },
   ];
-  return <FilterBar defs={defs} onFilterChange={onFilterChange} onResetFilters={onResetFilters} />;
+  return (
+    <FilterBar
+      defs={defs}
+      onFilterChange={onFilterChange}
+      onResetFilters={onResetFilters}
+    />
+  );
 }
 
 /* ── Leaderboard ────────────────────────────────────────── */
@@ -88,7 +106,11 @@ interface LBProps {
   onResetFilters: () => void;
 }
 
-export function LeaderboardFilters({ values, onFilterChange, onResetFilters }: LBProps) {
+export function LeaderboardFilters({
+  values,
+  onFilterChange,
+  onResetFilters,
+}: LBProps) {
   const { t } = useTranslation();
   const defs: ToolbarFilter[] = [
     {
@@ -127,12 +149,18 @@ export function LeaderboardFilters({ values, onFilterChange, onResetFilters }: L
       id: "lb_formats",
       label: getTranslation(t, "statistics.filters.formats"),
       value: values.lb_formats,
-      options: debateFormatsQueryOptions as unknown as (() => any),
+      options: debateFormatsQueryOptions as unknown as () => any,
       getOptionLabel: (item: DebateFormat) => item.name,
       getOptionValue: (item: DebateFormat) => item.id,
     },
   ];
-  return <FilterBar defs={defs} onFilterChange={onFilterChange} onResetFilters={onResetFilters} />;
+  return (
+    <FilterBar
+      defs={defs}
+      onFilterChange={onFilterChange}
+      onResetFilters={onResetFilters}
+    />
+  );
 }
 
 /* ── Platform Health ────────────────────────────────────── */
@@ -151,7 +179,11 @@ interface PHProps {
   onResetFilters: () => void;
 }
 
-export function PlatformHealthFilters({ values, onFilterChange, onResetFilters }: PHProps) {
+export function PlatformHealthFilters({
+  values,
+  onFilterChange,
+  onResetFilters,
+}: PHProps) {
   const { t } = useTranslation();
   const defs: ToolbarFilter[] = [
     {
@@ -178,12 +210,18 @@ export function PlatformHealthFilters({ values, onFilterChange, onResetFilters }
       id: "ph_formats",
       label: getTranslation(t, "statistics.filters.formats"),
       value: values.ph_formats,
-      options: debateFormatsQueryOptions as unknown as (() => any),
+      options: debateFormatsQueryOptions as unknown as () => any,
       getOptionLabel: (item: DebateFormat) => item.name,
       getOptionValue: (item: DebateFormat) => item.id,
     },
   ];
-  return <FilterBar defs={defs} onFilterChange={onFilterChange} onResetFilters={onResetFilters} />;
+  return (
+    <FilterBar
+      defs={defs}
+      onFilterChange={onFilterChange}
+      onResetFilters={onResetFilters}
+    />
+  );
 }
 
 /* ── Engagement & Churn ─────────────────────────────────── */
@@ -201,7 +239,11 @@ interface ECProps {
   onResetFilters: () => void;
 }
 
-export function EngagementChurnFilters({ values, onFilterChange, onResetFilters }: ECProps) {
+export function EngagementChurnFilters({
+  values,
+  onFilterChange,
+  onResetFilters,
+}: ECProps) {
   const { t } = useTranslation();
   const defs: ToolbarFilter[] = [
     {
@@ -209,13 +251,18 @@ export function EngagementChurnFilters({ values, onFilterChange, onResetFilters 
       label: getTranslation(t, "statistics.filters.riskFilter"),
       value: values.ec_risk_filter,
       options: formatOptions(t, "statistics.filters.riskFilterOptions", {
-        all: "",
         churn_risk: "",
         ramping_up: "",
       }),
     },
   ];
-  return <FilterBar defs={defs} onFilterChange={onFilterChange} onResetFilters={onResetFilters} />;
+  return (
+    <FilterBar
+      defs={defs}
+      onFilterChange={onFilterChange}
+      onResetFilters={onResetFilters}
+    />
+  );
 }
 
 /* ── Complaint Accountability ───────────────────────────── */
@@ -235,7 +282,11 @@ interface CAProps {
   onResetFilters: () => void;
 }
 
-export function ComplaintAccountabilityFilters({ values, onFilterChange, onResetFilters }: CAProps) {
+export function ComplaintAccountabilityFilters({
+  values,
+  onFilterChange,
+  onResetFilters,
+}: CAProps) {
   const { t } = useTranslation();
   const defs: ToolbarFilter[] = [
     {
@@ -275,10 +326,16 @@ export function ComplaintAccountabilityFilters({ values, onFilterChange, onReset
       id: "ca_formats",
       label: getTranslation(t, "statistics.filters.formats"),
       value: values.ca_formats,
-      options: debateFormatsQueryOptions as unknown as (() => any),
+      options: debateFormatsQueryOptions as unknown as () => any,
       getOptionLabel: (item: DebateFormat) => item.name,
       getOptionValue: (item: DebateFormat) => item.id,
     },
   ];
-  return <FilterBar defs={defs} onFilterChange={onFilterChange} onResetFilters={onResetFilters} />;
+  return (
+    <FilterBar
+      defs={defs}
+      onFilterChange={onFilterChange}
+      onResetFilters={onResetFilters}
+    />
+  );
 }

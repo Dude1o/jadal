@@ -7,6 +7,7 @@ import {
   MoreHorizontal,
   Trash,
   Megaphone,
+  X,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import type { Debate } from "@/types";
@@ -18,7 +19,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { getTranslation } from "@/lib/utils";
+import { getTranslation, isDebateAnnouncable } from "@/lib/utils";
 import DebateForm from "./debate-form";
 import { useDialogStore } from "@/services";
 import DeleteItem from "@/components/common/delete-item";
@@ -40,6 +41,7 @@ export interface DebateCardProps {
   result?: DebateResult | null;
   onEdit?: (id, values) => void;
   onDelete?: (id) => void;
+  onCancel?: (id) => void;
   onAnnounce?: (id) => void;
 }
 
@@ -50,6 +52,7 @@ export function DebateCard({
   result: propResult,
   onEdit,
   onDelete,
+  onCancel,
   onAnnounce,
 }: DebateCardProps) {
   const dialog = useDialogStore();
@@ -142,41 +145,56 @@ export function DebateCard({
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
 
+            {debate.status === "scheduled" &&
+              isDebateAnnouncable(debate.id) && (
+                <DropdownMenuItem
+                  className="group gap-2 text-chart-6 focus:text-chart-6 focus:bg-chart-6/10"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setTimeout(() => {
+                      const id = dialog.open({
+                        title: getTranslation(
+                          t,
+                          "debates.details.announceLineUp",
+                        ),
+                        description: getTranslation(
+                          t,
+                          "debates.details.announceDescription",
+                        ),
+                        size: "lg",
+                        closable: true,
+                        children: (
+                          <AnnounceForm
+                            debateId={debate.id}
+                            onSubmit={async (payload) => {
+                              onAnnounce({
+                                debateId: debate.id,
+                                payload: payload,
+                              });
+                            }}
+                            onCancel={() => dialog.close(id)}
+                          />
+                        ),
+                      });
+                      dialog.close(id);
+                    }, 0);
+                  }}
+                >
+                  <Megaphone className="mr-2 h-4 w-4 group-hover:text-muted-foreground" />
+                  {getTranslation(t, "common.actions.announce")}
+                </DropdownMenuItem>
+              )}
+
             {debate.status === "scheduled" && (
               <DropdownMenuItem
-                className="group gap-2 text-chart-6 focus:text-chart-6 focus:bg-chart-6/10"
+                className="group gap-2 text-destructive focus:text-destructive focus:bg-destructive/10"
                 onClick={(e) => {
                   e.stopPropagation();
-                  setTimeout(() => {
-                    const id = dialog.open({
-                      title: getTranslation(
-                        t,
-                        "debates.details.announceLineUp",
-                      ),
-                      description: getTranslation(
-                        t,
-                        "debates.details.announceDescription",
-                      ),
-                      size: "lg",
-                      closable: true,
-                      children: (
-                        <AnnounceForm
-                          debateId={debate.id}
-                          onSubmit={async (payload) => {
-                            onAnnounce({
-                              debateId: debate.id,
-                              payload: payload,
-                            });
-                          }}
-                          onCancel={() => dialog.close(id)}
-                        />
-                      ),
-                    });
-                  }, 0);
+                  onCancel?.(debate.id);
                 }}
               >
-                <Megaphone className="mr-2 h-4 w-4 group-hover:text-muted-foreground" />
-                {getTranslation(t, "common.actions.announce")}
+                <X className="mr-2 h-4 w-4" />
+                {getTranslation(t, "common.actions.cancel")}
               </DropdownMenuItem>
             )}
 

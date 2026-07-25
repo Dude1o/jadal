@@ -36,14 +36,20 @@ interface ToolbarFiltersProps {
   onChange: (id: string, value: string) => void;
   onReset: () => void;
   pluralName?: string;
+  showAllLabel?: boolean; // Whether to show "All" option for this filter
 }
 
 interface FilterSelectProps {
   filter: ToolbarFilter;
   onChange: (id: string, value: string) => void;
+  showAllLabel?: boolean; // Whether to show "All" option for this filter
 }
 
-function FilterSelect({ filter, onChange }: FilterSelectProps) {
+function FilterSelect({
+  filter,
+  onChange,
+  showAllLabel = true,
+}: FilterSelectProps) {
   const { t } = useTranslation();
 
   // Only call useQuery if options are async
@@ -83,7 +89,8 @@ function FilterSelect({ filter, onChange }: FilterSelectProps) {
       }
       disabled={isLoading}
     >
-      <SelectTrigger className="w-40 capitalize border-2 border-secondary">
+      <SelectTrigger className="w-full sm:w-40 capitalize border-2 border-secondary">
+        {" "}
         {isLoading ? (
           <Spinner />
         ) : (
@@ -92,7 +99,7 @@ function FilterSelect({ filter, onChange }: FilterSelectProps) {
       </SelectTrigger>
       <SelectContent>
         <SelectItem value="all">
-          {getTranslation(t, "common.labels.all")}{" "}
+          {showAllLabel ? getTranslation(t, "common.labels.all") : null}{" "}
           {getTranslation(t, filter.label)}
         </SelectItem>
         {resolvedOptions.map((opt, index) => (
@@ -122,17 +129,30 @@ export function ToolbarFilters({
   filters,
   onChange,
   onReset,
+  showAllLabel = true,
 }: ToolbarFiltersProps) {
   const hasActiveFilters = filters.some((f) => f.value && f.value !== "");
   const { t, i18n } = useTranslation();
 
   return (
-    <div dir={i18n.dir()} className="flex items-center gap-2">
+    <div
+      dir={i18n.dir()}
+      className="flex flex-col items-stretch gap-2 sm:flex-row sm:flex-wrap sm:items-center"
+    >
       {filters.map((filter) => (
-        <FilterSelect key={filter.id} filter={filter} onChange={onChange} />
+        <FilterSelect
+          key={filter.id}
+          filter={filter}
+          onChange={onChange}
+          showAllLabel={showAllLabel}
+        />
       ))}
       {hasActiveFilters && (
-        <Button variant="secondary" onClick={onReset} className="h-10 px-3">
+        <Button
+          variant="secondary"
+          onClick={onReset}
+          className="h-10 px-3 w-full sm:w-auto"
+        >
           {getTranslation(t, "common.actions.resetFilters")}
           <RotateCcw className="ml-2 h-4 w-4" />
         </Button>

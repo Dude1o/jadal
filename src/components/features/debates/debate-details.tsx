@@ -291,6 +291,7 @@ export function DebateDetails({ debateId }: DebateDetailsProps) {
                             debateId={debateId}
                             onSubmit={async (payload) => {
                               announceDebate({ debateId, payload: payload });
+                              dialog.close(id);
                             }}
                             onCancel={() => dialog.close(id)}
                           />

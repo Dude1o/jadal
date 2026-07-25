@@ -372,6 +372,8 @@
       "deleted": "Debate deleted successfully",
       "announced": "Debate announced successfully!",
       "announceError": "Failed to announce debate",
+      "cancelled": "Debate cancelled successfully!",
+      "cancelError": "Failed to cancel debate",
       "maxTwoTeams": "You can select at most 2 teams",
       "createError": "Failed to create debate",
       "updateError": "Failed to update debate",

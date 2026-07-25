@@ -156,10 +156,7 @@ export function StatisticList({
         isError: complaintAccountability.isError,
         emptyMessage: getTranslation(t, "statistics.noExposureEntries"),
         stats: complaintAccountability.data
-          ? complaintAccountabilityToStatistics(
-              complaintAccountability.data,
-              t,
-            )
+          ? complaintAccountabilityToStatistics(complaintAccountability.data, t)
           : [],
       });
     }
@@ -191,7 +188,7 @@ export function StatisticList({
   ]);
 
   return (
-    <div className="min-h-screen space-y-12 px-6 py-12 md:space-y-16 lg:px-8">
+    <div className="min-h-screen space-y-8 px-4 py-8 sm:space-y-12 sm:px-6 sm:py-12 md:space-y-16 lg:px-8">
       {sections.map((section) => (
         <StatisticSection {...section} key={section.key} animate={animate} />
       ))}
