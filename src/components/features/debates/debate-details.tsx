@@ -606,44 +606,124 @@ export function DebateDetails({ debateId }: DebateDetailsProps) {
                 })}
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {debate.participants.map((p, i) => {
-                  const color = avatarColors[i % avatarColors.length];
-                  return (
-                    <div
-                      key={p.id}
-                      onClick={() => navigate({ to: `/users/${p.user.id}` })}
-                      className="group flex items-center gap-3 p-3.5 rounded-xl border border-border/60 hover:bg-muted hover:border-accent/30 dark:hover:border-accent/30 dark:hover:ring-1 hover:ring-accent/20 transition-all duration-200 cursor-pointer shadow-sm hover:shadow"
-                    >
-                      <Avatar className="w-10 h-10 flex-shrink-0 rounded-xl border border-border shadow-sm transform transition-transform duration-200 group-hover:scale-105">
-                        <AvatarImage
-                          src={p.user.avatar_url || ""}
-                          alt={p.user.name}
-                          className="object-cover"
-                        />
-                        <AvatarFallback
-                          className={`${color.bg} font-black text-xs rounded-xl`}
-                        >
-                          {p.user.name
-                            .split(" ")
-                            .map((n) => n[0])
-                            .join("")}
-                        </AvatarFallback>
-                      </Avatar>
+            <CardContent className="p-6 space-y-5">
+              {(
+                [
+                  "proposition",
+                  "opposition",
+                  "neutral",
+                  "rejected",
+                  "pending",
+                ] as const
+              ).map((key) => {
+                let group = debate.participants;
+                if (key === "rejected") {
+                  group = debate.participants.filter(
+                    (p) => p.status === "rejected",
+                  );
+                } else if (key === "pending") {
+                  group = debate.participants.filter(
+                    (p) => p.status === "pending",
+                  );
+                } else {
+                  group = debate.participants.filter(
+                    (p) =>
+                      p.status !== "rejected" &&
+                      p.status !== "pending" &&
+                      (key === "neutral"
+                        ? p.side !== "proposition" &&
+                          p.side !== "opposition"
+                        : p.side === key),
+                  );
+                }
 
-                      <div className="min-w-0 flex-1">
-                        <p className="text-sm font-bold text-card-foreground truncate group-hover:text-accent transition-colors">
-                          {p.user.name}
-                        </p>
-                        <p className="text-[11px] font-bold text-muted-foreground capitalize mt-0.5 tracking-wide">
-                          {getTranslation(t, `users.roles.${p.user.role}`)}
-                        </p>
+                if (group.length === 0) return null;
+
+                const headerLabel =
+                  key === "rejected" || key === "pending"
+                    ? getTranslation(
+                        t,
+                        `debates.details.participantStatus.${key}`,
+                      )
+                    : getTranslation(t, `debates.details.${key}Side`);
+
+                return (
+                  <div key={key}>
+                    <h4 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">
+                      {headerLabel} ({group.length})
+                    </h4>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        {group.map((p, i) => {
+                          const color =
+                            avatarColors[i % avatarColors.length];
+                          const statusColor: Record<string, string> = {
+                            approved:
+                              "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400",
+                            pending:
+                              "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",
+                            rejected:
+                              "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
+                          };
+                          return (
+                            <div
+                              key={p.id}
+                              onClick={() =>
+                                navigate({ to: `/users/${p.user.id}` })
+                              }
+                              className="group flex items-center gap-3 p-3.5 rounded-xl border border-border/60 hover:bg-muted hover:border-accent/30 dark:hover:border-accent/30 dark:hover:ring-1 hover:ring-accent/20 transition-all duration-200 cursor-pointer shadow-sm hover:shadow"
+                            >
+                              <Avatar className="w-10 h-10 flex-shrink-0 rounded-xl border border-border shadow-sm transform transition-transform duration-200 group-hover:scale-105">
+                                <AvatarImage
+                                  src={p.user.avatar_url || ""}
+                                  alt={p.user.name}
+                                  className="object-cover"
+                                />
+                                <AvatarFallback
+                                  className={`${color.bg} font-black text-xs rounded-xl`}
+                                >
+                                  {p.user.name
+                                    .split(" ")
+                                    .map((n) => n[0])
+                                    .join("")}
+                                </AvatarFallback>
+                              </Avatar>
+
+                              <div className="min-w-0 flex-1">
+                                <div className="flex items-center gap-2">
+                                  <p className="text-sm font-bold text-card-foreground truncate group-hover:text-accent transition-colors">
+                                    {p.user.name}
+                                  </p>
+                                  {p.status && (
+                                    <Badge
+                                      className={`text-[10px] px-1.5 py-0 font-medium ${statusColor[p.status]}`}
+                                    >
+                                      {getTranslation(
+                                        t,
+                                        `debates.details.participantStatus.${p.status}`,
+                                      )}
+                                    </Badge>
+                                  )}
+                                </div>
+                                <p className="text-[11px] font-bold text-muted-foreground capitalize mt-0.5 tracking-wide">
+                                  {p.role
+                                    ? getTranslation(
+                                        t,
+                                        `users.roles.${p.role}`,
+                                      )
+                                    : getTranslation(
+                                        t,
+                                        `users.roles.${p.user.role}`,
+                                      )}
+                                </p>
+                              </div>
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
                   );
-                })}
-              </div>
+                },
+              )}
             </CardContent>
           </Card>
         </div>

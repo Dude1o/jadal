@@ -1,4 +1,4 @@
-import { Clock, AlertTriangle } from "lucide-react";
+import { Clock, AlertTriangle, Download } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { getTranslation } from "@/lib/utils";
 import { StatisticCard } from "./statistic-card";
@@ -14,6 +14,7 @@ interface StatisticSectionProps {
   emptyMessage: string;
   stats: Statistic[];
   animate: boolean;
+  onExportExcel?: () => void;
 }
 
 export function StatisticSection({
@@ -25,6 +26,7 @@ export function StatisticSection({
   emptyMessage,
   stats,
   animate,
+  onExportExcel,
 }: StatisticSectionProps) {
   const { t } = useTranslation();
 
@@ -48,6 +50,17 @@ export function StatisticSection({
               {getTranslation(t, "statistics.updated", { freshness })}
             </span>
           </div>
+        )}
+
+        {onExportExcel && stats.length > 0 && !isLoading && !isError && (
+          <button
+            onClick={onExportExcel}
+            className="flex items-center gap-1.5 text-xs font-medium bg-accent text-accent-foreground hover:bg-accent/90 transition-colors self-start sm:self-auto px-3 py-1.5 rounded-lg"
+            title="Export to Excel"
+          >
+            <Download className="h-3.5 w-3.5 shrink-0" strokeWidth={2} />
+            <span className="truncate">Excel</span>
+          </button>
         )}
       </div>
 

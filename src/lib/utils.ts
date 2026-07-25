@@ -1,5 +1,10 @@
 import i18n from "@/i18n";
-import type { Framework, ImprovementBand, SideBarItem } from "@/types";
+import type {
+  Framework,
+  ImprovementBand,
+  SideBarItem,
+  Statistic,
+} from "@/types";
 import type { TFunction } from "i18next";
 import { useTranslation } from "react-i18next";
 import { avatarPalette } from "./constants";
@@ -10,6 +15,8 @@ import { FileImage, FileText } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import type { FilterOptions } from "@/components/layout/toolbar/toolbar-filter";
 import { useLocation } from "@tanstack/react-router";
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
 
 export { cn };
 
@@ -533,4 +540,21 @@ export function isDebateAnnouncable(debateId: number) {
       registrations?.teams?.length >= 2 ||
       registrations?.solo?.length >= 6)
   );
+}
+
+export function exportStatisticsToExcel(
+  stats: Statistic[],
+  fileName: string,
+): void {
+  const rows = stats.map(
+    ({ id: _id, icon: _icon, variant: _variant, ...rest }) => rest,
+  );
+  const ws = XLSX.utils.json_to_sheet(rows);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "Statistics");
+  const buf = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+  const blob = new Blob([buf], {
+    type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8",
+  });
+  saveAs(blob, fileName.endsWith(".xlsx") ? fileName : `${fileName}.xlsx`);
 }

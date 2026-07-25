@@ -1,4 +1,9 @@
-import type { DebateStatus } from "../shared/enums";
+import type {
+  DebateStatus,
+  ParticipantRole,
+  ParticipantSide,
+  ParticipantStatus,
+} from "../shared/enums";
 import type { User } from "../user/user.type";
 import type { DebateFormat } from "./debate-format.type";
 import type { DebatePhase } from "./debate-phase.type";
@@ -15,7 +20,18 @@ export interface Debate {
   motion: Motion;
   scheduled_at: string;
   created_by: User;
-  participants: { id: number; user: User }[];
+  participants: {
+    id: number;
+    is_attended: boolean;
+    is_chair: boolean;
+    is_reply_speaker: boolean;
+    role: null | ParticipantRole;
+    side: ParticipantSide | null;
+    speaking_phase_order: number | null;
+    status: ParticipantStatus;
+    team_id: number;
+    user: User;
+  }[];
   feedbacks: string[];
   result: DebateResult | null;
   started_at: string | null;

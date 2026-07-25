@@ -27,6 +27,7 @@ import {
   engagementChurnToStatistics,
   complaintAccountabilityToStatistics,
   formatRelativeTime,
+  exportStatisticsToExcel,
 } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
@@ -271,6 +272,16 @@ function RouteComponent() {
                 : []
             }
             animate
+            onExportExcel={() => {
+              const data =
+                fairnessQuery.data?.frameworks.map((f) =>
+                  frameworkToStatistic(f, t),
+                ) ?? [];
+              exportStatisticsToExcel(
+                data,
+                "statistics-framework-fairness",
+              );
+            }}
           />
         </>
       )}
@@ -301,6 +312,12 @@ function RouteComponent() {
                 : []
             }
             animate
+            onExportExcel={() => {
+              const data = leaderboardQuery.data
+                ? leaderboardToStatistics(leaderboardQuery.data, t)
+                : [];
+              exportStatisticsToExcel(data, "statistics-leaderboard");
+            }}
           />
         </>
       )}
@@ -330,6 +347,15 @@ function RouteComponent() {
                 : []
             }
             animate
+            onExportExcel={() => {
+              const data = platformHealthQuery.data
+                ? platformHealthToStatistics(
+                    platformHealthQuery.data,
+                    t,
+                  )
+                : [];
+              exportStatisticsToExcel(data, "statistics-platform-health");
+            }}
           />
         </>
       )}
@@ -368,6 +394,15 @@ function RouteComponent() {
                 : []
             }
             animate
+            onExportExcel={() => {
+              const data = engagementChurnQuery.data
+                ? engagementChurnToStatistics(
+                    engagementChurnQuery.data,
+                    t,
+                  )
+                : [];
+              exportStatisticsToExcel(data, "statistics-engagement-churn");
+            }}
           />
         </>
       )}
@@ -402,6 +437,19 @@ function RouteComponent() {
                 : []
             }
             animate
+            onExportExcel={() => {
+              const data =
+                complaintAccountabilityQuery.data
+                  ? complaintAccountabilityToStatistics(
+                      complaintAccountabilityQuery.data,
+                      t,
+                    )
+                  : [];
+              exportStatisticsToExcel(
+                data,
+                "statistics-complaint-accountability",
+              );
+            }}
           />
         </>
       )}

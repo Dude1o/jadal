@@ -506,7 +506,15 @@
       "confirmAnnounce": "Confirm & Announce",
       "judgeCount": "judge(s) selected",
       "teamCount": "team(s) selected",
-      "soloCount": "solo applicant(s) registered"
+      "soloCount": "solo applicant(s) registered",
+      "propositionSide": "Proposition",
+      "oppositionSide": "Opposition",
+      "neutralSide": "Officials",
+      "participantStatus": {
+        "approved": "Approved",
+        "pending": "Pending",
+        "rejected": "Rejected"
+      }
     }
   },
   "debateFormats": {

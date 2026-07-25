@@ -501,7 +501,15 @@
       "confirmAnnounce": "تأكيد والإعلان",
       "judgeCount": "حكم (حكام) محددون",
       "teamCount": "فريق (فرق) محددة",
-      "soloCount": "متقدم (متقدمون) فردي"
+      "soloCount": "متقدم (متقدمون) فردي",
+      "propositionSide": "الموالاة",
+      "oppositionSide": "المعارضة",
+      "neutralSide": "المسؤولون",
+      "participantStatus": {
+        "approved": "مقبول",
+        "pending": "قيد الانتظار",
+        "rejected": "مرفوض"
+      }
     }
   },
   "debateFormats": {
