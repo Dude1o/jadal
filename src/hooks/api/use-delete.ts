@@ -11,6 +11,7 @@ import {
   normalizeError,
   type ApiError,
 } from "./use-create";
+import { useSpinnerStore } from "@/store/use-spinner-store";
 
 interface UseDeleteOptions<TData = unknown, TVariables = string | number> {
   mutationOptions: UseMutationOptions<TData, ApiError, TVariables>;
@@ -43,6 +44,7 @@ export const useDelete = <TData = unknown, TVariables = string | number>({
     ...mutationOptions,
 
     onMutate: async (variables) => {
+      useSpinnerStore.getState().start();
       await queryClient.cancelQueries({ queryKey });
       const previous = queryClient.getQueryData(queryKey);
 
@@ -84,6 +86,7 @@ export const useDelete = <TData = unknown, TVariables = string | number>({
     },
 
     onSettled: () => {
+      useSpinnerStore.getState().stop();
       queryClient.invalidateQueries({ queryKey, exact: false });
     },
   });

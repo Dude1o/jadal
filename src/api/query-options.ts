@@ -12,6 +12,8 @@ import {
   surveyKeys,
   teamKeys,
   userKeys,
+  achievementKeys,
+  achievementCatalogKeys,
 } from "@/lib/constants";
 import type {
   BlogCategory,
@@ -37,6 +39,8 @@ import type {
   Leaderboard,
   PlatformHealth,
   DebateRegistrations,
+  UserAchievement,
+  AchievementCatalog,
 } from "@/types";
 import { queryOptions } from "@tanstack/react-query";
 
@@ -577,4 +581,47 @@ export const debateRegistrationsQueryOptions = (debateId: number) =>
     enabled: !!debateId,
     staleTime: 1000 * 60 * 2,
     gcTime: 1000 * 60 * 10,
+  });
+
+export const achievementsQueryOptions = (
+  userId: number,
+  params?: { per_page?: number },
+) =>
+  queryOptions<PaginatedApiResponse<UserAchievement>>({
+    queryKey: achievementKeys.list(userId),
+    queryFn: async () => {
+      const response = await api.get<PaginatedApiResponse<UserAchievement>>(
+        `/users/${userId}/achievements`,
+        { params },
+      );
+      return response.data;
+    },
+    enabled: !!userId,
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 30,
+  });
+
+export const achievementCatalogQueryOptions = () =>
+  queryOptions<{ data: AchievementCatalog[] }>({
+    queryKey: achievementCatalogKeys.list(),
+    queryFn: async () => {
+      const response = await api.get<{ data: AchievementCatalog[] }>(
+        "/admin/achievements",
+      );
+      return response.data;
+    },
+    staleTime: 1000 * 60 * 5,
+  });
+
+export const userAvailableAchievementsQueryOptions = (userId: number) =>
+  queryOptions<{ data: AchievementCatalog[] }>({
+    queryKey: achievementKeys.available(userId),
+    queryFn: async () => {
+      const response = await api.get<{ data: AchievementCatalog[] }>(
+        `/admin/users/${userId}/achievements/available`,
+      );
+      return response.data;
+    },
+    enabled: !!userId,
+    staleTime: 1000 * 60 * 2,
   });

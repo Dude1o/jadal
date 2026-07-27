@@ -11,6 +11,7 @@ import {
   normalizeError,
   type ApiError,
 } from "./use-create";
+import { useSpinnerStore } from "@/store/use-spinner-store";
 
 interface UseUpdateOptions<
   TData = unknown,
@@ -52,6 +53,7 @@ export const useUpdate = <
     ...mutationOptions,
 
     onMutate: async (variables) => {
+      useSpinnerStore.getState().start();
       await queryClient.cancelQueries({ queryKey });
 
       const previous = queryClient.getQueryData(queryKey);
@@ -109,6 +111,7 @@ export const useUpdate = <
     },
 
     onSettled: () => {
+      useSpinnerStore.getState().stop();
       queryClient.invalidateQueries({ queryKey, exact: false });
     },
   });

@@ -171,6 +171,12 @@ export const sidebarItems: SideBarItem[] = [
   },
 
   {
+    title: "navigation.sidebar.achievements",
+    url: "/achievements",
+    icon: Trophy,
+  },
+
+  {
     title: "navigation.sidebar.teams",
     url: "/teams",
     icon: Users,

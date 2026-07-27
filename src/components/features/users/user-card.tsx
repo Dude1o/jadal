@@ -10,10 +10,14 @@ import {
 import { getTranslation } from "@/lib/utils";
 import type { TFunction } from "i18next";
 import type { User, UserStatus } from "@/types";
-import { Ban, Edit, MoreHorizontal, Pause, Play, Trash } from "lucide-react";
+import { Ban, Edit, MoreHorizontal, Pause, Play, Trash, Trophy } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import UserForm from "./user-form";
+import AssignmentForm from "@/components/features/achievements/assignment-form";
 import { useDialogStore } from "@/services";
+import { achievementKeys } from "@/lib/constants";
+import { createAchievementMutationOptions } from "@/api/mutation-options";
+import { useCreate } from "@/hooks/api/use-create";
 import DeleteItem from "@/components/common/delete-item";
 import { useNavigate } from "@tanstack/react-router";
 import {
@@ -81,6 +85,13 @@ export function UserCard({
 
   const dialog = useDialogStore();
 
+  const { mutate: assignAchievement } = useCreate({
+    mutationOptions: createAchievementMutationOptions(),
+    queryKey: achievementKeys.all,
+    successMessage: getTranslation(t, "achievements.messages.created"),
+    errorMessage: getTranslation(t, "achievements.messages.createError"),
+  });
+
   const handleUpdateUser = async (id: number, data: Partial<User>) => {
     await onEdit(id, data);
   };
@@ -89,6 +100,24 @@ export function UserCard({
   };
   const handleChangeUserStatus = async (id: number, status: UserStatus) => {
     await onChangeStatus({ id, status });
+  };
+  const openAchievementsDialog = () => {
+    setTimeout(() => {
+      const id = dialog.open({
+        title: getTranslation(t, "achievements.actions.assign"),
+        closeOnOutsideClick: true,
+        children: (
+          <AssignmentForm
+            userId={user.id}
+            onAssign={(userId, achievementId) => {
+              assignAchievement({ userId, achievement_id: achievementId });
+              dialog.close(id);
+            }}
+          />
+        ),
+        closable: true,
+      });
+    }, 0);
   };
 
   return (
@@ -230,6 +259,17 @@ export function UserCard({
                   >
                     <Edit className="mr-2 h-4 w-4 group-hover:text-muted-foreground" />
                     {getTranslation(t, "common.actions.edit")}
+                  </DropdownMenuItem>
+
+                  <DropdownMenuItem
+                    className="group gap-2 text-chart-5 focus:text-chart-5 focus:bg-chart-5/10"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openAchievementsDialog();
+                    }}
+                  >
+                    <Trophy className="mr-2 h-4 w-4" />
+                    {getTranslation(t, "achievements.actions.assign")}
                   </DropdownMenuItem>
 
                   <DropdownMenuItem

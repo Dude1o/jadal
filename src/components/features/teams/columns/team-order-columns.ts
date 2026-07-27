@@ -23,7 +23,7 @@ export const teamOrderColumns = (t: TFunction): ColumnDef<Team>[] => [
   },
   {
     id: "leader",
-    accessorFn: (row) => row.leader?.name ?? "",
+    accessorFn: (row) => row.leader,
     header: getTranslation(t, "teams.fields.leader"),
     cell: Cell.User(),
   },

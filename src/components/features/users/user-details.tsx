@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Ban,
@@ -20,10 +20,11 @@ import {
   Sliders,
   Award,
   Trash,
+  Plus,
+  TrophyIcon,
 } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import {
@@ -34,22 +35,35 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 
-import type { User, UserRole, UserStatus } from "@/types";
+import type {
+  User,
+  UserRole,
+  UserStatus,
+  AchievementType,
+  UserAchievement,
+  AchievementCatalog,
+} from "@/types";
 import { UserDetailsSkeleton } from "./user-details-skeleton";
 import { userQueryOptions } from "@/api/query-options";
 import { useTranslation } from "react-i18next";
 import { getTranslation, isRTL } from "@/lib/utils.ts";
 import { dialog, toast } from "@/services";
-import { userKeys } from "@/lib/constants";
+import { userKeys, achievementKeys } from "@/lib/constants";
 import {
   editUserMutationOptions,
   deleteUserMutationOptions,
   changeUserStatusMutationOptions,
+  createAchievementMutationOptions,
+  deleteAchievementMutationOptions,
 } from "@/api/mutation-options";
 import { useUpdate } from "@/hooks/api/use-update";
 import { useDelete } from "@/hooks/api/use-delete";
+import { useCreate } from "@/hooks/api/use-create";
+import { achievementsQueryOptions, achievementCatalogQueryOptions } from "@/api/query-options";
 import UserForm from "./user-form";
+import AssignmentForm from "@/components/features/achievements/assignment-form";
 import DeleteItem from "@/components/common/delete-item";
+import { Badge } from "@/components/ui/badge";
 
 export function UserDetails({ userId }: { userId: number }) {
   const { t } = useTranslation();
@@ -75,13 +89,17 @@ export function UserDetails({ userId }: { userId: number }) {
   const changeStatus = useMutation({
     ...changeUserStatusMutationOptions(),
     onSuccess: (_data, variables) => {
-      queryClient.invalidateQueries({ queryKey: userKeys.detail(String(variables.id)) });
+      queryClient.invalidateQueries({
+        queryKey: userKeys.detail(String(variables.id)),
+      });
       queryClient.invalidateQueries({ queryKey: userKeys.list() });
       toast.success(getTranslation(t, "users.messages.statusUpdated"));
     },
     onError: (err) => {
       toast.error(
-        err instanceof Error ? err.message : getTranslation(t, "users.messages.statusUpdateError"),
+        err instanceof Error
+          ? err.message
+          : getTranslation(t, "users.messages.statusUpdateError"),
       );
     },
   });
@@ -97,7 +115,9 @@ export function UserDetails({ userId }: { userId: number }) {
   const handleChangeStatus = (status: UserStatus) => {
     const id = dialog.open({
       title: getTranslation(t, "common.actions.confirm"),
-      description: getTranslation(t, `users.messages.confirmStatusChange`, { status }),
+      description: getTranslation(t, `users.messages.confirmStatusChange`, {
+        status,
+      }),
       children: (
         <div className="flex items-center gap-2 pt-2">
           <Button variant="outline" onClick={() => dialog.close(id)}>
@@ -117,6 +137,42 @@ export function UserDetails({ userId }: { userId: number }) {
       closable: true,
     });
   };
+
+  const typeColors: Record<AchievementType, string> = {
+    GOLD: "bg-yellow-100 text-yellow-800 border-yellow-300",
+    SILVER: "bg-gray-100 text-gray-700 border-gray-300",
+    BRONZE: "bg-orange-100 text-orange-700 border-orange-300",
+    HONORABLE: "bg-blue-100 text-blue-700 border-blue-300",
+    PARTICIPATION: "bg-green-100 text-green-700 border-green-300",
+  };
+
+  const { data: achievementsData } = useQuery(achievementsQueryOptions(userId));
+  const achievementsList: UserAchievement[] = achievementsData?.data ?? [];
+
+  const { data: catalogData } = useQuery(achievementCatalogQueryOptions());
+  const catalog: AchievementCatalog[] = catalogData?.data ?? [];
+
+  const joinedAchievements = useMemo(() => {
+    return achievementsList.map((a) => {
+      const type = a.rank.toUpperCase() as AchievementType;
+      const match = catalog.find((c) => c.name === a.name && c.type === type);
+      return { flat: a, type, catalogId: match?.id };
+    });
+  }, [achievementsList, catalog]);
+
+  const { mutate: assignAchievement } = useCreate({
+    mutationOptions: createAchievementMutationOptions(),
+    queryKey: achievementKeys.list(userId),
+    successMessage: getTranslation(t, "achievements.messages.created"),
+    errorMessage: getTranslation(t, "achievements.messages.createError"),
+  });
+
+  const { mutate: revokeAchievement } = useDelete({
+    mutationOptions: deleteAchievementMutationOptions(),
+    queryKey: achievementKeys.list(userId),
+    successMessage: getTranslation(t, "achievements.messages.deleted"),
+    errorMessage: getTranslation(t, "achievements.messages.deleteError"),
+  });
 
   if (isLoading) return <UserDetailsSkeleton />;
 
@@ -521,6 +577,101 @@ export function UserDetails({ userId }: { userId: number }) {
           </Card>
         </div>
 
+        {/* Achievements Section */}
+        <Card className="border-0 shadow-sm ring-1 ring-border bg-card overflow-hidden rounded-2xl mb-6 hover:-translate-y-1 transition-all duration-300 hover:ring-chart-5/30">
+          <div className="p-6">
+            <div className="flex items-center justify-between mb-5">
+              <h3 className="flex items-center gap-3 text-base font-bold text-foreground">
+                <span className="flex-shrink-0 w-8 h-8 rounded-lg bg-chart-5/10 flex items-center justify-center">
+                  <Award className="w-4 h-4 text-chart-5" />
+                </span>
+                {getTranslation(t, "users.details.achievements")}
+              </h3>
+              <Button
+                variant="outline"
+                size="sm"
+                className="gap-2 rounded-xl border-border shadow-sm text-xs font-bold h-9"
+                onClick={() => {
+                  const id = dialog.open({
+                    title: getTranslation(t, "users.details.assignAchievement"),
+                    children: (
+                      <AssignmentForm
+                        userId={userId}
+                        onAssign={(uid, achievementId) => {
+                          assignAchievement({
+                            userId: uid,
+                            achievement_id: achievementId,
+                          });
+                          dialog.close(id);
+                        }}
+                      />
+                    ),
+                    closable: true,
+                  });
+                }}
+              >
+                <Plus className="w-4 h-4" />
+                {getTranslation(t, "users.details.assignAchievement")}
+              </Button>
+            </div>
+
+            {joinedAchievements.length === 0 ? (
+              <p className="text-sm text-muted-foreground text-center py-8">
+                {getTranslation(t, "users.details.noAchievements")}
+              </p>
+            ) : (
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+                {joinedAchievements.map(({ flat, type, catalogId }) => (
+                  <div
+                    key={flat.id}
+                    className="relative group flex flex-col items-center text-center gap-2 p-4 rounded-xl bg-muted/40 border border-border/50 hover:bg-muted/60 transition-all"
+                  >
+                    {flat.image_url ? (
+                      <img
+                        src={flat.image_url}
+                        alt={flat.name}
+                        className="w-12 h-12 rounded-full object-cover border-2 border-accent"
+                      />
+                    ) : (
+                      <div className="w-12 h-12 rounded-full bg-accent/10 border-2 border-accent flex items-center justify-center">
+                        <TrophyIcon className="w-5 h-5 text-accent" />
+                      </div>
+                    )}
+                    <Badge
+                      variant="outline"
+                      className={`text-[9px] font-semibold uppercase border ${typeColors[type]}`}
+                    >
+                      {getTranslation(
+                        t,
+                        `achievements.types.${type.toLowerCase()}`,
+                      )}
+                    </Badge>
+                    <p className="text-xs font-bold text-foreground line-clamp-1 leading-tight w-full">
+                      {flat.name}
+                    </p>
+                    <span className="text-[10px] text-muted-foreground">
+                      {new Date(flat.awarded_at).toLocaleDateString()}
+                    </span>
+                    {catalogId != null && (
+                      <button
+                        className="absolute top-1.5 right-1.5 opacity-0 group-hover:opacity-100 text-destructive hover:text-destructive/80 text-[10px] font-bold transition-opacity"
+                        onClick={() =>
+                          revokeAchievement({
+                            userId,
+                            achievement_id: catalogId,
+                          })
+                        }
+                      >
+                        ✕
+                      </button>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </Card>
+
         {/* Quick Actions Console */}
         <Card className="border-0 shadow-sm ring-1 ring-border bg-card overflow-hidden rounded-2xl">
           <div className="p-6">
@@ -531,7 +682,9 @@ export function UserDetails({ userId }: { userId: number }) {
               <Button
                 variant="outline"
                 className="justify-start text-xs font-bold border-border hover:bg-muted h-11 rounded-xl transition-all shadow-sm gap-2"
-                onClick={() => toast.info(getTranslation(t, "common.comingSoon"))}
+                onClick={() =>
+                  toast.info(getTranslation(t, "common.comingSoon"))
+                }
               >
                 <MessageSquare className="w-4 h-4 text-accent" />
                 {getTranslation(t, "users.details.sendMessage")}
@@ -539,7 +692,9 @@ export function UserDetails({ userId }: { userId: number }) {
               <Button
                 variant="outline"
                 className="justify-start text-xs font-bold border-border hover:bg-muted h-11 rounded-xl transition-all shadow-sm gap-2"
-                onClick={() => toast.info(getTranslation(t, "common.comingSoon"))}
+                onClick={() =>
+                  toast.info(getTranslation(t, "common.comingSoon"))
+                }
               >
                 <Zap className="w-4 h-4 text-accent" />
                 {getTranslation(t, "users.details.viewActivity")}
@@ -547,7 +702,9 @@ export function UserDetails({ userId }: { userId: number }) {
               <Button
                 variant="outline"
                 className="justify-start text-xs font-bold border-border hover:bg-muted h-11 rounded-xl transition-all shadow-sm gap-2"
-                onClick={() => toast.info(getTranslation(t, "common.comingSoon"))}
+                onClick={() =>
+                  toast.info(getTranslation(t, "common.comingSoon"))
+                }
               >
                 <Shield className="w-4 h-4 text-chart-5" />
                 {getTranslation(t, "users.details.managePermissions")}
@@ -555,7 +712,9 @@ export function UserDetails({ userId }: { userId: number }) {
               <Button
                 variant="outline"
                 className="justify-start text-xs font-bold border-border hover:bg-muted h-11 rounded-xl transition-all shadow-sm gap-2"
-                onClick={() => toast.info(getTranslation(t, "common.comingSoon"))}
+                onClick={() =>
+                  toast.info(getTranslation(t, "common.comingSoon"))
+                }
               >
                 <Award className="w-4 h-4 text-success" />
                 {getTranslation(t, "users.details.viewDebates")}

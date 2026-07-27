@@ -1,4 +1,5 @@
 import { mutationOptions } from "@tanstack/react-query";
+import { http as api } from "@/services/api/http";
 import {
   usersApi,
   authApi,
@@ -29,6 +30,8 @@ import {
   tagKeys,
   teamKeys,
   userKeys,
+  achievementKeys,
+  achievementCatalogKeys,
 } from "@/lib/constants";
 import type {
   BlogCategory,
@@ -44,14 +47,44 @@ import type {
 
 export const createUserMutationOptions = () =>
   mutationOptions({
-    mutationFn: usersApi.create,
+    mutationFn: (data: Record<string, any>) => {
+      const hasFile = Object.values(data).some((v) => v instanceof File);
+      if (hasFile) {
+        const formData = new FormData();
+        Object.entries(data).forEach(([key, value]) => {
+          if (value === null) formData.append(key, "");
+          else if (value !== undefined) formData.append(key, value);
+        });
+        return api.post("/admin/users", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+      }
+      return usersApi.create(data);
+    },
     mutationKey: userKeys.all,
   });
 
 export const editUserMutationOptions = () =>
   mutationOptions({
-    mutationFn: (variables: { id: string | number; data: Partial<User> }) =>
-      usersApi.update(variables.id, variables.data),
+    mutationFn: (variables: {
+      id: string | number;
+      data: Record<string, any>;
+    }) => {
+      const hasFile = Object.values(variables.data).some(
+        (v) => v instanceof File,
+      );
+      if (hasFile) {
+        const formData = new FormData();
+        Object.entries(variables.data).forEach(([key, value]) => {
+          if (value === null) formData.append(key, "");
+          else if (value !== undefined) formData.append(key, value);
+        });
+        return api.put(`/admin/users/${variables.id}`, formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+      }
+      return usersApi.update(variables.id, variables.data);
+    },
     mutationKey: [userKeys.all, userKeys.detail],
   });
 
@@ -279,4 +312,93 @@ export const announceDebateMutationOptions = () =>
     mutationFn: (variables: { debateId: number; payload: AnnouncePayload }) =>
       announceDebateApi.action(variables.debateId, variables.payload),
     mutationKey: [...debateKeys.all, "announce"],
+  });
+
+export const createAchievementCatalogMutationOptions = () =>
+  mutationOptions({
+    mutationFn: async ({
+      name,
+      type,
+      image,
+    }: {
+      name: string;
+      type: string;
+      image?: File;
+    }) => {
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("type", type);
+      if (image) {
+        formData.append("image", image);
+      }
+
+      return api.post("/admin/achievements", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+    },
+    mutationKey: achievementCatalogKeys.all,
+  });
+
+export const updateAchievementCatalogMutationOptions = () =>
+  mutationOptions({
+    mutationFn: async ({
+      id,
+      name,
+      type,
+      image,
+    }: {
+      id: number;
+      name: string;
+      type: string;
+      image: File | string | null;
+    }) => {
+      const body: Record<string, unknown> = { name, type };
+      if (image !== undefined) {
+        if (image instanceof File) {
+          body.image = await fileToBase64(image);
+        } else {
+          // string (existing URL) or null (remove image)
+          body.image = image;
+        }
+      }
+      return api.put(`/admin/achievements/${id}`, body, {
+        headers: { "Content-Type": "application/json" },
+      });
+    },
+    mutationKey: achievementCatalogKeys.all,
+  });
+
+export const deleteAchievementCatalogMutationOptions = () =>
+  mutationOptions({
+    mutationFn: ({ id, force }: { id: number; force?: boolean }) =>
+      api.delete(`/admin/achievements/${id}`, {
+        params: { force: force ? "true" : undefined },
+      }),
+    mutationKey: achievementCatalogKeys.all,
+  });
+
+export const createAchievementMutationOptions = () =>
+  mutationOptions({
+    mutationFn: ({
+      userId,
+      achievement_id,
+    }: {
+      userId: number;
+      achievement_id: number;
+    }) => api.post(`/admin/users/${userId}/achievements`, { achievement_id }),
+    mutationKey: achievementKeys.all,
+  });
+
+export const deleteAchievementMutationOptions = () =>
+  mutationOptions({
+    mutationFn: ({
+      userId,
+      achievement_id,
+    }: {
+      userId: number;
+      achievement_id: number;
+    }) => api.delete(`/admin/users/${userId}/achievements/${achievement_id}`),
+    mutationKey: achievementKeys.all,
   });

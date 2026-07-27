@@ -298,3 +298,22 @@ export const tagKeys = {
   list: () => [...categoryKeys.all] as const,
   detail: (id: string) => [...categoryKeys.all, id] as const,
 };
+
+/**
+ * ACHIEVEMENTS
+ */
+export const achievementKeys = {
+  all: ["achievements"] as const,
+  list: (userId?: number) => ["achievements", "list", { userId }] as const,
+  detail: (userId?: number, id?: string) =>
+    ["achievements", { userId, id }] as const,
+  available: (userId?: number) =>
+    ["achievements", "available", { userId }] as const,
+};
+
+export const achievementCatalogKeys = {
+  all: ["achievement-catalog"] as const,
+  list: () => [...achievementCatalogKeys.all] as const,
+  detail: (id: number | string) =>
+    [...achievementCatalogKeys.all, String(id)] as const,
+};

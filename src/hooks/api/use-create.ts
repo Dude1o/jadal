@@ -6,6 +6,7 @@ import {
 } from "@tanstack/react-query";
 import { toast } from "@/services/toast/useToastStore";
 import { isRTL } from "@/lib/utils";
+import { useSpinnerStore } from "@/store/use-spinner-store";
 
 export interface ApiError extends Error {
   status?: number;
@@ -41,6 +42,10 @@ export const useCreate = <TData = unknown, TVariables = unknown>({
 
   return useMutation({
     ...mutationOptions,
+    onMutate: async (variables) => {
+      useSpinnerStore.getState().start();
+      return mutationOptions.onMutate?.(variables);
+    },
     onSuccess: async (newData, variables, context) => {
       try {
         // Invalidate list + any other related queries
@@ -61,6 +66,10 @@ export const useCreate = <TData = unknown, TVariables = unknown>({
 
       await onError?.(apiError);
       await mutationOptions.onError?.(error, variables, context);
+    },
+    onSettled: async (data, error, variables, context) => {
+      useSpinnerStore.getState().stop();
+      await mutationOptions.onSettled?.(data, error, variables, context);
     },
   });
 };

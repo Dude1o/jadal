@@ -23,6 +23,7 @@ import { Route as DashboardDebateMotionFrameworksRouteImport } from './routes/_d
 import { Route as DashboardDebateFormatsRouteImport } from './routes/_dashboard/debate-formats'
 import { Route as DashboardComplaintsRouteImport } from './routes/_dashboard/complaints'
 import { Route as DashboardBlogsRouteImport } from './routes/_dashboard/blogs'
+import { Route as DashboardAchievementsRouteImport } from './routes/_dashboard/achievements'
 import { Route as DashboardUsersIndexRouteImport } from './routes/_dashboard/users/index'
 import { Route as DashboardSurveysIndexRouteImport } from './routes/_dashboard/surveys/index'
 import { Route as DashboardDebatesIndexRouteImport } from './routes/_dashboard/debates/index'
@@ -102,6 +103,11 @@ const DashboardBlogsRoute = DashboardBlogsRouteImport.update({
   path: '/blogs',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardAchievementsRoute = DashboardAchievementsRouteImport.update({
+  id: '/achievements',
+  path: '/achievements',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const DashboardUsersIndexRoute = DashboardUsersIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -149,6 +155,7 @@ const DashboardComplaintsComplaintIdRoute =
 
 export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
+  '/achievements': typeof DashboardAchievementsRoute
   '/blogs': typeof DashboardBlogsRoute
   '/complaints': typeof DashboardComplaintsRouteWithChildren
   '/debate-formats': typeof DashboardDebateFormatsRoute
@@ -172,6 +179,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
+  '/achievements': typeof DashboardAchievementsRoute
   '/blogs': typeof DashboardBlogsRoute
   '/debate-formats': typeof DashboardDebateFormatsRoute
   '/debate-motion-frameworks': typeof DashboardDebateMotionFrameworksRoute
@@ -193,6 +201,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_dashboard': typeof DashboardRouteWithChildren
   '/login': typeof LoginRoute
+  '/_dashboard/achievements': typeof DashboardAchievementsRoute
   '/_dashboard/blogs': typeof DashboardBlogsRoute
   '/_dashboard/complaints': typeof DashboardComplaintsRouteWithChildren
   '/_dashboard/debate-formats': typeof DashboardDebateFormatsRoute
@@ -218,6 +227,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/login'
+    | '/achievements'
     | '/blogs'
     | '/complaints'
     | '/debate-formats'
@@ -241,6 +251,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/login'
+    | '/achievements'
     | '/blogs'
     | '/debate-formats'
     | '/debate-motion-frameworks'
@@ -261,6 +272,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/_dashboard'
     | '/login'
+    | '/_dashboard/achievements'
     | '/_dashboard/blogs'
     | '/_dashboard/complaints'
     | '/_dashboard/debate-formats'
@@ -388,6 +400,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardBlogsRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/_dashboard/achievements': {
+      id: '/_dashboard/achievements'
+      path: '/achievements'
+      fullPath: '/achievements'
+      preLoaderRoute: typeof DashboardAchievementsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/_dashboard/users/': {
       id: '/_dashboard/users/'
       path: '/'
@@ -501,6 +520,7 @@ const DashboardUsersRouteWithChildren = DashboardUsersRoute._addFileChildren(
 )
 
 interface DashboardRouteChildren {
+  DashboardAchievementsRoute: typeof DashboardAchievementsRoute
   DashboardBlogsRoute: typeof DashboardBlogsRoute
   DashboardComplaintsRoute: typeof DashboardComplaintsRouteWithChildren
   DashboardDebateFormatsRoute: typeof DashboardDebateFormatsRoute
@@ -516,6 +536,7 @@ interface DashboardRouteChildren {
 }
 
 const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardAchievementsRoute: DashboardAchievementsRoute,
   DashboardBlogsRoute: DashboardBlogsRoute,
   DashboardComplaintsRoute: DashboardComplaintsRouteWithChildren,
   DashboardDebateFormatsRoute: DashboardDebateFormatsRoute,

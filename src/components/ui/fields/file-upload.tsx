@@ -22,8 +22,9 @@ import { FieldWrapper } from "./field-wrapper";
 import { Button } from "../button";
 
 export interface UploadedFile {
-  file: File;
+  file: File | null;
   previewUrl?: string;
+  cleared?: boolean;
 }
 
 interface FileUploadFieldProps {
@@ -96,7 +97,7 @@ export function FileUploaderField({
 
     setUserClearedExisting(true);
 
-    field.handleChange(null);
+    field.handleChange({ file: null, cleared: true });
 
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
@@ -105,9 +106,9 @@ export function FileUploaderField({
 
   const current = field.state.value;
 
-  const isExisting = !current && !userClearedExisting && !!initialUrl;
+  const isExisting = (!current || !current.file) && !userClearedExisting && !!initialUrl;
 
-  const hasFile = !!current || isExisting;
+  const hasFile = (current?.file != null) || isExisting;
 
   return (
     <FieldWrapper

@@ -7,7 +7,6 @@ import { useTranslation } from "react-i18next";
 import { ROLES, STATUSES } from "@/lib/constants";
 import { useData } from "@/hooks/api/use-data";
 import { userQueryOptions } from "@/api/query-options";
-import { Spinner } from "@/components/ui/spinner";
 import { useMemo } from "react";
 import DynamicForm, {
   type FormRow,
@@ -15,6 +14,8 @@ import DynamicForm, {
 } from "../../dynamic-form/dynamic-form";
 import { useFormKey } from "@/hooks/use-form-key";
 import type { User } from "@/types";
+import type { UploadedFile } from "@/components/ui/fields/file-upload";
+import { Spinner } from "@/components/ui/spinner";
 
 type UserRole = "debater" | "trainer" | "judge" | "admin";
 type UserStatus = "active" | "suspended" | "banned";
@@ -25,7 +26,6 @@ interface UserFormValues {
   password: string;
   role: UserRole;
   status: UserStatus;
-  avatar: { url: string; name: string } | null;
   phone: string;
 }
 
@@ -57,12 +57,12 @@ export default function UserForm({
 
   const formKey = useFormKey(user);
 
-  const formDefaultValues: User = {
+  const formDefaultValues: UserFormValues = {
     name: user?.name ?? defaultValues?.name ?? "",
     email: user?.email ?? defaultValues?.email ?? "",
+    password: "",
     role: (user?.role ?? defaultValues?.role ?? "debater") as UserRole,
     status: (user?.status ?? defaultValues?.status ?? "active") as UserStatus,
-    avatar_url: initialAvatar?.url,
     phone: user?.phone ?? defaultValues?.phone ?? "",
   };
 
@@ -114,15 +114,6 @@ export default function UserForm({
         return undefined;
       },
     },
-  };
-
-  const avatarField: FieldConfig<UserFormValues> = {
-    name: "avatar",
-    label: getTranslation(t, "users.form.fields.avatar") ?? getTranslation(t, "users.form.fields.avatar"),
-    type: "file",
-    accept: "image/*",
-    initialUrl: initialAvatar?.url,
-    initialName: initialAvatar?.name,
   };
 
   const phoneField: FieldConfig<UserFormValues> = {
@@ -195,11 +186,6 @@ export default function UserForm({
     {
       kind: "fields",
       columns: 1,
-      fields: [avatarField],
-    },
-    {
-      kind: "fields",
-      columns: 1,
       fields: [phoneField],
     },
     {
@@ -222,20 +208,15 @@ export default function UserForm({
 
   // Transform submitted values to match API expectations
   const handleSubmit = async (values: UserFormValues) => {
-    let avatar_url = "";
-    if (values.avatar) {
-      if (values.avatar instanceof File) {
-        // Replace with actual upload logic
-        avatar_url = "await uploadFile(values.avatar)";
-      } else if (typeof values.avatar === "object" && "url" in values.avatar) {
-        avatar_url = values.avatar.url;
-      }
-    }
-    const payload = {
-      ...values,
-      avatar_url,
+    const payload: Record<string, any> = {
+      name: values.name,
+      email: values.email,
+      role: values.role,
+      status: values.status,
+      phone: values.phone,
     };
-    await onSubmit?.(payload);
+    if (values.password) payload.password = values.password;
+    await onSubmit?.(payload as any);
   };
 
   return (

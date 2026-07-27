@@ -3,6 +3,8 @@ export * from "./shared/api";
 export * from "./shared/enums";
 export * from "./shared/toolbar.type";
 
+export * from "./achievement/achievement.type";
+
 export * from "./blog/blog-post.type";
 
 export * from "./complaint/complaint.type";

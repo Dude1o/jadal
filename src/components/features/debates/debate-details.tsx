@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useState, useMemo } from "react";
+import { useSuspenseQuery, useQueries } from "@tanstack/react-query";
 import {
   ArrowLeft,
   Calendar,
@@ -37,7 +37,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 
-import { debateQueryOptions } from "@/api/query-options";
+import { debateQueryOptions, teamQueryOptions } from "@/api/query-options";
 import type { Debate } from "@/types";
 import { useTranslation } from "react-i18next";
 import { getTranslation, isRTL } from "@/lib/utils";
@@ -55,6 +55,7 @@ import { useCreate } from "@/hooks/api/use-create";
 import DebateForm from "./debate-form";
 import DeleteItem from "@/components/common/delete-item";
 import AnnounceForm from "./announce-form";
+import TeamDetails from "../teams/team-details";
 
 interface DebateDetailsProps {
   debateId: number;
@@ -120,6 +121,30 @@ export function DebateDetails({ debateId }: DebateDetailsProps) {
   ];
 
   const rtl = isRTL();
+
+  const teamIds = [
+    ...new Set(
+      debate.participants
+        .filter(
+          (p) =>
+            (p.side === "proposition" || p.side === "opposition") && p.team_id,
+        )
+        .map((p) => p.team_id),
+    ),
+  ];
+
+  const teamQueries = useQueries({
+    queries: teamIds.map((id) => ({
+      ...teamQueryOptions(id),
+      enabled: !!id,
+    })),
+  });
+
+  const teamNameMap = useMemo(
+    () =>
+      new Map(teamIds.map((id, i) => [id, teamQueries[i]?.data?.name ?? ""])),
+    [teamQueries, teamIds],
+  );
 
   return (
     <div className="min-h-screen bg-background text-foreground selection:bg-accent/30 selection:text-foreground">
@@ -639,18 +664,65 @@ export function DebateDetails({ debateId }: DebateDetailsProps) {
 
                 if (group.length === 0) return null;
 
-                const headerLabel =
-                  key === "rejected" || key === "pending"
-                    ? getTranslation(
-                        t,
-                        `debates.details.participantStatus.${key}`,
-                      )
-                    : getTranslation(t, `debates.details.${key}Side`);
+                const teamIdsForGroup =
+                  key === "proposition" || key === "opposition"
+                    ? [
+                        ...new Set(
+                          group
+                            .filter((p) => p.team_id)
+                            .map((p) => p.team_id),
+                        ),
+                      ]
+                    : [];
+                const teamRows = teamIdsForGroup
+                  .map((id) => ({
+                    id,
+                    name: teamNameMap.get(id) ?? "",
+                  }))
+                  .filter((tr) => tr.name);
 
                 return (
                   <div key={key}>
                     <h4 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">
-                      {headerLabel} ({group.length})
+                      {key === "rejected" || key === "pending" ? (
+                        getTranslation(
+                          t,
+                          `debates.details.participantStatus.${key}`,
+                        )
+                      ) : (
+                        <>
+                          {getTranslation(t, `debates.details.${key}Side`)}
+                          {teamRows.length > 0 && (
+                            <>
+                              {" \u2014 "}
+                              {teamRows.map((tr, i) => (
+                                <span key={tr.id}>
+                                  {i > 0 && ", "}
+                                  <span
+                                    className="cursor-pointer hover:underline underline-offset-2"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      dialog.open({
+                                        title: getTranslation(
+                                          t,
+                                          "teams.single",
+                                        ),
+                                        children: (
+                                          <TeamDetails team_id={tr.id} />
+                                        ),
+                                        closable: true,
+                                      });
+                                    }}
+                                  >
+                                    {tr.name}
+                                  </span>
+                                </span>
+                              ))}
+                            </>
+                          )}
+                        </>
+                      )}{" "}
+                      ({group.length})
                     </h4>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         {group.map((p, i) => {

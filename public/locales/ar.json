@@ -2,6 +2,8 @@
   "common": {
     "actions": {
       "save": "حفظ",
+      "saving": "جاري الحفظ",
+      "assigning": "جاري المنح",
       "cancel": "إلغاء",
       "announce": "إعلان",
       "edit": "تعديل",
@@ -193,6 +195,7 @@
       "debateMotions": "مواضيع المناظرات",
       "debateMotionFrameworks": "أطر مواضيع المناطرات",
       "blogs": "المدونات",
+      "achievements": "الإنجازات",
       "surveys": "الاستبيانات",
       "statistics": "الإحصائيات",
       "complaints": "الشكاوى",
@@ -335,6 +338,9 @@
       "memberSince": "عضو منذ",
       "lastUpdated": "آخر تحديث",
       "unknownDate": "غير معروف",
+      "achievements": "الإنجازات",
+      "assignAchievement": "منح إنجاز",
+      "noAchievements": "لا توجد إنجازات بعد",
       "quickActions": "إجراءات سريعة",
       "viewActivity": "عرض النشاط",
       "managePermissions": "إدارة الصلاحيات",
@@ -978,7 +984,8 @@
       "leader": "القائد",
       "noLeader": "—",
       "teamSize": "حجم الفريق",
-      "leaderBadge": "القائد"
+      "leaderBadge": "القائد",
+      "notFound": "الفريق غير موجود"
     },
     "messages": {
       "created": "تم إنشاء الفريق بنجاح",
@@ -1203,6 +1210,66 @@
         "resolved": "تم الحل",
         "dismissed": "مرفوضة"
       }
+    }
+  },
+  "achievements": {
+    "single": "إنجاز",
+    "plural": "الإنجازات",
+    "selectUser": "اختر مستخدم",
+    "userAchievements": "إنجازات المستخدم",
+    "actions": {
+      "create": "إنشاء إنجاز",
+      "createCatalog": "إنشاء إنجاز",
+      "delete": "حذف",
+      "assign": "منح إنجاز"
+    },
+    "messages": {
+      "created": "تم إنشاء الإنجاز بنجاح",
+      "createError": "فشل إنشاء الإنجاز",
+      "updated": "تم تحديث الإنجاز بنجاح",
+      "updateError": "فشل تحديث الإنجاز",
+      "deleted": "تم حذف الإنجاز بنجاح",
+      "deleteError": "فشل حذف الإنجاز"
+    },
+    "fields": {
+      "user": "المستخدم",
+      "name": "الاسم"
+    },
+    "types": {
+      "gold": "ذهبي",
+      "silver": "فضي",
+      "bronze": "برونزي",
+      "honorable": "تكريمي",
+      "participation": "مشاركة"
+    },
+    "groupBy": {
+      "type": "حسب النوع",
+      "date": "حسب التاريخ"
+    },
+    "form": {
+      "sections": {
+        "details": "تفاصيل الإنجاز"
+      },
+      "fields": {
+        "name": "اسم الإنجاز",
+        "type": "النوع",
+        "image": "صورة الشارة",
+        "user": "المستخدم"
+      }
+    },
+    "validation": {
+      "nameRequired": "اسم الإنجاز مطلوب",
+      "typeRequired": "النوع مطلوب",
+      "userRequired": "المستخدم مطلوب"
+    },
+    "empty": {
+      "noData": "اختر مستخدماً لعرض إنجازاته",
+      "selectUser": "استخدم القائمة أعلاه لاختيار مستخدم",
+      "noAchievements": "لا توجد إنجازات",
+      "noAchievementsDesc": "هذا المستخدم ليس لديه إنجازات بعد.",
+      "createFirst": "قم بإنشاء أول إنجاز للبدء.",
+      "allAssigned": "تم منح جميع الإنجازات",
+      "allAssignedDesc": "هذا المستخدم لديه جميع الإنجازات المتاحة."
     }
   },
   "home": {

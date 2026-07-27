@@ -2,6 +2,8 @@
   "common": {
     "actions": {
       "save": "Save",
+      "saving": "Saving",
+      "assigning": "Assigning",
       "cancel": "Cancel",
       "announce": "Announce",
       "edit": "Edit",
@@ -193,6 +195,7 @@
       "debateMotions": "Debate Motions",
       "debateMotionFrameworks": "Debate Motion Frameworks",
       "blogs": "Blogs",
+      "achievements": "Achievements",
       "surveys": "Surveys",
       "statistics": "Statistics",
       "complaints": "Complaints",
@@ -340,6 +343,9 @@
       "memberSince": "Member Since",
       "lastUpdated": "Last Updated",
       "unknownDate": "Unknown",
+      "achievements": "Achievements",
+      "assignAchievement": "Assign Achievement",
+      "noAchievements": "No achievements yet",
       "quickActions": "Quick Actions",
       "viewActivity": "View Activity",
       "managePermissions": "Manage Permissions",
@@ -980,7 +986,8 @@
       "leader": "Leader",
       "noLeader": "—",
       "teamSize": "Team Size",
-      "leaderBadge": "Leader"
+      "leaderBadge": "Leader",
+      "notFound": "Team not found"
     },
     "messages": {
       "noMembers": "No members configured.",
@@ -989,8 +996,7 @@
       "deleted": "Team deleted successfully",
       "createError": "Failed to create team",
       "updateError": "Failed to update team",
-      "deleteError": "Failed to delete team",
-      "notFound": "Team info not found"
+      "deleteError": "Failed to delete team"
     },
     "fields": {
       "city": "City",
@@ -1205,6 +1211,66 @@
         "resolved": "Resolved",
         "dismissed": "Dismissed"
       }
+    }
+  },
+  "achievements": {
+    "single": "Achievement",
+    "plural": "Achievements",
+    "selectUser": "Select a user",
+    "userAchievements": "User Achievements",
+    "actions": {
+      "create": "Create Achievement",
+      "createCatalog": "Create Achievement",
+      "delete": "Delete",
+      "assign": "Assign Achievement"
+    },
+    "messages": {
+      "created": "Achievement created successfully",
+      "createError": "Failed to create achievement",
+      "updated": "Achievement updated successfully",
+      "updateError": "Failed to update achievement",
+      "deleted": "Achievement deleted successfully",
+      "deleteError": "Failed to delete achievement"
+    },
+    "fields": {
+      "user": "User",
+      "name": "Name"
+    },
+    "types": {
+      "gold": "Gold",
+      "silver": "Silver",
+      "bronze": "Bronze",
+      "honorable": "Honorable",
+      "participation": "Participation"
+    },
+    "groupBy": {
+      "type": "By Type",
+      "date": "By Date"
+    },
+    "form": {
+      "sections": {
+        "details": "Achievement Details"
+      },
+      "fields": {
+        "name": "Achievement Name",
+        "type": "Type",
+        "image": "Badge Image",
+        "user": "User"
+      }
+    },
+    "validation": {
+      "nameRequired": "Achievement name is required",
+      "typeRequired": "Type is required",
+      "userRequired": "User is required"
+    },
+    "empty": {
+      "noData": "Select a user to view their achievements",
+      "selectUser": "Use the dropdown above to select a user",
+      "noAchievements": "No achievements",
+      "noAchievementsDesc": "This user has no achievements yet.",
+      "createFirst": "Create your first achievement to get started.",
+      "allAssigned": "All achievements assigned",
+      "allAssignedDesc": "This user has all available achievements."
     }
   },
   "home": {
