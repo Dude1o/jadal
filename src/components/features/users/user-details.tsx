@@ -59,11 +59,16 @@ import {
 import { useUpdate } from "@/hooks/api/use-update";
 import { useDelete } from "@/hooks/api/use-delete";
 import { useCreate } from "@/hooks/api/use-create";
-import { achievementsQueryOptions, achievementCatalogQueryOptions } from "@/api/query-options";
+import {
+  achievementsQueryOptions,
+  achievementCatalogQueryOptions,
+} from "@/api/query-options";
 import UserForm from "./user-form";
 import AssignmentForm from "@/components/features/achievements/assignment-form";
 import DeleteItem from "@/components/common/delete-item";
 import { Badge } from "@/components/ui/badge";
+
+import coverImage from "@/assets/Jadal_user_cover_image.png";
 
 export function UserDetails({ userId }: { userId: number }) {
   const { t } = useTranslation();
@@ -345,22 +350,26 @@ export function UserDetails({ userId }: { userId: number }) {
         </div>
 
         {/* Hero Identity Card */}
-        <Card className="relative overflow-hidden border-0 shadow-xl ring-1 ring-border/60 mb-8 rounded-3xl bg-card">
+        <Card className="relative overflow-hidden border-0 shadow-xl ring-1 ring-border/60 mb-8 rounded-3xl bg-card p-0">
           <div className="absolute inset-0 bg-gradient-to-tr from-accent/10 via-warning/5 to-transparent pointer-events-none" />
-          <div className="h-32 md:h-40 bg-gradient-to-r from-muted via-border to-muted relative overflow-hidden">
-            <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
+          <div className="h-32 md:h-40 w-full m-0 bg-gradient-to-r from-muted via-border to-muted relative overflow-hidden">
+            <img
+              src={coverImage}
+              alt="cover"
+              className="block w-full h-full object-cover scale-105 group-hover:scale-110 transition-transform duration-700"
+            />
           </div>
 
           <CardContent className="relative pt-0 pb-8 px-6 md:px-10">
             <div className="flex flex-col md:flex-row md:items-end gap-6 -mt-14 md:-mt-16">
               <div className="flex-shrink-0 self-start md:self-auto">
-                <Avatar className="w-28 h-28 md:w-32 md:h-32 rounded-2xl ring-4 ring-card shadow-2xl transform transition-transform duration-300 hover:scale-102">
+                <Avatar className="w-28 h-28 md:w-32 md:h-32 rounded-full ring-4 ring-card shadow-2xl transform transition-transform duration-300 hover:scale-102">
                   <AvatarImage
                     src={user.avatar_url || ""}
                     alt={user.name}
                     className="object-cover"
                   />
-                  <AvatarFallback className="text-3xl font-extrabold bg-gradient-to-tr from-accent to-warning text-accent-foreground rounded-2xl">
+                  <AvatarFallback className="text-3xl font-extrabold bg-gradient-to-tr from-accent to-warning text-accent-foreground rounded-full">
                     {user.name
                       .split(" ")
                       .map((n) => n[0])

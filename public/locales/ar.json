@@ -1210,7 +1210,20 @@
         "resolved": "تم الحل",
         "dismissed": "مرفوضة"
       }
-    }
+    },
+    "label": "إحصائيات المنصة",
+    "value": "القيمة",
+    "suffix": "اللاحقة",
+    "trend": "الاتجاه",
+    "trendValue": "قيمة الاتجاه",
+    "badge": "شارة",
+    "description": "الوصف",
+    "statistics-complaint-accountability": "المساءلة عن الشكاوى",
+    "statistics-engagement-churn": "التفاعل وخطر التراجع",
+    "statistics-platform-health": "نمو المنصة وصحتها",
+    "statistics-leaderboard": "لوحة المتصدرين",
+    "statistics-framework-fairness": "إنصاف الأطر",
+    "chartTitle": "عنوان الرسم البياني"
   },
   "achievements": {
     "single": "إنجاز",

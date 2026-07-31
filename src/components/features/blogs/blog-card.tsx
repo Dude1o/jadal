@@ -22,6 +22,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
+import blogImage from "@/assets/blog_article_placeholder.png";
+
 interface BlogCardProps {
   blog: BlogPost;
   variant?: "feed" | "compact";
@@ -111,15 +113,21 @@ export function BlogCard({ blog, variant = "feed" }: BlogCardProps) {
       dir={i18n.dir()}
     >
       {/* Cover Image */}
-      {blog.cover_image_url && (
-        <div className="sm:hidden relative h-36 w-full overflow-hidden">
+      <div className="sm:hidden relative h-36 w-full overflow-hidden">
+        {blog.cover_image_url ? (
           <img
             src={blog.cover_image_url}
             alt={blog.title}
             className="h-full w-full object-cover"
           />
-        </div>
-      )}
+        ) : (
+          <img
+            src={blogImage}
+            alt={blog.title}
+            className="h-full w-full object-cover"
+          />
+        )}
+      </div>
 
       <div className="flex flex-col sm:flex-row flex-1">
         <div className="flex-1 p-5 flex flex-col">
@@ -313,15 +321,21 @@ export function BlogCard({ blog, variant = "feed" }: BlogCardProps) {
         </div>
 
         {/* Desktop Cover Image */}
-        {blog.cover_image_url && (
-          <div className="hidden sm:block w-44 lg:w-52 relative overflow-hidden shrink-0">
+        <div className="hidden sm:block w-44 lg:w-52 relative overflow-hidden shrink-0">
+          {blog.cover_image_url ? (
             <img
               src={blog.cover_image_url}
               alt={blog.title}
               className="absolute inset-0 h-full w-full object-cover"
             />
-          </div>
-        )}
+          ) : (
+            <img
+              src={blogImage}
+              alt={blog.title}
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+          )}
+        </div>
       </div>
     </article>
   );

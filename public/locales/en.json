@@ -1211,7 +1211,20 @@
         "resolved": "Resolved",
         "dismissed": "Dismissed"
       }
-    }
+    },
+    "label": "Platform Statistics",
+    "value": "Value",
+    "suffix": "Suffix",
+    "trend": "Trend",
+    "trendValue": "Trend Value",
+    "badge": "Badge",
+    "description": "Description",
+    "statistics-complaint-accountability": "Complaint & Accountability",
+    "statistics-engagement-churn": "Engagement & Churn Risk",
+    "statistics-platform-health": "Platform Growth & Health",
+    "statistics-leaderboard": "Leaderboard",
+    "statistics-framework-fairness": "Framework Fairness",
+    "chartTitle": "Chart Title"
   },
   "achievements": {
     "single": "Achievement",

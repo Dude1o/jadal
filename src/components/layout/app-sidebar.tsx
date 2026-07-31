@@ -50,6 +50,8 @@ import { useAuthStore } from "@/store/use-auth-store";
 import { authApi } from "@/services/api";
 import { useMergeSearch } from "@/lib/utils";
 
+import logo from "@/assets/new-logo.png";
+
 const AppSidebar = () => {
   const { state, setOpenMobile } = useSidebar();
   const { pathname, search } = useLocation();
@@ -90,11 +92,26 @@ const AppSidebar = () => {
       collapsible="icon"
       side={i18n.language === "en" ? "left" : "right"}
     >
-      <SidebarHeader>
+      <SidebarHeader className="bg-muted-foreground">
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild>
-              <Link to="/">{getTranslation(t, "auth.login.brand")}</Link>
+            <SidebarMenuButton
+              asChild
+              className="h-auto p-2 group-data-[collapsible=icon]:!p-1.5 group-data-[collapsible=icon]:!size-auto"
+            >
+              <Link
+                to="/"
+                className="flex items-center gap-2 group-data-[collapsible=icon]:justify-center"
+              >
+                <img
+                  src={logo}
+                  alt="Logo"
+                  className="shrink-0 object-contain w-10 h-10 group-data-[collapsible=icon]:w-8 group-data-[collapsible=icon]:h-8"
+                />
+                <span className="whitespace-nowrap group-data-[collapsible=icon]:hidden">
+                  {getTranslation(t, "auth.login.brand")}
+                </span>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

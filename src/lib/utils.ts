@@ -1,9 +1,14 @@
 import i18n from "@/i18n";
-import type {
-  Framework,
-  ImprovementBand,
-  SideBarItem,
-  Statistic,
+import {
+  EXPORT_TREND,
+  NAVY,
+  SLATE_500,
+  TREND_BAR_COLORS,
+  TREND_COLORS,
+  type ExportableStat,
+  type Framework,
+  type ImprovementBand,
+  type SideBarItem,
 } from "@/types";
 import type { TFunction } from "i18next";
 import { useTranslation } from "react-i18next";
@@ -17,9 +22,7 @@ import type { FilterOptions } from "@/components/layout/toolbar/toolbar-filter";
 import { useLocation } from "@tanstack/react-router";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
-
 export { cn };
-
 import {
   Users,
   DollarSign,
@@ -43,12 +46,18 @@ import {
 import type {
   ComplaintAccountability,
   EngagementChurn,
+  ExcelStyleOptions,
+  ChartOptions,
   Leaderboard,
   PlatformHealth,
   StatTrend,
   Statistic,
 } from "@/types";
 import { debateRegistrationsQueryOptions } from "@/api/query-options";
+import ExcelJS from "exceljs";
+import { Chart, registerables, type ChartConfiguration } from "chart.js";
+
+Chart.register(...registerables);
 
 export const getSampleStats = (t: TFunction): Statistic[] => [
   {
@@ -103,7 +112,6 @@ export function frameworkToStatistic(f: Framework, t: TFunction): Statistic {
   const propPct = f.prop_win_rate * 100;
   const oppPct = f.opp_win_rate * 100;
   const drawPct = Math.max(0, 100 - propPct - oppPct);
-
   return {
     id: String(f.framework_id),
     label: f.label,
@@ -151,7 +159,6 @@ export function leaderboardToStatistics(
   return data.entries.map((e) => {
     const isPercent = data.board === "win_rate";
     const value = isPercent ? Math.round(e.value * 1000) / 10 : e.value;
-
     return {
       id: `lb-${e.user_id}`,
       label: `#${e.rank} ${e.name}`,
@@ -179,13 +186,11 @@ export function platformHealthToStatistics(
 ): Statistic[] {
   const bucket = data.buckets[data.buckets.length - 1];
   if (!bucket) return [];
-
   const newUsersTotal =
     bucket.new_users.debater +
     bucket.new_users.trainer +
     bucket.new_users.judge +
     bucket.new_users.admin;
-
   return [
     {
       id: "ph-new-users",
@@ -402,7 +407,6 @@ export function isMenuItemActive(
       Object.entries(item.search).every(
         ([key, value]) => search[key] === value,
       ));
-
   const hasActiveChild = item.subItems?.some(
     (subItem) =>
       pathname === subItem.url &&
@@ -411,7 +415,6 @@ export function isMenuItemActive(
           ([key, value]) => search[key] === value,
         )),
   );
-
   return isParentActive && !hasActiveChild;
 }
 
@@ -448,14 +451,10 @@ export function isValidPhone(str: string) {
 
 export function removeFromEnd(str: string): string {
   const count: number = isRTL() ? 2 : 1;
-
   if (count <= 0) return str;
-
   const segmenter = new Intl.Segmenter(undefined, { granularity: "grapheme" });
   const graphemes = Array.from(segmenter.segment(str), (s) => s.segment);
-
   if (count >= graphemes.length) return "";
-
   return graphemes.slice(0, graphemes.length - count).join("");
 }
 
@@ -506,13 +505,11 @@ export function resolveOptions(
 
 export const useMergeSearch = () => {
   const { search } = useLocation();
-
   return (newSearch?: Record<string, any>) => {
     // If no new search params, return existing ones
     if (!newSearch) {
       return search;
     }
-
     // Parse existing search params
     const existingParams = new URLSearchParams(
       typeof search === "string"
@@ -520,7 +517,6 @@ export const useMergeSearch = () => {
         : new URLSearchParams(search).toString(),
     );
     const existingObj = Object.fromEntries(existingParams);
-
     // Merge with new params (new params override existing ones)
     return {
       ...existingObj,
@@ -533,7 +529,6 @@ export function isDebateAnnouncable(debateId: number) {
   const { data: registrations } = useQuery(
     debateRegistrationsQueryOptions(debateId),
   );
-
   return (
     registrations?.judges?.length >= 1 &&
     ((registrations?.solo?.length >= 3 && registrations?.teams?.length >= 1) ||
@@ -542,19 +537,319 @@ export function isDebateAnnouncable(debateId: number) {
   );
 }
 
-export function exportStatisticsToExcel(
-  stats: Statistic[],
-  fileName: string,
-): void {
-  const rows = stats.map(
-    ({ id: _id, icon: _icon, variant: _variant, ...rest }) => rest,
-  );
-  const ws = XLSX.utils.json_to_sheet(rows);
-  const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, "Statistics");
-  const buf = XLSX.write(wb, { bookType: "xlsx", type: "array" });
-  const blob = new Blob([buf], {
-    type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8",
+/* ═══════════════════════════════════════════════════════════════════
+   Chart.js → PNG helper
+   ═══════════════════════════════════════════════════════════════════ */
+export async function generateChartImage(
+  stats: ExportableStat[],
+  options: ChartOptions = {},
+): Promise<string> {
+  const {
+    type = "bar",
+    title = "Statistics Overview",
+    width = 900,
+    height = 480,
+    backgroundColor = "#ffffff",
+    colors = [
+      "#4e79a7",
+      "#f28e2b",
+      "#e15759",
+      "#76b7b2",
+      "#59a14f",
+      "#edc948",
+      "#b07aa1",
+      "#ff9da7",
+    ],
+  } = options;
+
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("Could not get 2D context");
+
+  ctx.fillStyle = backgroundColor;
+  ctx.fillRect(0, 0, width, height);
+
+  const labels = stats.map((s) => String(s.label ?? "").slice(0, 40));
+  const data = stats.map((s) => {
+    const v = s.value;
+    return typeof v === "number" ? v : parseFloat(String(v)) || 0;
+  });
+
+  const config: ChartConfiguration = {
+    type,
+    data: {
+      labels,
+      datasets: [
+        {
+          label: title,
+          data,
+          backgroundColor: type === "line" ? colors[0] : colors,
+          borderColor: type === "line" ? colors[0] : colors,
+          borderWidth: 2,
+          tension: 0.3,
+          fill: type === "line" ? false : undefined,
+        },
+      ],
+    },
+    options: {
+      responsive: false,
+      animation: false,
+      plugins: {
+        title: {
+          display: true,
+          text: title,
+          font: { size: 18, weight: "bold" },
+          color: "#222",
+        },
+        legend: {
+          display: type === "pie" || type === "doughnut",
+        },
+      },
+      scales:
+        type === "pie" || type === "doughnut"
+          ? undefined
+          : {
+              y: {
+                beginAtZero: true,
+                ticks: { color: "#555" },
+                grid: { color: "#eee" },
+              },
+              x: {
+                ticks: { color: "#555", maxRotation: 45 },
+                grid: { display: false },
+              },
+            },
+    },
+  };
+
+  const chart = new Chart(ctx, config);
+  // Give Chart.js a moment to finish painting
+  await new Promise((r) => setTimeout(r, 80));
+  const dataUrl = canvas.toDataURL("image/png");
+  chart.destroy();
+  return dataUrl;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   Excel export (ExcelJS) – FIXED ARGB colors
+   ═══════════════════════════════════════════════════════════════════ */
+const DEFAULT_STYLES: Required<ExcelStyleOptions> = {
+  // IMPORTANT: ExcelJS expects 8-char ARGB (FF + 6-digit hex)
+  headerBgColor: "FF1F4E79",
+  headerFontColor: "FFFFFFFF",
+  headerFontSize: 12,
+  headerFontName: "Calibri",
+  rowBgColor: "FFFFFFFF",
+  altRowBgColor: "FFF5F7FA",
+  cellFontColor: "FF333333",
+  cellFontSize: 11,
+  cellFontName: "Calibri",
+  valueFontBold: true,
+  trendUpColor: "FF006600",
+  trendDownColor: "FFCC0000",
+  trendNeutralColor: "FF666666",
+  badgeBgColor: "FFE8F0FE",
+  badgeFontColor: "FF1A73E8",
+};
+
+function toArgb(color: string): string {
+  // Accept both "1F4E79" and "FF1F4E79"
+  const c = color.replace(/^#/, "").toUpperCase();
+  return c.length === 6 ? `FF${c}` : c;
+}
+
+function capitalize(str: string) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+export async function exportStatisticsToExcel(
+  stats: ExportableStat[],
+  fileName: string = "statistics.xlsx",
+  styleOptions: ExcelStyleOptions = {},
+  includeChart: boolean = true,
+  chartOptions: ChartOptions = {},
+): Promise<void> {
+  if (!stats?.length) {
+    console.warn("[exportStatisticsToExcel] No stats provided");
+    return;
+  }
+
+  // Normalize any 6-digit colors the caller may pass
+  const raw = { ...DEFAULT_STYLES, ...styleOptions };
+  const styles: Required<ExcelStyleOptions> = {
+    ...raw,
+    headerBgColor: toArgb(raw.headerBgColor),
+    headerFontColor: toArgb(raw.headerFontColor),
+    rowBgColor: toArgb(raw.rowBgColor),
+    altRowBgColor: toArgb(raw.altRowBgColor),
+    cellFontColor: toArgb(raw.cellFontColor),
+    trendUpColor: toArgb(raw.trendUpColor),
+    trendDownColor: toArgb(raw.trendDownColor),
+    trendNeutralColor: toArgb(raw.trendNeutralColor),
+    badgeBgColor: toArgb(raw.badgeBgColor),
+    badgeFontColor: toArgb(raw.badgeFontColor),
+  };
+
+  const workbook = new ExcelJS.Workbook();
+  workbook.creator = "Statistics Export";
+  workbook.created = new Date();
+
+  const worksheet = workbook.addWorksheet("Statistics", {
+    views: [{ showGridLines: false }],
+  });
+
+  // Columns that match the real data shape
+  worksheet.columns = [
+    { header: "Label", key: "label", width: 32 },
+    { header: "Value", key: "value", width: 14 },
+    { header: "Suffix", key: "suffix", width: 10 },
+    { header: "Trend", key: "trend", width: 12 },
+    { header: "Trend Value", key: "trendValue", width: 18 },
+    { header: "Badge", key: "badge", width: 14 },
+    { header: "Description", key: "description", width: 42 },
+  ];
+
+  // ── Header styling ──────────────────────────────────────────────
+  const headerRow = worksheet.getRow(1);
+  headerRow.height = 26;
+
+  headerRow.eachCell((cell) => {
+    cell.fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: styles.headerBgColor },
+    };
+    cell.font = {
+      name: styles.headerFontName,
+      size: styles.headerFontSize,
+      bold: true,
+      color: { argb: styles.headerFontColor },
+    };
+    cell.alignment = { vertical: "middle", horizontal: "center" };
+    cell.border = {
+      bottom: { style: "thin", color: { argb: "FF000000" } },
+    };
+  });
+
+  // ── Data rows ───────────────────────────────────────────────────
+  stats.forEach((stat, index) => {
+    const isAlt = index % 2 === 1;
+    const bgColor = isAlt ? styles.altRowBgColor : styles.rowBgColor;
+
+    const numericValue =
+      typeof stat.value === "number"
+        ? stat.value
+        : parseFloat(String(stat.value)) || 0;
+
+    const row = worksheet.addRow({
+      label: stat.label ?? "",
+      value: numericValue,
+      suffix: stat.suffix ?? "",
+      trend: stat.trend ? capitalize(String(stat.trend)) : "",
+      trendValue: stat.trendValue ?? "",
+      badge: stat.badge ?? "",
+      description: stat.description ?? "",
+    });
+
+    row.height = 22;
+
+    row.eachCell((cell, colNumber) => {
+      cell.fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: { argb: bgColor },
+      };
+      cell.font = {
+        name: styles.cellFontName,
+        size: styles.cellFontSize,
+        color: { argb: styles.cellFontColor },
+        bold: colNumber === 2 && styles.valueFontBold,
+      };
+      cell.alignment = {
+        vertical: "middle",
+        horizontal: colNumber === 2 || colNumber === 5 ? "right" : "left",
+      };
+      cell.border = {
+        bottom: { style: "hair", color: { argb: "FFDDDDDD" } },
+      };
+
+      // Format the pure number so Excel keeps it as a number
+      if (colNumber === 2) {
+        cell.numFmt = Number.isInteger(numericValue) ? "0" : "0.0";
+      }
+    });
+
+    // Trend color
+    if (stat.trend) {
+      const trendCell = row.getCell(4);
+      const color =
+        stat.trend === "up"
+          ? styles.trendUpColor
+          : stat.trend === "down"
+            ? styles.trendDownColor
+            : styles.trendNeutralColor;
+
+      trendCell.font = {
+        name: styles.cellFontName,
+        size: styles.cellFontSize,
+        color: { argb: color },
+        bold: true,
+      };
+    }
+
+    // Badge styling
+    if (stat.badge) {
+      const badgeCell = row.getCell(6);
+      badgeCell.fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: { argb: styles.badgeBgColor },
+      };
+      badgeCell.font = {
+        name: styles.cellFontName,
+        size: styles.cellFontSize,
+        color: { argb: styles.badgeFontColor },
+        bold: true,
+      };
+      badgeCell.alignment = { vertical: "middle", horizontal: "center" };
+    }
+  });
+
+  // ── Optional Chart ─────────────────────────────────────────────
+  if (includeChart && stats.length > 0) {
+    try {
+      const chartDataUrl = await generateChartImage(stats, {
+        title: chartOptions.title ?? fileName.replace(/\.xlsx$/i, ""),
+        ...chartOptions,
+      });
+      const base64 = chartDataUrl.split(",")[1];
+      if (!base64) throw new Error("Empty chart base64");
+
+      const imageId = workbook.addImage({
+        base64,
+        extension: "png",
+      });
+
+      const startRow = stats.length + 3;
+      worksheet.addImage(imageId, {
+        tl: { col: 0, row: startRow },
+        ext: {
+          width: chartOptions.width ?? 900,
+          height: chartOptions.height ?? 480,
+        },
+      });
+    } catch (err) {
+      console.warn("[exportStatisticsToExcel] Chart generation failed:", err);
+    }
+  }
+
+  // ── Download ───────────────────────────────────────────────────
+  const buffer = await workbook.xlsx.writeBuffer();
+  const blob = new Blob([buffer], {
+    type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
   });
   saveAs(blob, fileName.endsWith(".xlsx") ? fileName : `${fileName}.xlsx`);
 }

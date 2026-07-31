@@ -10,7 +10,15 @@ import {
 import { getTranslation } from "@/lib/utils";
 import type { TFunction } from "i18next";
 import type { User, UserStatus } from "@/types";
-import { Ban, Edit, MoreHorizontal, Pause, Play, Trash, Trophy } from "lucide-react";
+import {
+  Ban,
+  Edit,
+  MoreHorizontal,
+  Pause,
+  Play,
+  Trash,
+  Trophy,
+} from "lucide-react";
 import { useTranslation } from "react-i18next";
 import UserForm from "./user-form";
 import AssignmentForm from "@/components/features/achievements/assignment-form";
@@ -32,6 +40,8 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useState } from "react";
+
+import coverImage from "@/assets/Jadal_user_cover_image.png";
 
 export interface UserCardProps {
   user: User;
@@ -139,7 +149,7 @@ export function UserCard({
         {/* Cover */}
         <div className="relative h-28 overflow-hidden">
           <img
-            src={config.cover}
+            src={coverImage}
             alt="cover"
             className="w-full h-full object-cover scale-105 group-hover:scale-110 transition-transform duration-700"
           />
