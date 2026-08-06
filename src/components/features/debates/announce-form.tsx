@@ -6,7 +6,7 @@ import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { getTranslation } from "@/lib/utils";
+import { getInitials, getTranslation } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronDown, ChevronRight, Users, Shuffle } from "lucide-react";
@@ -25,7 +25,6 @@ import {
   debateRegistrationsQueryOptions,
   teamQueryOptions,
 } from "@/api/query-options";
-
 
 interface AnnounceFormProps {
   debateId: number;
@@ -72,16 +71,13 @@ function TeamMembersPreview({ teamId }: { teamId: number }) {
         })}
       </button>
       {expanded && (
-        <div className="mt-2 space-y-1 pl-4 border-l-2 border-muted">
+        <div className="mt-2 space-y-1 pl-4 ">
           {team.members.map((member) => (
             <div key={member.id} className="flex items-center gap-2 text-xs">
               <Avatar className="h-5 w-5">
                 <AvatarImage src={member.user.avatar_url || ""} />
                 <AvatarFallback className="text-[10px]">
-                  {member.user.name
-                    .split(" ")
-                    .map((n) => n[0])
-                    .join("")}
+                  {getInitials(member.user.name)}
                 </AvatarFallback>
               </Avatar>
               <span className="text-foreground">{member.user.name}</span>
@@ -150,7 +146,10 @@ export default function AnnounceForm({
       setTeam2TeamValue("");
       setSelectedTeam2(null);
     }
-    if (newType !== "team") { setTeam1TeamValue(""); setSelectedTeam1(null); }
+    if (newType !== "team") {
+      setTeam1TeamValue("");
+      setSelectedTeam1(null);
+    }
     if (newType !== "solo") setTeam1SolosValue([]);
   };
 
@@ -161,7 +160,10 @@ export default function AnnounceForm({
       setTeam1TeamValue("");
       setSelectedTeam1(null);
     }
-    if (newType !== "team") { setTeam2TeamValue(""); setSelectedTeam2(null); }
+    if (newType !== "team") {
+      setTeam2TeamValue("");
+      setSelectedTeam2(null);
+    }
     if (newType !== "solo") setTeam2SolosValue([]);
   };
 
@@ -311,13 +313,21 @@ export default function AnnounceForm({
                   }}
                 >
                   <SelectTrigger className="w-full mt-1">
-                    <SelectValue placeholder={getTranslation(t, "debates.form.fields.selectTeam")} />
+                    <SelectValue
+                      placeholder={getTranslation(
+                        t,
+                        "debates.form.fields.selectTeam",
+                      )}
+                    />
                   </SelectTrigger>
                   <SelectContent>
                     {(registrations?.teams ?? [])
                       .filter((reg) => String(reg.team.id) !== team2TeamValue)
                       .map((reg) => (
-                        <SelectItem key={reg.team.id} value={String(reg.team.id)}>
+                        <SelectItem
+                          key={reg.team.id}
+                          value={String(reg.team.id)}
+                        >
                           {reg.team.name}
                         </SelectItem>
                       ))}
@@ -333,7 +343,11 @@ export default function AnnounceForm({
                 </label>
                 <div className="mt-1 space-y-2">
                   {(registrations?.solo ?? [])
-                    .filter((s) => !team2SolosValue.includes(String(s.user.id)) && !randomTeam2.includes(s.user.id))
+                    .filter(
+                      (s) =>
+                        !team2SolosValue.includes(String(s.user.id)) &&
+                        !randomTeam2.includes(s.user.id),
+                    )
                     .map((s) => (
                       <div key={s.user.id} className="flex items-center gap-3">
                         <input
@@ -366,21 +380,39 @@ export default function AnnounceForm({
               <div className="rounded-lg border border-border p-3 bg-muted/30 space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Badge variant="outline" className="text-[10px] px-1.5 py-0">1</Badge>
+                    <Badge
+                      variant="outline"
+                      className="text-[10px] px-1.5 py-0"
+                    >
+                      1
+                    </Badge>
                     <span className="text-xs font-medium">
                       {getTranslation(t, "debates.form.fields.randomTeam")}
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Select value={String(teamSize)} onValueChange={(v) => setTeamSize(Number(v))}>
-                      <SelectTrigger className="w-16 h-7 text-xs"><SelectValue /></SelectTrigger>
+                    <Select
+                      value={String(teamSize)}
+                      onValueChange={(v) => setTeamSize(Number(v))}
+                    >
+                      <SelectTrigger className="w-16 h-7 text-xs">
+                        <SelectValue />
+                      </SelectTrigger>
                       <SelectContent>
                         {[3, 4].map((n) => (
-                          <SelectItem key={n} value={String(n)}>{n}</SelectItem>
+                          <SelectItem key={n} value={String(n)}>
+                            {n}
+                          </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
-                    <Button type="button" size="sm" variant="default" onClick={handleGenerateTeam1Random} className="h-7 text-xs gap-1 px-2">
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="default"
+                      onClick={handleGenerateTeam1Random}
+                      className="h-7 text-xs gap-1 px-2"
+                    >
                       <Shuffle className="h-3 w-3" />
                       {getTranslation(t, "debates.form.fields.generateRandom")}
                     </Button>
@@ -390,13 +422,18 @@ export default function AnnounceForm({
                   {randomTeam1.length > 0 ? (
                     <div className="space-y-1">
                       {randomTeam1.map((id) => (
-                        <div key={id} className="flex items-center gap-2 text-xs">
+                        <div
+                          key={id}
+                          className="flex items-center gap-2 text-xs"
+                        >
                           <Avatar className="h-5 w-5">
                             <AvatarFallback className="text-[10px]">
-                              {(soloApplicantMap.get(id) ?? "?").split(" ").map((n) => n[0]).join("")}
+                              {getInitials((soloApplicantMap.get(id) ?? "?"))}
                             </AvatarFallback>
                           </Avatar>
-                          <span>{soloApplicantMap.get(id) ?? `User #${id}`}</span>
+                          <span>
+                            {soloApplicantMap.get(id) ?? `User #${id}`}
+                          </span>
                         </div>
                       ))}
                     </div>
@@ -443,13 +480,21 @@ export default function AnnounceForm({
                   }}
                 >
                   <SelectTrigger className="w-full mt-1">
-                    <SelectValue placeholder={getTranslation(t, "debates.form.fields.selectTeam")} />
+                    <SelectValue
+                      placeholder={getTranslation(
+                        t,
+                        "debates.form.fields.selectTeam",
+                      )}
+                    />
                   </SelectTrigger>
                   <SelectContent>
                     {(registrations?.teams ?? [])
                       .filter((reg) => String(reg.team.id) !== team1TeamValue)
                       .map((reg) => (
-                        <SelectItem key={reg.team.id} value={String(reg.team.id)}>
+                        <SelectItem
+                          key={reg.team.id}
+                          value={String(reg.team.id)}
+                        >
                           {reg.team.name}
                         </SelectItem>
                       ))}
@@ -465,7 +510,11 @@ export default function AnnounceForm({
                 </label>
                 <div className="mt-1 space-y-2">
                   {(registrations?.solo ?? [])
-                    .filter((s) => !team1SolosValue.includes(String(s.user.id)) && !randomTeam1.includes(s.user.id))
+                    .filter(
+                      (s) =>
+                        !team1SolosValue.includes(String(s.user.id)) &&
+                        !randomTeam1.includes(s.user.id),
+                    )
                     .map((s) => (
                       <div key={s.user.id} className="flex items-center gap-3">
                         <input
@@ -498,21 +547,39 @@ export default function AnnounceForm({
               <div className="rounded-lg border border-border p-3 bg-muted/30 space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Badge variant="outline" className="text-[10px] px-1.5 py-0">2</Badge>
+                    <Badge
+                      variant="outline"
+                      className="text-[10px] px-1.5 py-0"
+                    >
+                      2
+                    </Badge>
                     <span className="text-xs font-medium">
                       {getTranslation(t, "debates.form.fields.randomTeam")}
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Select value={String(teamSize)} onValueChange={(v) => setTeamSize(Number(v))}>
-                      <SelectTrigger className="w-16 h-7 text-xs"><SelectValue /></SelectTrigger>
+                    <Select
+                      value={String(teamSize)}
+                      onValueChange={(v) => setTeamSize(Number(v))}
+                    >
+                      <SelectTrigger className="w-16 h-7 text-xs">
+                        <SelectValue />
+                      </SelectTrigger>
                       <SelectContent>
                         {[3, 4].map((n) => (
-                          <SelectItem key={n} value={String(n)}>{n}</SelectItem>
+                          <SelectItem key={n} value={String(n)}>
+                            {n}
+                          </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
-                    <Button type="button" size="sm" variant="default" onClick={handleGenerateTeam2Random} className="h-7 text-xs gap-1 px-2">
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="default"
+                      onClick={handleGenerateTeam2Random}
+                      className="h-7 text-xs gap-1 px-2"
+                    >
                       <Shuffle className="h-3 w-3" />
                       {getTranslation(t, "debates.form.fields.generateRandom")}
                     </Button>
@@ -522,13 +589,18 @@ export default function AnnounceForm({
                   {randomTeam2.length > 0 ? (
                     <div className="space-y-1">
                       {randomTeam2.map((id) => (
-                        <div key={id} className="flex items-center gap-2 text-xs">
+                        <div
+                          key={id}
+                          className="flex items-center gap-2 text-xs"
+                        >
                           <Avatar className="h-5 w-5">
                             <AvatarFallback className="text-[10px]">
-                              {(soloApplicantMap.get(id) ?? "?").split(" ").map((n) => n[0]).join("")}
+                              {getInitials((soloApplicantMap.get(id) ?? "?"))}
                             </AvatarFallback>
                           </Avatar>
-                          <span>{soloApplicantMap.get(id) ?? `User #${id}`}</span>
+                          <span>
+                            {soloApplicantMap.get(id) ?? `User #${id}`}
+                          </span>
                         </div>
                       ))}
                     </div>
@@ -581,7 +653,8 @@ export default function AnnounceForm({
           )}
           <Button
             type="button"
-            className="flex-1 bg-accent hover:bg-accent/80"
+            variant="accent"
+            className="flex-1"
             onClick={() => {
               document.getElementById("announce-form")?.requestSubmit();
             }}

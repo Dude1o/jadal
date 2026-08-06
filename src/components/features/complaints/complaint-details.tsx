@@ -3,6 +3,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   AlertCircle,
+  FileText,
   ArrowLeft,
   ArrowRight,
   Calendar,
@@ -18,12 +19,12 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "@tanstack/react-router";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { OrangeBand, BandChip } from "@/components/common/orange-band";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import type { ComplaintStatus } from "@/types";
 import { complaintQueryOptions } from "@/api/query-options";
-import { getTranslation, isRTL } from "@/lib/utils";
+import { getInitials, getTranslation, isRTL } from "@/lib/utils";
 
 // ── Animation Variants ────────────────────────────────────────────────────────
 
@@ -62,7 +63,7 @@ const STATUS_CONFIG: Record<
     glow: "shadow-[0_0_15px_var(--muted-foreground)/15]",
   },
   open: {
-    colorClass: "bg-primary/10 text-primary border-primary/20",
+    colorClass: "bg-primary/10 text-primary ",
     icon: Inbox,
     glow: "shadow-[0_0_15px_var(--primary)/15]",
   },
@@ -77,52 +78,53 @@ function HeroSection({ complaint, t }: { complaint: any; t: any }) {
 
   return (
     <motion.div variants={itemVariants} className="relative w-full">
-      <Card
-        className={`overflow-hidden border-border/80 bg-card/60 backdrop-blur-md shadow-xl transition-all duration-300 ${currentStatus.glow}`}
-      >
-        <div className="h-32 bg-gradient-to-r from-muted via-border to-muted relative overflow-hidden flex items-center px-6 md:px-8">
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
-          <div className="absolute -right-10 -top-10 w-40 h-40 bg-accent/10 rounded-full blur-2xl" />
-        </div>
+      {/* The header identifies the complaint; it does not carry it. The
+          description can run to pages, and a header that grows with its content
+          is not a header — so the title is the complaint number and the body
+          lives in its own section below. Status stays a translucent navy chip:
+          on orange, a semantic red/green pill reads as an error, not a state. */}
+      <OrangeBand
+        icon={<AlertCircle />}
+        title={`${getTranslation(t, "complaints.single")} #${complaint.id}`}
+        chips={
+          <>
+            <BandChip strong>
+              <StatusIcon />
+              {getTranslation(t, `complaints.statuses.${complaint.status}`)}
+            </BandChip>
+            {complaint.debate_id != null && (
+              <BandChip>
+                {getTranslation(t, "complaints.details.debateId")} #
+                {complaint.debate_id}
+              </BandChip>
+            )}
+          </>
+        }
+      />
+    </motion.div>
+  );
+}
 
-        <CardContent className="px-6 md:px-8 pb-6 relative">
-          <div className="flex flex-col sm:flex-row sm:items-end gap-5 -mt-10 mb-6">
-            <div className="w-20 h-20 rounded-2xl border-4 border-card shadow-xl bg-gradient-to-tr from-accent to-warning flex items-center justify-center shrink-0 transform -rotate-3 hover:rotate-0 transition-transform duration-300">
-              <AlertCircle className="w-9 h-9 text-accent-foreground" />
-            </div>
-
-            <div className="flex-1 min-w-0 pt-2">
-              <h1 className="text-xl md:text-2xl font-bold tracking-tight text-foreground leading-tight break-words">
-                {complaint.description}
-              </h1>
-              <p className="text-xs md:text-sm font-medium text-muted-foreground mt-1 flex flex-wrap items-center gap-1.5">
-                <span>
-                  {getTranslation(t, "complaints.details.id")} #{complaint.id}
-                </span>
-                {complaint.debate_id != null && (
-                  <>
-                    <span className="text-border">
-                      •
-                    </span>
-                    <span className="text-accent font-semibold">
-                      {getTranslation(t, "complaints.details.debateId")} #
-                      {complaint.debate_id}
-                    </span>
-                  </>
-                )}
-              </p>
-            </div>
-
-            <div className="sm:self-end mt-2 sm:mt-0">
-              <Badge
-                variant="outline"
-                className={`capitalize px-3 py-1 text-xs font-semibold tracking-wide border rounded-xl flex items-center gap-1.5 ${currentStatus.colorClass}`}
-              >
-                <StatusIcon className="w-3.5 h-3.5" />
-                {getTranslation(t, `complaints.statuses.${complaint.status}`)}
-              </Badge>
-            </div>
-          </div>
+/** The complaint text itself — unclamped, and free to be as long as it is. */
+function ComplaintBody({ complaint, t }: { complaint: any; t: any }) {
+  return (
+    <motion.div variants={itemVariants}>
+      <Card className="jd-card overflow-hidden">
+        <CardHeader className="pb-4">
+          <CardTitle className="flex items-center gap-2.5 text-base font-bold text-card-foreground">
+            <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-[color-mix(in_oklab,var(--accent-btn)_18%,transparent)] text-[var(--accent-btn-fg)] dark:text-[var(--accent-btn)]">
+              <FileText className="size-4" />
+            </span>
+            {getTranslation(t, "complaints.details.complaintText")}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {/* This is the thing the reader came for, so it is set at reading
+              size, not metadata size, and measure-capped so long complaints
+              stay readable. */}
+          <p className="bidi-plaintext max-w-[70ch] text-[length:var(--text-subtitle)] leading-relaxed whitespace-pre-wrap text-card-foreground">
+            {complaint.description}
+          </p>
         </CardContent>
       </Card>
     </motion.div>
@@ -145,11 +147,7 @@ function FilerProfile({ filer, t }: { filer: any; t: any }) {
           <Avatar className="w-12 h-12 ring-2 ring-accent/20">
             <AvatarImage src={filer.avatar_url ?? ""} alt={filer.name} />
             <AvatarFallback className="text-sm font-bold bg-gradient-to-tr from-accent to-warning text-accent-foreground">
-              {filer.name
-                .split(" ")
-                .map((n: string) => n[0])
-                .join("")
-                .toUpperCase()}
+              {getInitials(filer.name)}
             </AvatarFallback>
           </Avatar>
           <div className="min-w-0 flex-1">
@@ -357,6 +355,9 @@ export function ComplaintDetails({ complaintId }: { complaintId: number }) {
 
         {/* ── Hero Info Accent Card ── */}
         <HeroSection complaint={complaint} t={t} />
+
+        {/* ── The complaint text, in its own section ── */}
+        <ComplaintBody complaint={complaint} t={t} />
 
         {/* ── Split Information Grid ── */}
         <motion.div

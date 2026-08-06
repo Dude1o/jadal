@@ -35,7 +35,10 @@ export function DateTimePickerField({ label }: { label: string }) {
     }
     const current = field.state.value;
     if (current) {
-      date = setHours(setMinutes(date, current.getMinutes()), current.getHours());
+      date = setHours(
+        setMinutes(date, current.getMinutes()),
+        current.getHours(),
+      );
     }
     field.handleChange(date);
     setOpen(false);
@@ -44,11 +47,13 @@ export function DateTimePickerField({ label }: { label: string }) {
   const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const timeValue = e.target.value;
     setLocalTime(timeValue);
-    
+
     if (!timeValue) return;
-    
+
     const [hours, minutes] = timeValue.split(":").map(Number);
-    const current = field.state.value ? new Date(field.state.value) : new Date();
+    const current = field.state.value
+      ? new Date(field.state.value)
+      : new Date();
     field.handleChange(setMinutes(setHours(current, hours), minutes));
   };
 
@@ -78,7 +83,10 @@ export function DateTimePickerField({ label }: { label: string }) {
                 <ChevronDownIcon className="h-4 w-4" />
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-auto overflow-hidden p-0" align="start">
+            <PopoverContent
+              className="w-auto overflow-hidden p-0"
+              align="start"
+            >
               <Calendar
                 mode="single"
                 selected={field.state.value}

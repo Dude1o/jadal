@@ -78,7 +78,8 @@ export default function ErrorFallback({
           <div className="rounded-md bg-muted/60 p-3 font-mono text-xs text-muted-foreground break-all max-h-[120px] overflow-y-auto border border-border/40">
             <span className="font-semibold text-foreground/70">
               {getTranslation(t, "common.errors.details")}:
-            </span>{" "}
+            </span>
+            {""}
             {status ? `[Status ${status}] ` : ""}
             {errorMessage}
           </div>

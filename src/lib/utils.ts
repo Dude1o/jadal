@@ -117,6 +117,28 @@ export function frameworkToStatistic(f: Framework, t: TFunction): Statistic {
     label: f.label,
     value: Math.round(propPct * 10) / 10,
     suffix: "%",
+    // Prop / opp / draw is a whole split three ways — show it as a donut.
+    parts: [
+      {
+        label: getTranslation(t, "debates.card.proposition"),
+        value: propPct,
+        color: "var(--proposition)",
+      },
+      {
+        label: getTranslation(t, "debates.card.opposition"),
+        value: oppPct,
+        color: "var(--opposition)",
+      },
+      ...(drawPct > 0.5
+        ? [
+            {
+              label: getTranslation(t, "debates.card.draw"),
+              value: drawPct,
+              color: "var(--judges)",
+            },
+          ]
+        : []),
+    ],
     icon: Scale,
     variant: f.flagged ? "destructive" : "default",
     badge: f.flagged ? getTranslation(t, "statistics.flagged") : undefined,
@@ -191,6 +213,11 @@ export function platformHealthToStatistics(
     bucket.new_users.trainer +
     bucket.new_users.judge +
     bucket.new_users.admin;
+
+  /** Each metric is bucketed over time already — surface it as a sparkline. */
+  const seriesOf = (pick: (b: (typeof data.buckets)[number]) => number) =>
+    data.buckets.length > 1 ? data.buckets.map(pick) : undefined;
+
   return [
     {
       id: "ph-new-users",
@@ -198,6 +225,13 @@ export function platformHealthToStatistics(
       value: newUsersTotal,
       icon: Users,
       variant: "default",
+      series: seriesOf(
+        (b) =>
+          b.new_users.debater +
+          b.new_users.trainer +
+          b.new_users.judge +
+          b.new_users.admin,
+      ),
     },
     {
       id: "ph-created",
@@ -205,6 +239,7 @@ export function platformHealthToStatistics(
       value: bucket.debates_created,
       icon: Calendar,
       variant: "default",
+      series: seriesOf((b) => b.debates_created),
     },
     {
       id: "ph-completed",
@@ -212,6 +247,7 @@ export function platformHealthToStatistics(
       value: bucket.debates_completed,
       icon: CheckCircle2,
       variant: "success",
+      series: seriesOf((b) => b.debates_completed),
     },
     {
       id: "ph-cancelled",
@@ -219,6 +255,7 @@ export function platformHealthToStatistics(
       value: bucket.debates_cancelled,
       icon: XCircle,
       variant: bucket.debates_cancelled > 0 ? "warning" : "default",
+      series: seriesOf((b) => b.debates_cancelled),
     },
     {
       id: "ph-completion-rate",
@@ -240,6 +277,7 @@ export function platformHealthToStatistics(
           : Math.round(bucket.avg_debates_per_active_debater * 10) / 10,
       icon: Activity,
       variant: "default",
+      series: seriesOf((b) => b.avg_debates_per_active_debater ?? 0),
     },
   ];
 }
@@ -319,13 +357,21 @@ export function formatRelativeTime(iso: string, t: TFunction): string {
 }
 
 /* ── Avatar utils ── */
-export function getInitials(name: string) {
-  return name
-    .split(" ")
-    .map((n) => n[0])
-    .slice(0, 2)
-    .join("")
-    .toUpperCase();
+/**
+ * Up to TWO initials, never more, never the full name (section 11.4).
+ * One name token yields one character; two or more yield the first character
+ * of the first and last tokens. Latin is uppercased; Arabic has no case, so it
+ * keeps its natural forms.
+ */
+export function getInitials(name?: string | null) {
+  const tokens = (name ?? "").trim().split(/\s+/).filter(Boolean);
+  if (tokens.length === 0) return "?";
+
+  const first = [...tokens[0]][0] ?? "";
+  const last =
+    tokens.length > 1 ? ([...tokens[tokens.length - 1]][0] ?? "") : "";
+
+  return (first + last).slice(0, 2).toUpperCase();
 }
 
 export function avatarColor(name: string) {

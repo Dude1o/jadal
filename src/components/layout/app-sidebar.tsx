@@ -12,18 +12,9 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
-  SidebarSeparator,
   useSidebar,
 } from "@/components/ui/sidebar";
-import {
-  ChevronDown,
-  ChevronUp,
-  CircleUserIcon,
-  LogOutIcon,
-  Plus,
-  Settings2,
-  User2,
-} from "lucide-react";
+import { ChevronDown, ChevronUp, LogOutIcon, Settings2 } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -48,7 +39,8 @@ import { useDialogStore } from "@/services";
 import { useRef, useState } from "react";
 import { useAuthStore } from "@/store/use-auth-store";
 import { authApi } from "@/services/api";
-import { useMergeSearch } from "@/lib/utils";
+
+import { NavPill } from "./nav-pill";
 
 import logo from "@/assets/new-logo.png";
 
@@ -59,10 +51,18 @@ const AppSidebar = () => {
   const dialog = useDialogStore();
   const navigate = useNavigate();
   const { logout } = useAuthStore();
-  const mergeSearch = useMergeSearch();
 
-  const [dialogError, setDialogError] = useState<string | undefined>();
+  const [, setDialogError] = useState<string | undefined>();
   const user = useAuthStore.getState().user;
+
+  // The pill measures against this list and re-measures whenever the route
+  // changes, which is what makes it slide rather than blink.
+  const navRef = useRef<HTMLDivElement>(null);
+  const activeKey = `${pathname}?${
+    typeof search === "string"
+      ? search
+      : new URLSearchParams(search as never).toString()
+  }`;
 
   // Helper to get search params while preserving view
   const getSearchWithView = (newSearch?: Record<string, any>) => {
@@ -92,220 +92,200 @@ const AppSidebar = () => {
       collapsible="icon"
       side={i18n.language === "en" ? "left" : "right"}
     >
-      <SidebarHeader className="bg-muted-foreground">
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              asChild
-              className="h-auto p-2 group-data-[collapsible=icon]:!p-1.5 group-data-[collapsible=icon]:!size-auto"
-            >
-              <Link
-                to="/"
-                className="flex items-center gap-2 group-data-[collapsible=icon]:justify-center"
-              >
-                <img
-                  src={logo}
-                  alt="Logo"
-                  className="shrink-0 object-contain w-10 h-10 group-data-[collapsible=icon]:w-8 group-data-[collapsible=icon]:h-8"
-                />
-                <span className="whitespace-nowrap group-data-[collapsible=icon]:hidden">
-                  {getTranslation(t, "auth.login.brand")}
-                </span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
+      <SidebarHeader className="relative z-10 px-3 py-5">
+        <Link
+          to="/"
+          className="flex items-center gap-3 group-data-[collapsible=icon]:justify-center"
+        >
+          <span className="flex size-10 shrink-0 items-center justify-center rounded-[14px] bg-white/[0.08]">
+            <img
+              src={logo}
+              alt=""
+              aria-hidden
+              className="size-7 shrink-0 object-contain"
+            />
+          </span>
+          <span className="truncate text-[length:var(--text-title)] font-extrabold text-rail-fg group-data-[collapsible=icon]:hidden">
+            {getTranslation(t, "auth.login.brand")}
+          </span>
+        </Link>
       </SidebarHeader>
 
-      <SidebarSeparator className="self-center" />
-
-      <SidebarContent className="no-scrollbar">
-        <SidebarGroup>
+      <SidebarContent className="no-scrollbar relative z-10 px-2">
+        <SidebarGroup className="p-0">
           <SidebarGroupContent>
-            <SidebarMenu>
-              {sidebarItems.map((item) => {
-                const isActive = isMenuItemActive(pathname, search, item);
+            <div ref={navRef} className="relative">
+              {/* Sliding orange indicator: one element, not a class per row */}
+              {state !== "collapsed" && (
+                <NavPill containerRef={navRef} activeKey={activeKey} />
+              )}
+              <SidebarMenu className="gap-1">
+                {sidebarItems.map((item) => {
+                  const isActive = isMenuItemActive(pathname, search, item);
 
-                return (
-                  <Collapsible
-                    key={item.title}
-                    defaultOpen={false}
-                    className="group/collapsible"
-                  >
-                    <SidebarMenuItem>
-                      {item.subItems ? (
-                        <>
-                          {/* Parent row */}
-                          <div className="flex items-center w-full">
-                            {/* Navigation */}
-                            <SidebarMenuButton
-                              asChild
-                              isActive={isActive}
-                              className="flex-1"
-                            >
-                              <Link
-                                to={item.url}
-                                search={getSearchWithView()}
-                                onClick={() => setOpenMobile(false)}
-                                className="flex items-center gap-2 w-full"
+                  return (
+                    <Collapsible
+                      key={item.title}
+                      defaultOpen={false}
+                      className="group/collapsible"
+                    >
+                      <SidebarMenuItem>
+                        {item.subItems ? (
+                          <>
+                            {/* Parent row */}
+                            <div className="flex items-center w-full">
+                              {/* Navigation */}
+                              <SidebarMenuButton
+                                asChild
+                                isActive={isActive}
+                                data-nav-active={isActive || undefined}
+                                className="flex-1"
                               >
-                                {item.icon && <item.icon className="h-4 w-4" />}
-                                <span>{getTranslation(t, item.title)}</span>
-                              </Link>
-                            </SidebarMenuButton>
-
-                            {/* Chevron toggle */}
-                            {state !== "collapsed" && (
-                              <CollapsibleTrigger asChild>
-                                <button
-                                  type="button"
-                                  className={cn(
-                                    rtlAuto(),
-                                    "p-2 text-muted-foreground hover:text-foreground",
-                                  )}
-                                  onClick={(e) => e.stopPropagation()}
+                                <Link
+                                  to={item.url}
+                                  search={getSearchWithView()}
+                                  onClick={() => setOpenMobile(false)}
+                                  className="flex w-full items-center gap-3"
                                 >
-                                  <ChevronDown
-                                    size={18}
+                                  {item.icon && <item.icon />}
+                                  <span>{getTranslation(t, item.title)}</span>
+                                </Link>
+                              </SidebarMenuButton>
+
+                              {/* Chevron toggle */}
+                              {state !== "collapsed" && (
+                                <CollapsibleTrigger asChild>
+                                  <button
+                                    type="button"
                                     className={cn(
-                                      "transition-transform group-data-[state=open]/collapsible:rotate-180",
-                                      rtlChevron(),
-                                      "hover:text-accent-foreground hover:bg-accent hover:rounded-2xl",
+                                      rtlAuto(),
+                                      "relative z-10 shrink-0 cursor-pointer rounded-full p-2 text-rail-fg-muted transition-colors duration-150 ease-in-out hover:bg-white/[0.07] hover:text-[#D5E2F2]",
                                     )}
-                                  />
-                                </button>
-                              </CollapsibleTrigger>
-                            )}
-                          </div>
+                                    onClick={(e) => e.stopPropagation()}
+                                  >
+                                    <ChevronDown
+                                      size={16}
+                                      className={cn(
+                                        "transition-transform duration-200 group-data-[state=open]/collapsible:rotate-180",
+                                        rtlChevron(),
+                                      )}
+                                    />
+                                  </button>
+                                </CollapsibleTrigger>
+                              )}
+                            </div>
 
-                          {/* Submenu */}
-                          <CollapsibleContent>
-                            <SidebarMenuSub>
-                              {item.subItems.map((subItem) => {
-                                const isSubActive = isSubMenuItemActive(
-                                  pathname,
-                                  search,
-                                  subItem,
-                                );
+                            {/* Submenu */}
+                            <CollapsibleContent>
+                              <SidebarMenuSub className="mt-1 gap-0.5 py-0">
+                                {item.subItems.map((subItem) => {
+                                  const isSubActive = isSubMenuItemActive(
+                                    pathname,
+                                    search,
+                                    subItem,
+                                  );
 
-                                return (
-                                  <SidebarMenuSubItem key={subItem.title}>
-                                    <SidebarMenuSubButton
-                                      asChild
-                                      isActive={isSubActive}
-                                      className="
-                                  text-sidebar-foreground
-                                  [&>svg]:text-sidebar-foreground
-
-                                  hover:text-sidebar-accent-foreground
-                                  hover:[&>svg]:text-sidebar-accent-foreground
-
-                                  data-[active=true]:text-sidebar-primary-foreground
-                                  data-[active=true]:[&>svg]:text-sidebar-primary-foreground
-                                "
-                                    >
-                                      <Link
-                                        to={subItem.url}
-                                        search={getSearchWithView(
-                                          subItem.search,
-                                        )}
-                                        onClick={() => setOpenMobile(false)}
-                                        className="flex items-center gap-2 w-full"
+                                  return (
+                                    <SidebarMenuSubItem key={subItem.title}>
+                                      <SidebarMenuSubButton
+                                        asChild
+                                        isActive={isSubActive}
+                                        data-nav-active={
+                                          isSubActive || undefined
+                                        }
                                       >
-                                        {subItem.icon && (
-                                          <subItem.icon className="h-4 w-4" />
-                                        )}
-                                        <span>
-                                          {getTranslation(t, subItem.title)}
-                                        </span>
-                                      </Link>
-                                    </SidebarMenuSubButton>
-                                  </SidebarMenuSubItem>
-                                );
-                              })}
-                            </SidebarMenuSub>
-                          </CollapsibleContent>
-                        </>
-                      ) : (
-                        /* Normal menu item */
-                        <div className="flex items-center w-full">
+                                        <Link
+                                          to={subItem.url}
+                                          search={getSearchWithView(
+                                            subItem.search,
+                                          )}
+                                          onClick={() => setOpenMobile(false)}
+                                          className="flex w-full items-center gap-3"
+                                        >
+                                          {subItem.icon && <subItem.icon />}
+                                          <span>
+                                            {getTranslation(t, subItem.title)}
+                                          </span>
+                                        </Link>
+                                      </SidebarMenuSubButton>
+                                    </SidebarMenuSubItem>
+                                  );
+                                })}
+                              </SidebarMenuSub>
+                            </CollapsibleContent>
+                          </>
+                        ) : (
+                          /* Normal menu item */
                           <SidebarMenuButton
                             asChild
                             isActive={isActive}
-                            className="flex-1"
+                            data-nav-active={isActive || undefined}
                           >
                             <Link
                               to={item.url}
                               search={getSearchWithView(item.search)}
                               onClick={() => setOpenMobile(false)}
-                              className="flex items-center gap-2 w-full"
+                              className="flex w-full items-center gap-3"
                             >
-                              {item.icon && <item.icon className="h-4 w-4" />}
+                              {item.icon && <item.icon />}
                               <span>{getTranslation(t, item.title)}</span>
                             </Link>
                           </SidebarMenuButton>
-
-                          {item.hasPlusIcon && state !== "collapsed" && (
-                            <button
-                              type="button"
-                              className={cn(
-                                rtlAuto(),
-                                "p-2 text-muted-foreground hover:text-foreground",
-                              )}
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              <Plus
-                                size={18}
-                                className={cn(
-                                  "transition-transform",
-                                  rtlChevron(),
-                                  "hover:text-accent-foreground hover:bg-accent hover:rounded-2xl",
-                                )}
-                              />
-                            </button>
-                          )}
-                        </div>
-                      )}
-                    </SidebarMenuItem>
-                  </Collapsible>
-                );
-              })}
-            </SidebarMenu>
+                        )}
+                      </SidebarMenuItem>
+                    </Collapsible>
+                  );
+                })}
+              </SidebarMenu>
+            </div>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarSeparator className="self-center" />
-
-      <SidebarFooter>
+      <SidebarFooter className="relative z-10 px-3 pb-4">
         <SidebarMenuItem className="list-none">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <SidebarMenuButton
+              <button
+                type="button"
                 className={cn(
-                  "flex items-center w-full gap-2 justify-between", // gap for icon+name, justify-between for chevron
+                  "flex w-full cursor-pointer items-center justify-between gap-2 rounded-[18px] bg-white/[0.06] px-3 py-2.5 text-start transition-colors duration-150 ease-in-out hover:bg-white/[0.11]",
                   isRTL() && "flex-row-reverse",
                 )}
               >
-                <div
+                <span
                   className={cn(
-                    "flex items-center gap-2",
+                    "flex min-w-0 items-center gap-2.5",
                     isRTL() && "flex-row-reverse",
                   )}
                 >
-                  <User2 size={18} />
-                  <span className={`${state === "collapsed" ? "hidden" : ""}`}>
-                    {user?.name}
+                  <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-rail-accent/20 text-[length:var(--text-small)] font-bold text-rail-accent">
+                    {(user?.name ?? "?").slice(0, 1).toUpperCase()}
                   </span>
-                </div>
-                <ChevronUp />
-              </SidebarMenuButton>
+                  <span
+                    className={cn("min-w-0", state === "collapsed" && "hidden")}
+                  >
+                    <span className="block truncate text-[length:var(--text-caption)] font-bold text-rail-fg">
+                      {user?.name}
+                    </span>
+                    <span className="block truncate text-[length:var(--text-small)] font-semibold text-rail-fg-muted">
+                      {user?.role
+                        ? getTranslation(t, `users.roles.${user.role}`)
+                        : ""}
+                    </span>
+                  </span>
+                </span>
+                <ChevronUp
+                  size={16}
+                  className={cn(
+                    "shrink-0 text-rail-fg-muted",
+                    state === "collapsed" && "hidden",
+                  )}
+                />
+              </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align={isRTL() ? "start" : "end"}>
-              <DropdownMenuItem
-                className="hover:bg-muted hover:text-foreground"
-                asChild
-              >
+              <DropdownMenuItem asChild>
                 <Link
                   to="/settings"
                   search={getSearchWithView()}
@@ -322,7 +302,7 @@ const AppSidebar = () => {
               </DropdownMenuItem>
               <DropdownMenuItem
                 className={cn(
-                  "group flex items-center gap-2",
+                  "group flex items-center gap-2 text-destructive focus:bg-destructive/10 focus:text-destructive",
                   isRTL() && "flex-row-reverse",
                 )}
                 onClick={() => {
@@ -384,7 +364,7 @@ const AppSidebar = () => {
                   openDialog();
                 }}
               >
-                <LogOutIcon className="transition-colors group-hover:text-destructive" />
+                <LogOutIcon />
                 <span>{getTranslation(t, "navigation.sidebar.logout")}</span>
               </DropdownMenuItem>
             </DropdownMenuContent>

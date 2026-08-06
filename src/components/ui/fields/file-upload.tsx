@@ -106,9 +106,10 @@ export function FileUploaderField({
 
   const current = field.state.value;
 
-  const isExisting = (!current || !current.file) && !userClearedExisting && !!initialUrl;
+  const isExisting =
+    (!current || !current.file) && !userClearedExisting && !!initialUrl;
 
-  const hasFile = (current?.file != null) || isExisting;
+  const hasFile = current?.file != null || isExisting;
 
   return (
     <FieldWrapper
@@ -140,7 +141,7 @@ export function FileUploaderField({
           !hasFile
             ? "cursor-pointer bg-muted/5 hover:bg-muted/10 border-muted-foreground/20 hover:border-primary/50"
             : "bg-background border-border",
-          isDragging && "border-primary bg-primary/5 scale-[1.01]",
+          isDragging && " bg-primary/5 scale-[1.01]",
         )}
       >
         <input

@@ -4,7 +4,7 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "@tanstack/react-router";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { keepPreviousData } from "@tanstack/react-query";
 
 import { getTranslation, isDebateAnnouncable } from "@/lib/utils";
 import {
@@ -73,7 +73,7 @@ export default function DebateList({
 
   const [localSearch, setLocalSearch] = useState(search ?? "");
 
-  const debouncedSearch = useDebounce(localSearch, 1000);
+  const debouncedSearch = useDebounce(localSearch, 300);
 
   useEffect(() => {
     const normalizedUrlSearch = search ?? "";
@@ -98,6 +98,9 @@ export default function DebateList({
       status: state || undefined,
       tag: topic || undefined,
     }),
+    // Keep the previous results on screen while a new query resolves, so the
+    // list never collapses mid-search and scroll position is preserved.
+    { placeholderData: keepPreviousData },
   );
 
   const debatesList = realDebatesResponse?.data ?? [];
@@ -261,8 +264,9 @@ export default function DebateList({
   };
 
   return (
-    <div className="min-h-screen py-16 px-6">
+    <div className="p-4 sm:p-6 lg:p-8">
       <AppHeader
+        entity="debates"
         title={getTranslation(
           t,
           state ? `debates.statuses.${state}` : "debates.all",
@@ -271,19 +275,11 @@ export default function DebateList({
         setView={updateView}
         showCreateButton={true}
         actions={[
-          {
-            label: getTranslation(t, "debateMotions.actions.create"),
-            variant: "default",
-            onClick: openCreateMotionDialog,
-          },
-          {
-            label: getTranslation(t, "debateFormats.actions.create"),
-            variant: "default",
-            onClick: openCreateFromatDialog,
-          },
+          // §12.3 Create-motion and create-format live on their own screens.
+          // Their handlers stay wired below; only the header entries are gone.
           {
             label: getTranslation(t, "debates.actions.create"),
-            variant: "default",
+            variant: "accent",
             onClick: openCreateDialog,
           },
         ]}
@@ -366,28 +362,7 @@ export default function DebateList({
             />
           ) : (
             <>
-              {/* {realDebatesResponse.meta.last_page > 1 && (
-                <Pagination
-                  currentPage={realDebatesResponse?.meta?.current_page}
-                  lastPage={realDebatesResponse?.meta?.last_page}
-                  onPageChange={(newPage) => {
-                    navigate({
-                      to: "/debates",
-                      search: (prev) => ({
-                        ...prev,
-                        page: newPage,
-                      }),
-                    });
-
-                    window.scrollTo({
-                      top: 0,
-                      behavior: "smooth",
-                    });
-                  }}
-                />
-              )} */}
-
-              <div className="mt-5 grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 justify-items-center items-stretch">
+              <div className="mt-6 grid grid-cols-1 items-stretch gap-5 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
                 {filteredDebates.map((debate) => (
                   <DebateCard
                     key={debate.id}
@@ -399,6 +374,20 @@ export default function DebateList({
                   />
                 ))}
               </div>
+              {/* Below the grid, like every other list screen. */}
+              {realDebatesResponse?.meta?.last_page > 1 && (
+                <Pagination
+                  currentPage={realDebatesResponse?.meta?.current_page}
+                  lastPage={realDebatesResponse?.meta?.last_page}
+                  onPageChange={(newPage) => {
+                    navigate({
+                      to: "/debates",
+                      search: (prev) => ({ ...prev, page: newPage }),
+                    });
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }}
+                />
+              )}
             </>
           )}
         </>

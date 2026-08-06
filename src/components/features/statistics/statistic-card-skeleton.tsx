@@ -1,10 +1,10 @@
 export function StatisticCardSkeleton() {
   return (
-    <div className="relative flex h-36 sm:h-40 flex-col justify-between rounded-2xl border border-border bg-card p-4 sm:p-5 animate-pulse">
+    <div className="relative flex min-h-[190px] flex-col justify-between rounded-[28px] border border-border bg-card p-4 sm:p-5 animate-pulse">
       {/* Top Header */}
       <div className="flex items-start justify-between">
         <div className="h-3 w-1/2 rounded bg-muted" />
-        <div className="h-9 w-9 rounded-xl bg-muted" />
+        <div className="h-9 w-9 rounded-[28px] bg-muted" />
       </div>
 
       {/* Middle metric representation */}

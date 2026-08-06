@@ -110,7 +110,10 @@ export default function DebateFormatForm({
         name: "name",
         label: getTranslation(t, "debateFormats.fields.phaseName"),
         type: "text",
-        placeholder: getTranslation(t, "debateFormats.form.phaseNamePlaceholder"),
+        placeholder: getTranslation(
+          t,
+          "debateFormats.form.phaseNamePlaceholder",
+        ),
 
         validators: {
           onChange: ({ value }) =>
@@ -124,7 +127,10 @@ export default function DebateFormatForm({
         name: "duration_seconds",
         label: getTranslation(t, "debateFormats.fields.durationSeconds"),
         type: "number",
-        placeholder: getTranslation(t, "debateFormats.form.durationPlaceholder"),
+        placeholder: getTranslation(
+          t,
+          "debateFormats.form.durationPlaceholder",
+        ),
 
         validators: {
           onChange: ({ value }) =>
@@ -151,7 +157,10 @@ export default function DebateFormatForm({
         name: "role",
         label: getTranslation(t, "debateFormats.fields.role"),
         type: "select",
-        placeholder: getTranslation(t, "debateFormats.form.selectRolePlaceholder"),
+        placeholder: getTranslation(
+          t,
+          "debateFormats.form.selectRolePlaceholder",
+        ),
 
         options: () =>
           DEBATE_PHASE_ROLE.map((s) => ({

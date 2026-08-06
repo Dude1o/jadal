@@ -1,51 +1,61 @@
 import { TrendingUp, TrendingDown, Minus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useCountUp } from "@/hooks/use-count-up";
+import { StatVisual } from "./stat-visual";
 import type { Statistic } from "@/types";
 
 interface StatisticCardProps {
   stat: Statistic;
   animate?: boolean;
+  /** Largest value in the section, used to scale column visuals. */
+  sectionMax?: number;
+  /** Stagger index for the entrance animation. */
+  index?: number;
 }
 
+/** Every variant resolves to a brand or semantic token, never an ad-hoc hue. */
 const variantStyles = {
   default: {
-    iconBg: "bg-primary/10 border-primary/20 text-primary",
-    glow: "shadow-primary/5 hover:shadow-primary/10",
-    trendUp: "text-emerald-500 bg-emerald-500/10 border-emerald-500/20",
-    trendDown: "text-destructive bg-destructive/10 border-destructive/20",
+    chip: "bg-primary/12 text-primary",
+    color: "var(--chart-1)",
+    tint: "jd-tint-blue",
   },
   accent: {
-    iconBg: "bg-accent/15 border-accent/25 text-accent-foreground",
-    glow: "shadow-accent/5 hover:shadow-accent/10",
-    trendUp: "text-emerald-500 bg-emerald-500/10 border-emerald-500/20",
-    trendDown: "text-destructive bg-destructive/10 border-destructive/20",
+    chip: "bg-[var(--chip-orange-bg)] text-[var(--chip-orange-fg)]",
+    color: "var(--chart-2)",
+    tint: "jd-tint-orange",
   },
   destructive: {
-    iconBg: "bg-destructive/10 border-destructive/20 text-destructive",
-    glow: "shadow-destructive/5 hover:shadow-destructive/10",
-    trendUp: "text-emerald-500 bg-emerald-500/10 border-emerald-500/20",
-    trendDown: "text-destructive bg-destructive/10 border-destructive/20",
+    chip: "bg-[var(--chip-red-bg)] text-[var(--chip-red-fg)]",
+    color: "var(--chart-7)",
+    tint: "jd-tint-red",
   },
   success: {
-    iconBg: "bg-emerald-500/10 border-emerald-500/20 text-emerald-500",
-    glow: "shadow-emerald-500/5 hover:shadow-emerald-500/10",
-    trendUp: "text-emerald-500 bg-emerald-500/10 border-emerald-500/20",
-    trendDown: "text-destructive bg-destructive/10 border-destructive/20",
+    chip: "bg-[var(--chip-green-bg)] text-[var(--chip-green-fg)]",
+    color: "var(--chart-6)",
+    tint: "jd-tint-green",
   },
   warning: {
-    iconBg: "bg-amber-500/10 border-amber-500/20 text-amber-500",
-    glow: "shadow-amber-500/5 hover:shadow-amber-500/10",
-    trendUp: "text-emerald-500 bg-emerald-500/10 border-emerald-500/20",
-    trendDown: "text-destructive bg-destructive/10 border-destructive/20",
+    chip: "bg-[var(--chip-orange-bg)] text-[var(--chip-orange-fg)]",
+    color: "var(--chart-2)",
+    tint: "jd-tint-orange",
   },
 };
 
-export function StatisticCard({ stat, animate = true }: StatisticCardProps) {
+/**
+ * A stat card is never a bare number: every one carries a visualisation
+ * (section 14.2). Which one is chosen by StatVisual from the data shape.
+ */
+export function StatisticCard({
+  stat,
+  animate = true,
+  sectionMax,
+  index = 0,
+}: StatisticCardProps) {
   const v = stat.variant ?? "default";
   const styles = variantStyles[v];
   const Icon = stat.icon;
-  const count = useCountUp(stat.value, 1000, animate);
+  const count = useCountUp(stat.value, 900, animate);
 
   const TrendIcon =
     stat.trend === "up"
@@ -56,86 +66,98 @@ export function StatisticCard({ stat, animate = true }: StatisticCardProps) {
 
   const trendClass =
     stat.trend === "up"
-      ? styles.trendUp
+      ? "bg-[var(--chip-green-bg)] text-[var(--chip-green-fg)]"
       : stat.trend === "down"
-        ? styles.trendDown
-        : "text-muted-foreground bg-muted border-border";
+        ? "bg-[var(--chip-red-bg)] text-[var(--chip-red-fg)]"
+        : "bg-[var(--chip-neutral-bg)] text-[var(--chip-neutral-fg)]";
+
+  // A gauge sits beside the number; every other visual sits below it.
+  const inlineVisual = !stat.parts && !stat.series && stat.suffix === "%";
 
   return (
     <div
+      style={{ "--jd-i": index } as React.CSSProperties}
       className={cn(
-        "group relative flex min-h-[140px] sm:min-h-[160px] flex-col justify-between rounded-2xl border bg-card p-4 sm:p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg",
-        stat.badge ? "border-destructive/30" : "border-border",
-        styles.glow,
+        "jd-card jd-interactive jd-enter flex min-h-[190px] flex-col justify-between p-6",
+        styles.tint,
       )}
     >
-      {/* Decorative Glow Blob */}
-      <div
-        className="pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full bg-current opacity-5 blur-2xl transition-opacity duration-500 group-hover:opacity-10"
-        style={{ color: "var(--primary)" }}
-      />
-
-      {/* Row 1: Header (Label and Badges/Icons) */}
-      <div className="flex items-start justify-between gap-4">
-        <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground leading-snug">
+      {/* Label + icon */}
+      <div className="flex items-start justify-between gap-3">
+        <span className="text-[length:var(--text-caption)] leading-snug font-bold text-muted-foreground">
           {stat.label}
         </span>
 
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex shrink-0 items-center gap-2">
           {stat.badge && (
-            <span className="rounded-full bg-destructive px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-destructive-foreground">
+            <span className="inline-flex h-6 items-center rounded-full bg-[var(--chip-red-bg)] px-2.5 text-[length:var(--text-small)] font-bold text-[var(--chip-red-fg)]">
               {stat.badge}
             </span>
           )}
-          <div
+          <span
             className={cn(
-              "flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-xl border transition-transform duration-300 group-hover:scale-105",
-              styles.iconBg,
+              "flex size-10 items-center justify-center rounded-[14px]",
+              styles.chip,
             )}
           >
-            <Icon className="h-4.5 w-4.5" strokeWidth={2} />
-          </div>
+            <Icon className="size-5" strokeWidth={2} />
+          </span>
         </div>
       </div>
 
-      {/* Row 2: Metrics block */}
-      <div className="mt-2 space-y-1">
-        <div className="flex items-baseline gap-0.5 font-serif text-2xl sm:text-3xl font-bold tracking-tight text-card-foreground">
-          {stat.prefix && (
-            <span className="text-lg font-semibold text-muted-foreground mr-0.5 select-none">
-              {stat.prefix}
-            </span>
-          )}
-          <span className="tabular-nums">{count.toLocaleString()}</span>
-          {stat.suffix && (
-            <span className="text-lg font-semibold text-muted-foreground ml-0.5 select-none">
-              {stat.suffix}
-            </span>
+      {/* Value (+ gauge when the metric is a ratio) */}
+      <div className="mt-4 flex items-end justify-between gap-3">
+        <div className="min-w-0">
+          <div className="flex items-baseline gap-0.5 text-[length:var(--text-display)] font-extrabold text-card-foreground">
+            {stat.prefix && (
+              <span className="me-0.5 text-[length:var(--text-subtitle)] font-bold text-muted-foreground select-none">
+                {stat.prefix}
+              </span>
+            )}
+            <span className="tabular-nums">{count.toLocaleString()}</span>
+            {stat.suffix && (
+              <span className="ms-0.5 text-[length:var(--text-subtitle)] font-bold text-muted-foreground select-none">
+                {stat.suffix}
+              </span>
+            )}
+          </div>
+
+          {stat.description && (
+            <p className="mt-1 line-clamp-1 text-[length:var(--text-small)] font-semibold text-muted-foreground">
+              {stat.description}
+            </p>
           )}
         </div>
 
-        {stat.description && (
-          <p className="line-clamp-1 text-xs leading-relaxed text-muted-foreground">
-            {stat.description}
-          </p>
+        {inlineVisual && (
+          <StatVisual stat={stat} color={styles.color} animate={animate} />
         )}
       </div>
 
-      {/* Row 3: Trends */}
-      <div className="mt-3">
+      {/* Visualisation + trend */}
+      <div className="mt-5 space-y-3">
+        {!inlineVisual && (
+          <StatVisual
+            stat={stat}
+            color={styles.color}
+            sectionMax={sectionMax}
+            animate={animate}
+          />
+        )}
+
         {stat.trend && stat.trendValue && (
           <div className="flex items-center gap-2">
             <span
               className={cn(
-                "inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[11px] font-semibold leading-none",
+                "inline-flex h-6 items-center gap-1 rounded-full px-2.5 text-[length:var(--text-small)] font-bold",
                 trendClass,
               )}
             >
-              <TrendIcon className="h-3 w-3" strokeWidth={2.5} />
+              <TrendIcon className="size-3" strokeWidth={2.5} />
               {stat.trendValue}
             </span>
             {stat.trendLabel && (
-              <span className="text-[11px] text-muted-foreground">
+              <span className="truncate text-[length:var(--text-small)] font-semibold text-muted-foreground">
                 {stat.trendLabel}
               </span>
             )}

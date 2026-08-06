@@ -2,7 +2,10 @@
 "use client";
 
 import { useMemo, useState, useRef } from "react";
+import { Badge } from "@/components/ui/badge";
 import { useTranslation } from "react-i18next";
+import { useDialogStore } from "@/services";
+import { BlogArticleView } from "./blog-article-view";
 import { getTranslation } from "@/lib/utils";
 import type { BlogPost } from "@/types";
 import { ArrowDown, Check, X, Heart, ThumbsDown, Eye } from "lucide-react";
@@ -33,6 +36,7 @@ const EXCERPT_MAX_LENGTH = 150;
 
 export function BlogCard({ blog, variant = "feed" }: BlogCardProps) {
   const { t, i18n } = useTranslation();
+  const dialog = useDialogStore();
   const [showRejectForm, setShowRejectForm] = useState(false);
   const [reviewerComment, setReviewerComment] = useState("");
 
@@ -109,71 +113,49 @@ export function BlogCard({ blog, variant = "feed" }: BlogCardProps) {
 
   return (
     <article
-      className="group relative bg-card border border-border rounded-xl overflow-hidden transition-all duration-300 hover:border-accent/40 hover:shadow-lg flex flex-col h-full"
+      className="jd-card jd-interactive jd-tint-orange group relative flex h-full cursor-pointer flex-col overflow-hidden"
       dir={i18n.dir()}
+      onClick={() =>
+        dialog.open({
+          title: getTranslation(t, "blogs.single"),
+          size: "lg",
+          closable: true,
+          closeOnOutsideClick: true,
+          children: <BlogArticleView blog={blog} />,
+        })
+      }
     >
-      {/* Cover Image */}
-      <div className="sm:hidden relative h-36 w-full overflow-hidden">
-        {blog.cover_image_url ? (
-          <img
-            src={blog.cover_image_url}
-            alt={blog.title}
-            className="h-full w-full object-cover"
-          />
-        ) : (
-          <img
-            src={blogImage}
-            alt={blog.title}
-            className="h-full w-full object-cover"
-          />
-        )}
+      {/* Cover: a wide banner on top. A blog cover is a horizontal image, and
+          the old tall side-strip cropped every one of them (v1 section 7.9). */}
+      <div className="relative aspect-[16/9] w-full shrink-0 overflow-hidden rounded-t-[28px] bg-[var(--inset)]">
+        <img
+          src={blog.cover_image_url || blogImage}
+          alt=""
+          aria-hidden
+          className="size-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+        />
       </div>
 
-      <div className="flex flex-col sm:flex-row flex-1">
-        <div className="flex-1 p-5 flex flex-col">
+      <div className="flex flex-1 flex-col">
+        <div className="flex flex-1 flex-col p-5">
           {/* Meta */}
-          <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground mb-3">
+          <div className="mb-2.5 flex flex-wrap items-center gap-2 text-[length:var(--text-small)] font-semibold text-muted-foreground">
             <span>{blog.author?.name ?? `user_${blog.author?.id}`}</span>
             <span>·</span>
             <span>{displayTime}</span>
           </div>
 
           {/* Title */}
-          <h2 className="text-base font-semibold leading-tight mb-3 line-clamp-2 min-h-[2.75rem]">
+          <h2 className="mb-2 line-clamp-2 text-[length:var(--text-subtitle)] leading-snug font-extrabold">
             {blog.title}
           </h2>
 
-          {/* Excerpt — "See More" opens a dialog with the full text */}
+          {/* Excerpt: a clamp, not a truncation with its own affordance.
+              Clicking the card opens the full reading view. */}
           {excerpt && (
-            <div className="mb-3">
-              <p className="text-sm text-muted-foreground">
-                {truncatedExcerpt}
-              </p>
-              {isExcerptTruncated && (
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <button
-                      type="button"
-                      onClick={(e) => e.stopPropagation()}
-                      className="text-xs font-medium text-primary hover:underline mt-1"
-                    >
-                      {getTranslation(t, "common.labels.seeMore")}
-                    </button>
-                  </DialogTrigger>
-                  <DialogContent
-                    className="max-w-lg"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <DialogHeader>
-                      <DialogTitle>{blog.title}</DialogTitle>
-                    </DialogHeader>
-                    <p className="text-sm text-foreground whitespace-pre-wrap leading-relaxed">
-                      {excerpt}
-                    </p>
-                  </DialogContent>
-                </Dialog>
-              )}
-            </div>
+            <p className="mb-3 line-clamp-3 text-[length:var(--text-body)] font-semibold text-muted-foreground">
+              {excerpt}
+            </p>
           )}
 
           {/* Categories */}
@@ -192,7 +174,7 @@ export function BlogCard({ blog, variant = "feed" }: BlogCardProps) {
 
           {/* Approve / Reject Buttons */}
           {showActionButtons && !showRejectForm && (
-            <div className="flex gap-2 mt-auto pt-4 border-t border-border">
+            <div className="flex gap-2 mt-auto pt-4 ">
               <button
                 onClick={handleApprove}
                 disabled={isLoading}
@@ -220,7 +202,7 @@ export function BlogCard({ blog, variant = "feed" }: BlogCardProps) {
 
           {/* Reject Form */}
           {showRejectForm && (
-            <div className="mt-auto pt-4 border-t border-border flex flex-col gap-3">
+            <div className="mt-auto pt-4 flex flex-col gap-3">
               <label className="text-xs font-medium">
                 {getTranslation(t, "blogs.card.reviewerComment")}
               </label>
@@ -253,7 +235,7 @@ export function BlogCard({ blog, variant = "feed" }: BlogCardProps) {
                 <button
                   onClick={handleCancelReject}
                   disabled={isRejectPending}
-                  className="flex-1 px-4 py-2 rounded-lg text-xs font-medium border border-border"
+                  className="flex-1 px-4 py-2 rounded-lg text-xs font-medium "
                 >
                   {getTranslation(t, "common.actions.cancel")}
                 </button>
@@ -263,7 +245,7 @@ export function BlogCard({ blog, variant = "feed" }: BlogCardProps) {
 
           {/* Approved State */}
           {isApproved && (
-            <div className="mt-auto pt-4 border-t border-border">
+            <div className="mt-auto pt-4 ">
               <div className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-xs font-medium bg-success/10 text-success border border-success/30 mb-3">
                 <Check className="h-4 w-4" />
                 {getTranslation(t, "blogs.messages.approveLabel")}
@@ -303,13 +285,13 @@ export function BlogCard({ blog, variant = "feed" }: BlogCardProps) {
 
           {/* Rejected State */}
           {isRejected && (
-            <div className="mt-auto pt-4 border-t border-border">
-              <div className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-xs font-medium bg-destructive/10 text-destructive border border-destructive/30">
+            <div className="mt-auto pt-4 ">
+              <div className="flex items-center justify-center gap-2 rounded-[14px] bg-[var(--chip-red-bg)] px-4 py-2.5 text-[length:var(--text-caption)] font-bold text-[var(--chip-red-fg)]">
                 <X className="h-4 w-4" />
                 {getTranslation(t, "blogs.messages.rejectLabel")}
               </div>
               {blog.reviewer_comment && (
-                <div className="mt-3 p-3 rounded-lg bg-destructive/5 border border-destructive/20 text-xs">
+                <div className="mt-3 rounded-[14px] bg-[var(--chip-red-bg)]/60 p-3 text-[length:var(--text-small)]">
                   <p className="font-medium text-muted-foreground mb-1">
                     {getTranslation(t, "blogs.card.reviewerCommentLabel")}:
                   </p>
@@ -317,23 +299,6 @@ export function BlogCard({ blog, variant = "feed" }: BlogCardProps) {
                 </div>
               )}
             </div>
-          )}
-        </div>
-
-        {/* Desktop Cover Image */}
-        <div className="hidden sm:block w-44 lg:w-52 relative overflow-hidden shrink-0">
-          {blog.cover_image_url ? (
-            <img
-              src={blog.cover_image_url}
-              alt={blog.title}
-              className="absolute inset-0 h-full w-full object-cover"
-            />
-          ) : (
-            <img
-              src={blogImage}
-              alt={blog.title}
-              className="absolute inset-0 h-full w-full object-cover"
-            />
           )}
         </div>
       </div>

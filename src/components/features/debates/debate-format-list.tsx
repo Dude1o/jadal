@@ -4,7 +4,7 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "@tanstack/react-router";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 import { getTranslation } from "@/lib/utils";
 import { debateFormatsQueryOptions } from "@/api/query-options";
@@ -53,8 +53,14 @@ export default function DebateFormatList({
   const [localSearch, setLocalSearch] = useState(search);
   const debouncedSearch = useDebounce(localSearch, 500);
 
-  // Sync URL search with local state
-  useEffect(() => setLocalSearch(search), [search]);
+  // Sync URL -> local only for EXTERNAL navigation (back button, a link
+  // with a query). Without this guard the effect fires on our own
+  // debounced URL write and clobbers whatever has been typed since.
+  useEffect(() => {
+    if ((search || "") !== (debouncedSearch || "")) return;
+    setLocalSearch(search);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [search]);
 
   // Update URL when debounced search changes
   // Update URL when debounced search changes
@@ -76,14 +82,15 @@ export default function DebateFormatList({
   }, [debouncedSearch, navigate]);
 
   // Query with pagination + search
-  const { data: paginatedData } = useSuspenseQuery(
-    debateFormatsQueryOptions({
+  const { data: paginatedData } = useQuery({
+    ...debateFormatsQueryOptions({
       page: page,
       perPage: 12,
     }),
-  );
+    placeholderData: keepPreviousData,
+  });
 
-  const formats = paginatedData.data;
+  const formats = paginatedData?.data ?? [];
 
   const filteredFormats = debouncedSearch
     ? formats.filter((format) =>
@@ -189,19 +196,17 @@ export default function DebateFormatList({
   };
 
   return (
-    <div className="min-h-screen py-16 px-6">
+    <div className="p-4 sm:p-6 lg:p-8">
       <AppHeader
+        entity="debateFormats"
         title={getTranslation(t, "debateFormats.plural")}
         view={view}
         setView={updateView}
-        showCreateButton={true}
-        actions={[
-          {
-            label: getTranslation(t, "debateFormats.actions.create"),
-            variant: "default",
-            onClick: openCreateDialog,
-          },
-        ]}
+        // Through onCreate/buttonLabel so it inherits the header's `accent`
+        // default: flat orange, navy text. An `actions` entry with variant
+        // "default" is the brand gradient — that is what this button was.
+        onCreate={openCreateDialog}
+        buttonLabel={getTranslation(t, "debateFormats.actions.create")}
       />
 
       {view === "cards" ? (
@@ -245,20 +250,6 @@ export default function DebateFormatList({
             />
           ) : (
             <>
-              {paginatedData.meta?.last_page > 1 && (
-                <Pagination
-                  currentPage={paginatedData?.meta?.current_page}
-                  lastPage={paginatedData?.meta?.last_page}
-                  onPageChange={(newPage) => {
-                    navigate({
-                      to: "/debate-formats",
-                      search: (prev) => ({ ...prev, page: newPage }),
-                    });
-                    // Optional: scroll to top
-                    window.scrollTo({ top: 0, behavior: "smooth" });
-                  }}
-                />
-              )}
               <div
                 className="
     mt-5
@@ -276,6 +267,20 @@ export default function DebateFormatList({
                   />
                 ))}
               </div>
+              {paginatedData?.meta?.last_page > 1 && (
+                <Pagination
+                  currentPage={paginatedData?.meta?.current_page}
+                  lastPage={paginatedData?.meta?.last_page}
+                  onPageChange={(newPage) => {
+                    navigate({
+                      to: "/debate-formats",
+                      search: (prev) => ({ ...prev, page: newPage }),
+                    });
+                    // Optional: scroll to top
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }}
+                />
+              )}
             </>
           )}
         </>

@@ -29,11 +29,11 @@ const positionClasses: Record<ToastPosition, string> = {
 // ─── Variant styles ──────────────────────────────────────────────────────────
 
 const variantStyles = {
-  default: "bg-card border border-border text-card-foreground",
-  success: "bg-card border border-success/40 text-card-foreground",
-  error: "bg-card border border-destructive/40 text-card-foreground",
-  warning: "bg-card border border-warning/40 text-card-foreground",
-  info: "bg-card border border-primary/40 text-card-foreground",
+  default: "bg-card   text-card-foreground",
+  success: "bg-card   text-card-foreground",
+  error: "bg-card   text-card-foreground",
+  warning: "bg-card   text-card-foreground",
+  info: "bg-card   text-card-foreground",
 };
 
 const variantIconColor = {
@@ -72,7 +72,7 @@ function ToastItem({ toast }: { toast: Toast }) {
   return (
     <div
       className={cn(
-        "relative flex w-full max-w-sm gap-3 rounded-lg p-4 shadow-lg",
+        "relative flex w-full max-w-sm gap-3 rounded-[18px] p-4 shadow-lg",
         "animate-in slide-in-from-bottom-2 fade-in duration-300",
         variantStyles[variant],
       )}
@@ -118,7 +118,7 @@ function ToastItem({ toast }: { toast: Toast }) {
       {toast.closable !== false && (
         <button
           onClick={() => remove(toast.id)}
-          className="shrink-0 rounded-sm opacity-60 hover:opacity-100 transition-opacity focus:outline-none focus:ring-2 focus:ring-ring"
+          className="shrink-0 rounded-[18px] opacity-60 hover:opacity-100 transition-opacity focus:outline-none focus:ring-2 focus:ring-ring"
           aria-label="Close"
         >
           <X className="h-4 w-4" />

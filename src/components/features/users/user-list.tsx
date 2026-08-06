@@ -4,7 +4,7 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "@tanstack/react-router";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 import { getTranslation } from "@/lib/utils";
 import { usersQueryOptions } from "@/api/query-options";
@@ -54,10 +54,16 @@ export function UserList({
   const dialog = useDialogStore();
 
   const [localSearch, setLocalSearch] = useState(search);
-  const debouncedSearch = useDebounce(localSearch, 1000);
+  const debouncedSearch = useDebounce(localSearch, 300);
 
-  // Sync URL search with local state
-  useEffect(() => setLocalSearch(search), [search]);
+  // Sync URL -> local only for EXTERNAL navigation (back button, a link
+  // with a query). Without this guard the effect fires on our own
+  // debounced URL write and clobbers whatever has been typed since.
+  useEffect(() => {
+    if ((search || "") !== (debouncedSearch || "")) return;
+    setLocalSearch(search);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [search]);
 
   // Update URL when debounced search changes
   useEffect(() => {
@@ -78,14 +84,15 @@ export function UserList({
   }, [debouncedSearch, navigate]);
 
   // Fetch paginated user response from API
-  const { data: realUsersResponse } = useSuspenseQuery(
-    usersQueryOptions({
+  const { data: realUsersResponse } = useQuery({
+    ...usersQueryOptions({
       search: debouncedSearch || undefined,
       role: role || undefined,
       page: page,
       perPage: 12,
     }),
-  );
+    placeholderData: keepPreviousData,
+  });
 
   // Users array from backend response structure
   const usersList = realUsersResponse?.data ?? [];
@@ -180,8 +187,9 @@ export function UserList({
   };
 
   return (
-    <div className="min-h-screen py-16 px-6 overflow-x-hidden">
+    <div className="p-4 sm:p-6 lg:p-8">
       <AppHeader
+        entity="users"
         title={getTranslation(t, role ? `users.roles.${role}` : "users.plural")}
         view={view}
         setView={updateView}
@@ -273,7 +281,18 @@ export function UserList({
             />
           ) : (
             <>
-              {realUsersResponse.meta.last_page > 1 && (
+              <div className="mt-6 grid grid-cols-1 items-stretch gap-5 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+                {filteredUsers.map((user) => (
+                  <UserCard
+                    key={user.id}
+                    user={user}
+                    onEdit={handleUpdateUser}
+                    onDelete={handleDeleteuser}
+                    onChangeStatus={handleChangeUserStatus}
+                  />
+                ))}
+              </div>
+              {realUsersResponse?.meta?.last_page > 1 && (
                 <Pagination
                   currentPage={realUsersResponse?.meta?.current_page}
                   lastPage={realUsersResponse?.meta?.last_page}
@@ -287,17 +306,6 @@ export function UserList({
                   }}
                 />
               )}
-              <div className="mt-5 grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 justify-items-center items-stretch">
-                {filteredUsers.map((user) => (
-                  <UserCard
-                    key={user.id}
-                    user={user}
-                    onEdit={handleUpdateUser}
-                    onDelete={handleDeleteuser}
-                    onChangeStatus={handleChangeUserStatus}
-                  />
-                ))}
-              </div>
             </>
           )}
         </>
@@ -377,7 +385,7 @@ export function UserList({
             {
               icon: <Ban className="h-4 w-4" />,
               label: getTranslation(t, "common.actions.ban"),
-              color: "violet",
+              color: "warm",
               action: (user) =>
                 handleChangeUserStatus({ id: user.id!, status: "banned" }),
               show: (user) => user.status !== "banned", // hide if already banned

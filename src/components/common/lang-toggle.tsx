@@ -1,4 +1,4 @@
-import { Languages } from "lucide-react";
+import { Check, Languages } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -29,10 +29,16 @@ export function LangToggle() {
 
       <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={() => handleChange("en")}>
-          {t("settings.language.en")} {language === "en" && "✓"}
+          {t("settings.language.en")}
+          {language === "en" && (
+            <Check className="ms-auto size-4 text-accent" />
+          )}
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => handleChange("ar")}>
-          {t("settings.language.ar")} {language === "ar" && "✓"}
+          {t("settings.language.ar")}
+          {language === "ar" && (
+            <Check className="ms-auto size-4 text-accent" />
+          )}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

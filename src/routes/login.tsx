@@ -42,7 +42,8 @@ function RouteComponent() {
       addToast({
         title: getTranslation(t, "common.toasts.error"),
         description:
-          err?.response?.data?.message || getTranslation(t, "auth.login.errorMessage"),
+          err?.response?.data?.message ||
+          getTranslation(t, "auth.login.errorMessage"),
         variant: "error",
       });
     },

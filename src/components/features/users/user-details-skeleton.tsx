@@ -6,7 +6,7 @@ export function UserDetailsSkeleton() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 p-4 md:p-8">
       <div className="max-w-5xl mx-auto space-y-8">
         <Skeleton className="h-10 w-20" />
-        <Card className="border-slate-200 dark:border-slate-800">
+        <Card className="">
           <div className="h-24 bg-slate-200 dark:bg-slate-800" />
           <CardContent className="pt-0">
             <div className="flex gap-6 -mt-12 mb-6">
@@ -24,7 +24,7 @@ export function UserDetailsSkeleton() {
         </Card>
         <div className="grid md:grid-cols-2 gap-6">
           {[1, 2].map((i) => (
-            <Card key={i} className="border-slate-200 dark:border-slate-800">
+            <Card key={i} className="">
               <CardHeader>
                 <Skeleton className="h-6 w-40" />
               </CardHeader>

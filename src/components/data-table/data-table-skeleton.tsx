@@ -43,7 +43,7 @@ export function DataTableSkeleton({
           </thead>
 
           {/* Table Body Rows */}
-          <tbody className="divide-y divide-border">
+          <tbody className="">
             {Array.from({ length: rowCount }).map((_, rowIndex) => (
               <tr key={`body-row-${rowIndex}`} className="hover:bg-muted/5">
                 {Array.from({ length: columnCount }).map((_, columnIndex) => (

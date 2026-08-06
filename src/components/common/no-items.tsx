@@ -41,8 +41,12 @@ export default function NoItems({
             transition={{ delay: 0.1 }}
             className="space-y-2"
           >
-            <h3 className="text-xl font-semibold">{title ?? getTranslation(t, "common.noItems.title")}</h3>
-            <p className="text-sm text-muted-foreground">{description ?? getTranslation(t, "common.noItems.description")}</p>
+            <h3 className="text-xl font-semibold">
+              {title ?? getTranslation(t, "common.noItems.title")}
+            </h3>
+            <p className="text-sm text-muted-foreground">
+              {description ?? getTranslation(t, "common.noItems.description")}
+            </p>
           </motion.div>
 
           {/* Actions */}

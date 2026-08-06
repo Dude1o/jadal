@@ -569,9 +569,7 @@ function MCQOptions({
 
       <div
         className={`space-y-2 p-4 rounded-xl border transition-colors ${
-          hasErrors
-            ? "border-destructive/20 bg-destructive/5"
-            : "border-background bg-background"
+          hasErrors ? " bg-destructive/5" : "border-background bg-background"
         }`}
       >
         {options.map((option, idx) => {

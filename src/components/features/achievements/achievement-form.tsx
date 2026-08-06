@@ -138,7 +138,8 @@ export default function AchievementForm({
         )}
         <Button
           type="button"
-          className="flex-1 bg-accent hover:bg-accent/80"
+          variant="accent"
+          className="flex-1"
           onClick={() => {
             (
               document.getElementById("achievement-form") as HTMLFormElement

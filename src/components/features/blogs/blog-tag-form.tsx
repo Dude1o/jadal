@@ -116,7 +116,8 @@ export default function BlogTagForm({
         <Button
           type="submit"
           form="blog-tag-form"
-          className="flex-1 bg-accent hover:bg-accent/80"
+          variant="accent"
+          className="flex-1"
         >
           {getTranslation(t, "common.actions.save")}
         </Button>

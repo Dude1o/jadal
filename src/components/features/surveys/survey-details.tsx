@@ -3,7 +3,11 @@
 
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useSuspenseQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQueryClient,
+  useSuspenseQuery,
+} from "@tanstack/react-query";
 import {
   ArrowLeft,
   Clock,
@@ -21,6 +25,7 @@ import {
   ArrowRight,
   Target,
   Sparkles,
+  Lock,
 } from "lucide-react";
 import {
   Card,
@@ -31,6 +36,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { OrangeBand, BandChip } from "@/components/common/orange-band";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -314,7 +320,9 @@ export function SurveyDetails({ surveyId, onBack }: SurveyDetailsProps) {
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   className="rounded-lg gap-2 cursor-pointer font-medium"
-                  onClick={() => toast.info(getTranslation(t, "common.actions.comingSoon"))}
+                  onClick={() =>
+                    toast.info(getTranslation(t, "common.actions.comingSoon"))
+                  }
                 >
                   <Share2 className="w-4 h-4 text-muted-foreground" />
                   {getTranslation(t, "common.actions.share")}
@@ -348,46 +356,30 @@ export function SurveyDetails({ surveyId, onBack }: SurveyDetailsProps) {
           </div>
         </div>
 
-        {/* Hero Banner Card */}
-        <Card className="relative overflow-hidden border-0 shadow-2xl rounded-3xl bg-accent-foreground text-sidebar-foreground min-h-[240px] flex items-end">
-          {/* Immersive background graphic elements */}
-          <div className="absolute inset-0 bg-gradient-to-br from-accent via-warning to-warning opacity-85 mix-blend-multiply" />
-          <div className="absolute top-[-20%] right-[-10%] w-96 h-96 rounded-full bg-accent/20 blur-3xl pointer-events-none" />
-          <div className="absolute bottom-[-30%] left-[-5%] w-80 h-80 rounded-full bg-warning/20 blur-3xl pointer-events-none" />
-
-          <CardContent className="relative z-10 w-full p-6 md:p-8 lg:p-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-            <div className="space-y-4 max-w-3xl">
-              <div className="flex flex-wrap items-center gap-3">
-                <Badge
-                  className={cn(
-                    "px-3 py-1 text-xs font-bold rounded-lg border uppercase tracking-wider backdrop-blur-md shadow-inner",
-                    closed
-                      ? "bg-destructive/20 border-destructive/40 text-destructive-foreground"
-                      : urgent
-                        ? "bg-warning/20 border-warning/40 text-warning-foreground animate-pulse"
-                        : "bg-success/20 border-success/40 text-success-foreground",
-                  )}
-                >
-                  {closed
-                    ? getTranslation(t, "surveys.details.closed")
-                    : urgent
-                      ? getTranslation(t, "surveys.details.closingSoon")
-                      : getTranslation(t, "surveys.details.active")}
-                </Badge>
-              </div>
-
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-black tracking-tight leading-none text-primary-foreground drop-shadow-sm">
-                {title}
-              </h1>
-
-              {description && (
-                <p className="text-primary-foreground/90 text-sm md:text-base font-medium max-w-2xl leading-relaxed drop-shadow-xs">
-                  {description}
-                </p>
+        {/* The shared bright-orange band — the same definition in both themes.
+            The status is a translucent navy-on-white chip, not the red/green
+            pill that used to sit on the orange. */}
+        <OrangeBand
+          entity="surveys"
+          title={title}
+          description={description || undefined}
+          chips={
+            <BandChip strong>
+              {closed ? (
+                <Lock />
+              ) : urgent ? (
+                <Clock />
+              ) : (
+                <CheckCircle2 />
               )}
-            </div>
-          </CardContent>
-        </Card>
+              {closed
+                ? getTranslation(t, "surveys.details.closed")
+                : urgent
+                  ? getTranslation(t, "surveys.details.closingSoon")
+                  : getTranslation(t, "surveys.details.active")}
+            </BandChip>
+          }
+        />
 
         {/* Dynamic Responsive Layout Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -564,7 +556,9 @@ export function SurveyDetails({ surveyId, onBack }: SurveyDetailsProps) {
                 <Button
                   variant="outline"
                   className="w-full justify-start gap-3 rounded-xl border-border text-card-foreground font-semibold text-sm h-11 bg-card hover:bg-muted/60 transition-colors shadow-xs"
-                  onClick={() => toast.info(getTranslation(t, "common.actions.comingSoon"))}
+                  onClick={() =>
+                    toast.info(getTranslation(t, "common.actions.comingSoon"))
+                  }
                 >
                   <Share2 className="w-4 h-4 text-muted-foreground shrink-0" />
                   {getTranslation(t, "common.actions.share")}

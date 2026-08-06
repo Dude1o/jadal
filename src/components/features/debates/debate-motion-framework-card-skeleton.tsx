@@ -30,7 +30,7 @@ export default function DebateMotionFrameworkCardSkeleton() {
         <Skeleton className="h-4 w-24" />
       </CardContent>
 
-      <CardFooter className="pt-4 border-t flex gap-2">
+      <CardFooter className="pt-4 flex gap-2">
         {/* Edit Button Skeleton */}
         <Skeleton className="flex-1 h-9" />
         {/* Delete Button Skeleton */}

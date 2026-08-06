@@ -30,16 +30,21 @@ export function StatisticSection({
 }: StatisticSectionProps) {
   const { t } = useTranslation();
 
+  // Columns are only meaningful relative to their peers in the same section.
+  const sectionMax = stats.reduce((max, s) => Math.max(max, s.value), 0);
+
   return (
-    <section className="w-full space-y-4 sm:space-y-5">
+    <section className="w-full space-y-5">
       {/* Header section with layout adjustments */}
-      <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h2 className="font-serif text-xl font-bold tracking-tight text-foreground sm:text-2xl">
+          <h2 className="text-[length:var(--text-subtitle)] font-extrabold text-foreground">
             {title}
           </h2>
           {subtitle && (
-            <p className="text-sm text-muted-foreground mt-0.5">{subtitle}</p>
+            <p className="mt-0.5 text-[length:var(--text-caption)] font-semibold text-muted-foreground">
+              {subtitle}
+            </p>
           )}
         </div>
 
@@ -55,10 +60,10 @@ export function StatisticSection({
         {onExportExcel && stats.length > 0 && !isLoading && !isError && (
           <button
             onClick={onExportExcel}
-            className="flex items-center gap-1.5 text-xs font-medium bg-accent text-accent-foreground hover:bg-accent/90 transition-colors self-start sm:self-auto px-3 py-1.5 rounded-lg"
+            className="inline-flex h-10 cursor-pointer items-center gap-2 self-start rounded-[18px] bg-[var(--accent-btn)] px-4 text-[length:var(--text-caption)] font-bold text-[var(--accent-btn-fg)] shadow-[0_2px_4px_-2px_rgba(234,124,28,.28),0_8px_18px_-6px_rgba(234,124,28,.40)] transition-[background-color,transform,box-shadow] duration-150 ease-out hover:-translate-y-0.5 hover:bg-[var(--accent-btn-hover)] sm:self-auto"
             title="Export to Excel"
           >
-            <Download className="h-3.5 w-3.5 shrink-0" strokeWidth={2} />
+            <Download className="size-[18px] shrink-0" strokeWidth={2} />
             <span className="truncate">Excel</span>
           </button>
         )}
@@ -85,18 +90,15 @@ export function StatisticSection({
           {emptyMessage}
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-3 xs:grid-cols-2 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
           {stats.map((stat, i) => (
-            <div
+            <StatisticCard
               key={stat.id}
-              className="animate-fade-in"
-              style={{
-                animationDelay: `${i * 60}ms`,
-                animationFillMode: "both",
-              }}
-            >
-              <StatisticCard stat={stat} animate={animate} />
-            </div>
+              stat={stat}
+              animate={animate}
+              sectionMax={sectionMax}
+              index={i}
+            />
           ))}
         </div>
       )}

@@ -6,6 +6,7 @@ import {
   platformHealthStatisticsQueryOptions,
 } from "@/api/query-options";
 import NotFoundPage from "@/components/common/not-found";
+import AppHeader from "@/components/common/app-header";
 import { StatisticSection } from "@/components/features/statistics/statistic-section";
 import { StatisticTabs } from "@/components/features/statistics/statistic-tabs";
 import {
@@ -231,10 +232,13 @@ function RouteComponent() {
   };
 
   return (
-    <div className="min-h-screen space-y-6 px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
-      <h1 className="font-serif text-3xl font-bold tracking-tight text-foreground">
-        {getTranslation(t, "navigation.sidebar.statistics")}
-      </h1>
+    <div className="space-y-7 p-4 sm:p-6 lg:p-8">
+      <AppHeader
+        title={getTranslation(t, "navigation.sidebar.statistics")}
+        description={getTranslation(t, "statistics.keyMetrics")}
+        entity="statistics"
+        showCreateButton={false}
+      />
 
       <StatisticTabs
         activeTab={params.tab as any}

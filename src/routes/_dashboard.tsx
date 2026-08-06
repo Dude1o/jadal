@@ -1,9 +1,8 @@
 // routes/_dashboard.tsx
 import { createFileRoute, Outlet } from "@tanstack/react-router";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import AppSidebar from "@/components/layout/app-sidebar";
-import { ModeToggle } from "@/components/common/mode-toggle";
-import { LangToggle } from "@/components/common/lang-toggle";
+import { TopBar } from "@/components/layout/top-bar";
 import { useRtl } from "@/lib/utils";
 import { requireAuth } from "@/lib/route-guards";
 
@@ -21,12 +20,9 @@ function DashboardLayout() {
     <div dir={dir} className="min-h-screen">
       <SidebarProvider>
         <AppSidebar />
-        <main className="w-full min-w-0 overflow-x-hidden">
-          <div className="flex items-center gap-2 p-2">
-            <SidebarTrigger />
-            <ModeToggle />
-            <LangToggle />
-          </div>
+        {/* The well: transparent so the pinned app wash shows through. */}
+        <main className="w-full min-w-0 overflow-x-hidden bg-transparent">
+          <TopBar />
           {/* This Outlet renders the children (blogs, statistics, etc.) */}
           <Outlet />
         </main>

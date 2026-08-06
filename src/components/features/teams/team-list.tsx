@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "@tanstack/react-router";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 import { TeamCard } from "@/components/features/teams/team-card";
 import { AppToolbar } from "@/components/layout/toolbar/app-toolbar";
@@ -70,13 +70,14 @@ export function TeamList({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearch, navigate]);
 
-  const { data: realTeamsResponse } = useSuspenseQuery(
-    teamsQueryOptions({
+  const { data: realTeamsResponse } = useQuery({
+    ...teamsQueryOptions({
       search: debouncedSearch || undefined,
       status: status || undefined,
       type: type || undefined,
     }),
-  );
+    placeholderData: keepPreviousData,
+  });
 
   const teamsList = realTeamsResponse?.data ?? [];
 
@@ -115,8 +116,9 @@ export function TeamList({
   };
 
   return (
-    <div className="min-h-screen py-16 px-6 overflow-x-hidden">
+    <div className="p-4 sm:p-6 lg:p-8">
       <AppHeader
+        entity="teams"
         title={getTranslation(t, "teams.plural")}
         view={view}
         setView={updateView}
@@ -204,7 +206,7 @@ export function TeamList({
             />
           ) : (
             <>
-              <div className="mt-5 grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="mt-6 grid grid-cols-1 items-stretch gap-5 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
                 {teamsList.map((team) => (
                   <TeamCard
                     key={team.id}

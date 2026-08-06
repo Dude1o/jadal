@@ -47,7 +47,7 @@ export default function DebateFormatCard({
   };
 
   return (
-    <Card className="group relative w-full max-w-sm flex flex-col overflow-hidden border border-border shadow-md bg-card transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/10 dark:hover:shadow-primary/20">
+    <Card className="jd-card jd-interactive group relative flex h-full w-full flex-col overflow-hidden bg-[var(--table-row)]">
       {/* Top accent gradient */}
       <div className="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-primary via-chart-5 to-primary opacity-80" />
 
@@ -73,7 +73,7 @@ export default function DebateFormatCard({
       <CardContent className="flex-1 flex flex-col px-6 pb-6 pt-0 space-y-5">
         {/* Stats row */}
         <div className="grid grid-cols-2 gap-3">
-          <div className="rounded-xl bg-muted/50 border border-border p-3">
+          <div className="rounded-xl bg-muted/50  p-3">
             <div className="flex items-center gap-2 mb-1">
               <Clock className="h-4 w-4 text-primary" />
               <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
@@ -84,7 +84,7 @@ export default function DebateFormatCard({
               {phases.length}
             </p>
           </div>
-          <div className="rounded-xl bg-muted/50 border border-border p-3">
+          <div className="rounded-xl bg-muted/50  p-3">
             <div className="flex items-center gap-2 mb-1">
               <Users className="h-4 w-4 text-primary" />
               <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
@@ -108,11 +108,13 @@ export default function DebateFormatCard({
                 <Badge
                   key={idx}
                   variant="secondary"
-                  className="capitalize text-xs px-2.5 py-0.5 bg-card border border-border font-medium"
+                  className="capitalize text-xs px-2.5 py-0.5 bg-card font-medium"
                   style={{
                     borderLeftWidth: "3px",
                     borderLeftColor:
-                      phase.side === "proposition" ? "var(--primary)" : "var(--accent)",
+                      phase.side === "proposition"
+                        ? "var(--primary)"
+                        : "var(--accent)",
                   }}
                 >
                   {phase.name ?? phase.side}
@@ -135,8 +137,9 @@ export default function DebateFormatCard({
         {/* Action buttons */}
         <div className="mt-auto flex gap-2 pt-1">
           <Button
+            variant="accent"
             onClick={() => onView?.(format) || openViewDialog()}
-            className="flex-1 font-medium shadow-sm"
+            className="flex-1"
             title={getTranslation(t, "debateFormats.single")}
           >
             {getTranslation(t, "common.actions.view")}

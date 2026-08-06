@@ -50,7 +50,7 @@ export default function ComplaintCard({
   return (
     <div
       dir={i18n.dir()}
-      className="group relative flex flex-col h-full rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+      className="jd-card jd-interactive jd-tint-deep group relative flex h-full flex-col overflow-hidden"
       style={{
         fontFamily: "var(--font-sans)",
         background: "var(--card)",
@@ -67,8 +67,7 @@ export default function ComplaintCard({
       <div
         className="h-1 w-full shrink-0"
         style={{
-          background:
-            "linear-gradient(to right, var(--destructive), color-mix(in oklch, var(--destructive) 50%, var(--accent)))",
+          background: "var(--banner-complaint)",
         }}
       />
 
@@ -285,8 +284,7 @@ export default function ComplaintCard({
           <div
             className="flex items-center justify-center h-5 w-5 rounded-full"
             style={{
-              background:
-                "linear-gradient(135deg, var(--primary), var(--accent))",
+              background: "var(--banner-complaint)",
               color: "var(--primary-foreground)",
               fontSize: "9px",
               fontWeight: 700,

@@ -2,9 +2,9 @@
 
 import { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
 import AppHeader from "@/components/common/app-header";
 import NoItems from "@/components/common/no-items";
 import { getTranslation } from "@/lib/utils";
@@ -30,9 +30,10 @@ export function AchievementCatalogList() {
   const { t } = useTranslation();
   const dialog = useDialogStore();
   const [groupBy, setGroupBy] = useState<GroupBy>("type");
-  const { data: catalogData } = useSuspenseQuery(
-    achievementCatalogQueryOptions(),
-  );
+  const { data: catalogData } = useQuery({
+    ...achievementCatalogQueryOptions(),
+    placeholderData: keepPreviousData,
+  });
   const catalogList = catalogData?.data ?? [];
 
   const { mutate: createCatalog } = useCreate({
@@ -133,11 +134,10 @@ export function AchievementCatalogList() {
   }, [catalogList, groupBy]);
 
   return (
-    <div className="min-h-screen py-16 px-6">
+    <div className="p-4 sm:p-6 lg:p-8">
       <AppHeader
+        entity="achievements"
         title={getTranslation(t, "achievements.plural")}
-        view={groupBy === "type" ? "cards" : "table"}
-        setView={(v) => setGroupBy(v === "cards" ? "type" : "date")}
         onCreate={openCreateDialog}
         buttonLabel={getTranslation(t, "achievements.actions.createCatalog")}
       />
@@ -147,22 +147,52 @@ export function AchievementCatalogList() {
         onValueChange={(v) => setGroupBy(v as GroupBy)}
         className="mt-6"
       >
-        <TabsList className="rounded-full bg-muted p-1">
-          <TabsTrigger
-            value="type"
-            className="gap-1.5 rounded-full data-[state=active]:shadow-sm"
+        {/* Group-by control.
+            Was a shadcn TabsList: small, low-contrast, and carrying the tab
+            underline that every other screen has had removed. It is now a
+            proper segmented control on its own elevated surface — 48px tall,
+            body-size type, selected segment filled with the one orange. */}
+        <div className="jd-toolbar inline-flex w-auto flex-wrap items-center gap-3">
+          <span className="ps-2 text-[length:var(--text-caption)] font-bold tracking-wide text-muted-foreground uppercase">
+            {getTranslation(t, "achievements.groupBy.label")}
+          </span>
+          <div
+            role="tablist"
+            className="jd-field inline-flex items-center gap-1 p-1"
           >
-            <Shapes className="h-3.5 w-3.5" />
-            {getTranslation(t, "achievements.groupBy.type")}
-          </TabsTrigger>
-          <TabsTrigger
-            value="date"
-            className="gap-1.5 rounded-full data-[state=active]:shadow-sm"
-          >
-            <CalendarClock className="h-3.5 w-3.5" />
-            {getTranslation(t, "achievements.groupBy.date")}
-          </TabsTrigger>
-        </TabsList>
+            {[
+              {
+                id: "type" as const,
+                icon: Shapes,
+                label: "achievements.groupBy.type",
+              },
+              {
+                id: "date" as const,
+                icon: CalendarClock,
+                label: "achievements.groupBy.date",
+              },
+            ].map((item) => {
+              const active = groupBy === item.id;
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={active}
+                  onClick={() => setGroupBy(item.id)}
+                  className={`flex h-11 cursor-pointer items-center gap-2.5 rounded-[11px] px-5 text-[length:var(--text-body)] font-bold transition-[background-color,color,box-shadow] duration-200 ease-out ${
+                    active
+                      ? "bg-[var(--accent-btn)] text-[var(--accent-btn-fg)] shadow-[0_2px_8px_-3px_rgba(245,154,74,.55)]"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <item.icon className="block size-[18px] shrink-0" />
+                  {getTranslation(t, item.label)}
+                </button>
+              );
+            })}
+          </div>
+        </div>
 
         <TabsContent value="type" className="mt-8 space-y-10">
           {groups.length === 0 ? (
@@ -180,9 +210,8 @@ export function AchievementCatalogList() {
                   <span className="text-[11px] text-muted-foreground bg-muted rounded-full px-2 py-0.5">
                     {items.length}
                   </span>
-                  <div className="h-px flex-1 bg-border" />
                 </div>
-                <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="grid grid-cols-1 items-stretch gap-5 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
                   {items.map((c) => (
                     <AchievementCard
                       key={c.id}
@@ -213,9 +242,8 @@ export function AchievementCatalogList() {
                   <span className="text-[11px] text-muted-foreground bg-muted rounded-full px-2 py-0.5">
                     {items.length}
                   </span>
-                  <div className="h-px flex-1 bg-border" />
                 </div>
-                <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="grid grid-cols-1 items-stretch gap-5 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
                   {items.map((c) => (
                     <AchievementCard
                       key={c.id}

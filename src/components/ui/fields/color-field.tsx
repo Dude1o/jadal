@@ -140,12 +140,18 @@ export function ColorField({
             }}
           >
             <SelectTrigger className="w-[120px] border-2 border-secondary">
-              <SelectValue placeholder={getTranslation(t, "common.fields.format")} />
+              <SelectValue
+                placeholder={getTranslation(t, "common.fields.format")}
+              />
             </SelectTrigger>
 
             <SelectContent>
-              <SelectItem value="hex">{getTranslation(t, "common.fields.hex")}</SelectItem>
-              <SelectItem value="rgb">{getTranslation(t, "common.fields.rgb")}</SelectItem>
+              <SelectItem value="hex">
+                {getTranslation(t, "common.fields.hex")}
+              </SelectItem>
+              <SelectItem value="rgb">
+                {getTranslation(t, "common.fields.rgb")}
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>

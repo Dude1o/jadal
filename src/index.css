@@ -3,141 +3,411 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   Jadal design system — v2
+
+   Three rules drive everything below:
+     1. Structure is carried by TONE, never by lines. No border is permitted as
+        a separator (see §5). The four exceptions — focus rings, input focus,
+        chart gridlines, avatar rings — are objects, not separators.
+     2. Brand colour arrives as saturated small objects and one continuous
+        sweep, never as two flat blocks colliding.
+     3. Surfaces are tinted. Pure white on white and navy on navy are why the
+        v1 pass read as cold.
+
+   Colour source of truth is still JadalColors. Nothing here invents a hue.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
 :root {
-  --background: oklch(0.9753 0.0096 72.66);
-  --foreground: oklch(0.3455 0.0914 259.43);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.3455 0.0914 259.43);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.3455 0.0914 259.43);
-  --primary: oklch(0.4449 0.1446 255.03);
-  --primary-foreground: oklch(0.9658 0.0091 258.34);
-  --secondary: oklch(0.9635 0.0045 258.32);
-  --secondary-foreground: oklch(0.3455 0.0914 259.43);
-  --muted: oklch(0.8488 0.0059 84.57);
-  --muted-foreground: oklch(0.5475 0.0633 258.32);
-  --accent: oklch(0.6976 0.1658 54.23);
-  --accent-foreground: oklch(0.3455 0.0914 259.43);
-  --destructive: oklch(0.6062 0.1794 18.39);
-  --destructive-foreground: oklch(0.9658 0.0091 258.34);
-  --success: oklch(0.6353 0.1464 155.62);
-  --success-foreground: oklch(0.9658 0.0091 258.34);
-  --warning: oklch(0.7837 0.1587 72.99);
-  --warning-foreground: oklch(0.9658 0.0091 258.34);
-  --border: oklch(0.82 0.014 247.93);
-  --input: oklch(0.7 0.014 247.93);
-  --ring: oklch(0.4449 0.1446 255.03);
-  --chart-1: oklch(0.4449 0.1446 255.03);
-  --chart-2: oklch(0.6976 0.1658 54.23);
-  --chart-3: oklch(0.3455 0.0914 259.43);
-  --chart-4: oklch(0.6206 0.1415 152.69);
-  --chart-5: oklch(0.585 0.1826 299.9);
-  --chart-6: oklch(0.6552 0.1105 212.17);
-  --chart-7: oklch(0.644 0.1746 5.51);
-  --chart-8: oklch(0.6521 0.1322 81.57);
-  --sidebar: oklch(0.4449 0.1446 255.03);
-  --sidebar-foreground: oklch(0.9658 0.0091 258.34);
-  /* selected (match hover) */
-  --sidebar-primary: oklch(0.7276 0.1658 54.23);
-  --sidebar-primary-foreground: oklch(0.18 0.045 259.43);
-  --sidebar-accent: oklch(0.7276 0.1658 54.23); /* orange */
-  --sidebar-accent-foreground: oklch(0.18 0.045 259.43); /* dark */
-  --sidebar-border: oklch(0.9553 0.0103 247.93);
-  --sidebar-ring: oklch(0.6976 0.1658 54.23);
-  --font-sans: Poppins, ui-sans-serif, sans-serif, system-ui;
-  --font-serif: Playfair Display, ui-serif, serif;
+  /* ── Brand ────────────────────────────────────────────────────────────── */
+  --brand-blue: #0352a1; /* primaryBlue    */
+  --brand-orange: #ea7c1c; /* primaryOrange  */
+  --brand-deep: #1a3868; /* deepBlue       */
+  --brand-warm: #895541; /* warmOrange — the gradient bridge (§4.5) */
+  --proposition: #0352a1;
+  --opposition: #ea7c1c;
+  --judges: #9a9a9a;
+
+  /* ── Page ─────────────────────────────────────────────────────────────── */
+  --background: #fbf6f0; /* warm off-white — never #FFFFFF */
+  --foreground: #1a3868;
+  --muted-foreground: #5a7296;
+
+  /* The app wash. Opaque 5-stop diagonal, both ends returning to base so it
+     melts into the UI with no seam. Pinned to the viewport, never scrolled. */
+  --app-wash: linear-gradient(
+    135deg,
+    #fbf6f0 0%,
+    #e2e6e8 30%,
+    #e7e5e4 52%,
+    #f9eadb 74%,
+    #fbf6f0 100%
+  );
+
+  /* ── Surfaces ─────────────────────────────────────────────────────────── */
+  --card: rgba(255, 255, 255, 0.94);
+  --card-foreground: #1a3868;
+  --popover: #ffffff;
+  --popover-foreground: #1a3868;
+  --inset: #f1f4f9; /* lightSurfaceAlt — inputs, table heads */
+
+  /* Precomputed accent tints (§4.3): accent @ 7% over #FFFFFF. */
+  --tint-blue: #edf3f8;
+  --tint-orange: #fef6ef;
+  --tint-deep: #eff1f4;
+  --tint-green: #eff9f4;
+  --tint-red: #fcf2f3;
+
+  /* ── The rail is permanently dark, in BOTH themes (§4.7) ──────────────── */
+  --rail-bg: linear-gradient(180deg, #1a3868 0%, #163156 55%, #12294d 100%);
+  --rail-fg: #f0f4fa;
+  --rail-fg-muted: #a3bad8;
+  --rail-accent: #f59a4a; /* orangeOnDark — never #EA7C1C on navy */
+  --rail-spill: 10px 0 32px -14px rgba(26, 56, 104, 0.34);
+  --rail-solid: #163156; /* opaque backstop under the rail gradient */
+
+  /* ── Top bar ──────────────────────────────────────────────────────────── */
+  --topbar-bg: rgba(251, 246, 240, 0.72);
+
+  /* ── Semantic ─────────────────────────────────────────────────────────── */
+  --primary: #0352a1;
+  --primary-foreground: #ffffff;
+  --accent: #ea7c1c;
+  --accent-foreground: #1a3868;
+  --secondary: #eef0f3;
+  --secondary-foreground: #1a3868;
+  --muted: #eef0f3;
+  --destructive: #d84857;
+  --destructive-foreground: #ffffff;
+  --success: #1fa463;
+  --success-foreground: #ffffff;
+  --warning: #ea7c1c;
+  --warning-foreground: #1a3868;
+
+  /* Chip fills (§16.2) — tinted fill + matching text, no border ever. */
+  --chip-blue-bg: #e1eaf4;
+  --chip-blue-fg: #0352a1;
+  --chip-orange-bg: #fceadb;
+  --chip-orange-fg: #b45f13;
+  --chip-green-bg: #e4f5ec;
+  --chip-green-fg: #157a49;
+  --chip-red-bg: #fbe7e9;
+  --chip-red-fg: #b0303d;
+  --chip-neutral-bg: #eef0f3;
+  --chip-neutral-fg: #5a7296;
+
+  /* `border`/`input`/`ring` remain defined because shadcn primitives read
+     them, but structural borders are neutralised in @layer base below. */
+  --border: transparent;
+  --input: #f1f4f9;
+  --ring: #ea7c1c; /* focus rings are orange — the one permitted stroke */
+
+  /* ── Charts (§14.4) ───────────────────────────────────────────────────── */
+  --chart-1: #0352a1;
+  --chart-2: #ea7c1c;
+  --chart-3: #1a3868;
+  --chart-4: #895541;
+  --chart-5: #5a7296;
+  --chart-6: #1fa463;
+  --chart-7: #d84857;
+  --chart-8: #9a9a9a;
+  --grid-line: rgba(26, 56, 104, 0.06);
+
+  /* ── Gradients (§4.5) ─────────────────────────────────────────────────── */
+  /* The brand sweep. warmOrange bridges blue→orange so it never goes muddy.
+     Signature only: CTAs, hero, card accent bars, dialog rule. */
+  --grad-brand: linear-gradient(
+    100deg in oklab,
+    #0352a1 0%,
+    #1a3868 32%,
+    #895541 68%,
+    #ea7c1c 100%
+  );
+
+  /* §5 Screen header band. No light/dark variant: the dark theme's two shades
+     are now the only ones, because the light variant was invisible. */
+  --grad-header: linear-gradient(
+    115deg in oklab,
+    #12294d 0%,
+    #1a5fb4 62%,
+    #2e7dd1 100%
+  );
+
+  /* §13 The shared orange band for form/detail headers. Identical in both
+     themes — the light-theme version was the correct one. Navy text only.
+     ONE flat colour, not a sweep: the three-stop gradient made the band read
+     lighter at one end than the other, so the same navy text sat on two
+     different backgrounds within one header. */
+  --band-orange: #f2952f;
+
+  /* §15.2 Debate-format / motion card banner. The intermediate blue stops at
+     22% and 78% are what stop navy -> light-orange going muddy. */
+  --banner-format: linear-gradient(
+    100deg in oklab,
+    #16305b 0%,
+    #2d5f9e 22%,
+    #fad3ac 50%,
+    #2d5f9e 78%,
+    #16305b 100%
+  );
+
+  /* Role colours (section 11.2). The role WORD is coloured, never the card,
+     border or avatar ring. Admin is a desaturated clay derived from warmOrange
+     so it can never be confused with Judge orange. */
+  --role-debater: #0352a1;
+  --role-judge: #b45f13;
+  --role-trainer: #157a49;
+  --role-admin: #7a4b39;
+
+  /* §6 The one orange button colour in the app. Flat, never a gradient. */
+  /* §22.3 Complaint banner. In the dark variant the red channel must
+     dominate; once green climbs past ~140 it starts reading orange. */
+  /* §21.1 Survey banners, keyed to status. */
+  --banner-survey-scheduled: linear-gradient(100deg, #2d5f9e 0%, #16305b 100%);
+  --banner-survey-active: linear-gradient(100deg, #f5b65c 0%, #e09422 100%);
+  --banner-survey-overdue: linear-gradient(100deg, #e4707d 0%, #c13b4a 100%);
+  --banner-survey-closed: linear-gradient(100deg, #b3bcc7 0%, #8a96a4 100%);
+
+  --banner-complaint: linear-gradient(100deg, #e4707d 0%, #c13b4a 100%);
+
+  --accent-btn: #f59a4a;
+  --accent-btn-hover: #f0902f;
+  --accent-btn-fg: #1a3868;
+
+  /* §9 Table rows: explicit hexes, not alphas. v2's .035 was invisible. */
+  --table-head: #e7edf6;
+  --table-row: #ffffff;
+  --table-row-alt: #f0f4fa;
+  --table-row-hover: #e3edfa;
+  --table-row-selected: #fceedf;
+
+  /* toolbar: page -> toolbar -> field is two visible steps, not one. */
+  --toolbar-surface: #ffffff;
+  --toolbar-field: #edf1f7;
+  --grad-blue: linear-gradient(135deg, #1a3868 0%, #0352a1 100%);
+
+  /* ── Shadows — three tiers, no others (§7) ────────────────────────────── */
+  /* Two layers: a tight contact shadow that defines the footprint, and a wide
+     ambient one that lifts it. Navy-tinted, never black — black on a warm
+     off-white page goes grey and dirty. */
+  --shadow-card:
+    0 2px 4px -2px rgba(26, 56, 104, 0.1),
+    0 12px 28px -10px rgba(26, 56, 104, 0.18);
+  --shadow-hover:
+    0 4px 10px -3px rgba(26, 56, 104, 0.14),
+    0 24px 48px -14px rgba(26, 56, 104, 0.28);
+  --shadow-modal:
+    0 8px 16px -6px rgba(26, 56, 104, 0.16),
+    0 32px 72px -20px rgba(26, 56, 104, 0.34);
+
+  /* Aliases so shadcn's shadow-* utilities land on the three tiers. */
+  --shadow-2xs: var(--shadow-card);
+  --shadow-xs: var(--shadow-card);
+  --shadow-sm: var(--shadow-card);
+  --shadow: var(--shadow-card);
+  --shadow-md: var(--shadow-card);
+  --shadow-lg: var(--shadow-hover);
+  --shadow-xl: var(--shadow-modal);
+  --shadow-2xl: var(--shadow-modal);
+
+  /* ── Sidebar tokens (consumed by the shadcn sidebar primitive) ────────── */
+  --sidebar: #163156;
+  --sidebar-foreground: #f0f4fa;
+  --sidebar-primary: #f59a4a;
+  --sidebar-primary-foreground: #12294d;
+  --sidebar-accent: rgba(255, 255, 255, 0.07);
+  --sidebar-accent-foreground: #d5e2f2;
+  --sidebar-border: transparent;
+  --sidebar-ring: #f59a4a;
+
+  /* ── Typography (§6) ──────────────────────────────────────────────────── */
+  --font-sans: Cairo, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-serif: Cairo, system-ui, sans-serif;
   --font-mono:
     ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
     "Courier New", monospace;
-  --radius: 0.625rem;
-  --shadow-x: 0;
-  --shadow-y: 1px;
-  --shadow-blur: 3px;
-  --shadow-spread: 0px;
-  --shadow-opacity: 0.1;
-  --shadow-color: oklch(0 0 0);
-  --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
-  --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
-  --shadow-sm:
-    0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
-  --shadow: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
-  --shadow-md:
-    0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 2px 4px -1px hsl(0 0% 0% / 0.1);
-  --shadow-lg:
-    0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 4px 6px -1px hsl(0 0% 0% / 0.1);
-  --shadow-xl:
-    0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 8px 10px -1px hsl(0 0% 0% / 0.1);
-  --shadow-2xl: 0 1px 3px 0px hsl(0 0% 0% / 0.25);
-  --tracking-normal: 0em;
+
+  --text-display: clamp(21px, 0.6vw + 18.4px, 31px);
+  --text-headline: clamp(18px, 0.42vw + 16px, 25px);
+  --text-title: clamp(17px, 0.28vw + 15.5px, 22px);
+  --text-subtitle: clamp(15px, 0.21vw + 14px, 19px);
+  --text-body: clamp(13px, 0.14vw + 12px, 16px);
+  --text-button: clamp(13px, 0.14vw + 12.5px, 17px);
+  --text-caption: clamp(12px, 0.12vw + 11.3px, 15px);
+  --text-small: clamp(11px, 0.1vw + 10.6px, 14px);
+
+  --leading-latin: 1.45;
+  --leading-arabic: 1.75;
+  --leading-body: 1.45;
+
+  /* ── Radius (§7) — everything is rounder ──────────────────────────────── */
+  --r-dialog: 36px;
+  --r-hero: 32px;
+  --r-card: 28px;
+  --r-inner: 20px;
+  --r-control: 18px;
+  --r-icon-btn: 14px;
+  --r-badge-sm: 12px;
+  --r-pill: 999px;
+  --radius: 28px;
+
   --spacing: 0.25rem;
+  --tracking-normal: 0em;
 }
 
 .dark {
-  --background: oklch(0.2204 0.0423 256.41);
-  --foreground: oklch(0.9658 0.0091 258.34);
-  --card: oklch(0.2689 0.0534 259.7);
-  --card-foreground: oklch(0.9658 0.0091 258.34);
-  --popover: oklch(0.2689 0.0534 259.7);
-  --popover-foreground: oklch(0.9658 0.0091 258.34);
-  --primary: oklch(0.4449 0.1446 255.03);
-  --primary-foreground: oklch(0.9658 0.0091 258.34);
-  --secondary: oklch(0.3162 0.0494 260.29);
-  --secondary-foreground: oklch(0.9658 0.0091 258.34);
-  --muted: oklch(0.3829 0.0258 255.08);
-  --muted-foreground: oklch(0.7146 0.059 255.93);
-  --accent: oklch(0.6976 0.1658 54.23);
-  --accent-foreground: oklch(0.3455 0.0914 259.43);
-  --destructive: oklch(0.6062 0.1794 18.39);
-  --destructive-foreground: oklch(0.9658 0.0091 258.34);
-  --success: oklch(0.6353 0.1464 155.62);
-  --success-foreground: oklch(0.9658 0.0091 258.34);
-  --warning: oklch(0.7837 0.1587 72.99);
-  --warning-foreground: oklch(0.9658 0.0091 258.34);
-  --border: oklch(0.3273 0.0474 259.56);
-  --input: oklch(0.316 0.06 258.28);
-  --ring: oklch(0.4449 0.1446 255.03);
-  --chart-1: oklch(0.4449 0.1446 255.03);
-  --chart-2: oklch(0.6976 0.1658 54.23);
-  --chart-3: oklch(0.3455 0.0914 259.43);
-  --chart-4: oklch(0.6206 0.1415 152.69);
-  --chart-5: oklch(0.585 0.1826 299.9);
-  --chart-6: oklch(0.6552 0.1105 212.17);
-  --chart-7: oklch(0.644 0.1746 5.51);
-  --chart-8: oklch(0.6521 0.1322 81.57);
-  --sidebar: oklch(0.4449 0.1446 255.03);
-  --sidebar-foreground: oklch(0.9658 0.0091 258.34); /* default text: white */
-  --sidebar-accent-foreground: oklch(0.18 0.045 259.43); /* hover text: black */
-  --sidebar-primary-foreground: oklch(0.18 0.045 259.43); /* hover */
-  /* selected */
-  --sidebar-primary: oklch(0.7276 0.1658 54.23);
-  --sidebar-border: oklch(0.3273 0.0474 259.56);
-  --sidebar-ring: oklch(0.6976 0.1658 54.23);
-  --font-sans: Poppins, ui-sans-serif, sans-serif, system-ui;
-  --font-serif: Playfair Display, ui-serif, serif;
-  --font-mono:
-    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
-    "Courier New", monospace;
-  --radius: 0.625rem;
-  --shadow-x: 0;
-  --shadow-y: 1px;
-  --shadow-blur: 3px;
-  --shadow-spread: 0px;
-  --shadow-opacity: 0.1;
-  --shadow-color: oklch(0 0 0);
-  --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
-  --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
-  --shadow-sm:
-    0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
-  --shadow: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
-  --shadow-md:
-    0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 2px 4px -1px hsl(0 0% 0% / 0.1);
-  --shadow-lg:
-    0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 4px 6px -1px hsl(0 0% 0% / 0.1);
-  --shadow-xl:
-    0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 8px 10px -1px hsl(0 0% 0% / 0.1);
-  --shadow-2xl: 0 1px 3px 0px hsl(0 0% 0% / 0.25);
-  --tracking-normal: 0em;
-  --spacing: 0.25rem;
+  --brand-blue: #3b87d6; /* lifted so it reads as an accent on navy */
+  --brand-orange: #f59a4a; /* orangeOnDark — MANDATORY in dark (§4.4) */
+  --brand-deep: #1a3868;
+  --brand-warm: #8e5b44;
+  --proposition: #3b87d6;
+  --opposition: #f59a4a;
+  --judges: #9a9a9a;
+
+  --background: #0d1b2e;
+  --foreground: #f0f4fa;
+  --muted-foreground: #8ba5c8;
+
+  /* Orange blend drops 0.13 -> 0.055, blue 0.17 -> 0.14, deep 0.19 -> 0.16,
+     and the stops widen so every transition has a longer runway. #171F2B should
+     register as warmth in that corner, never as an orange region. */
+  --app-wash: linear-gradient(
+    135deg,
+    #0d1b2e 0%,
+    #0d1b2e 12%,
+    #0c223d 34%,
+    #0f2036 54%,
+    #171f2b 76%,
+    #0d1b2e 92%,
+    #0d1b2e 100%
+  );
+
+  --card: rgba(30, 50, 80, 0.88);
+  --card-foreground: #f0f4fa;
+  --popover: #1e3250;
+  --popover-foreground: #f0f4fa;
+  --inset: #162640;
+
+  /* Orange over navy computes to a dead grey, so dark surfaces stay in the
+     blue family; warmth comes from saturated orange objects instead (§4.3). */
+  --tint-blue: #1a365b;
+  --tint-orange: #1e3250;
+  --tint-deep: #1d3353;
+  --tint-green: #1e4152;
+  --tint-red: #363551;
+
+  --rail-bg: linear-gradient(180deg, #0a1626 0%, #08131f 100%);
+  --rail-fg: #f0f4fa;
+  --rail-fg-muted: #a3bad8;
+  --rail-accent: #f59a4a;
+  --rail-spill: 10px 0 32px -10px rgba(0, 0, 0, 0.6);
+  --rail-solid: #08131f;
+
+  --topbar-bg: rgba(13, 27, 46, 0.72);
+
+  --primary: #3b87d6;
+  --primary-foreground: #08131f;
+  --accent: #f59a4a;
+  --accent-foreground: #14243c;
+  --secondary: #1b2637;
+  --secondary-foreground: #f0f4fa;
+  --muted: #1b2637;
+  --destructive: #ef6a6a;
+  --destructive-foreground: #14243c;
+  --success: #3fcb8b;
+  --success-foreground: #08131f;
+  --warning: #f59a4a;
+  --warning-foreground: #14243c;
+
+  --chip-blue-bg: #0e1e2c;
+  --chip-blue-fg: #4aa8f5;
+  --chip-orange-bg: #2c1e0e;
+  --chip-orange-fg: #f59a4a;
+  --chip-green-bg: #0f2a1e;
+  --chip-green-fg: #3fcb8b;
+  --chip-red-bg: #2c1515;
+  --chip-red-fg: #ef6a6a;
+  --chip-neutral-bg: #1b2637;
+  --chip-neutral-fg: #8ba5c8;
+
+  --border: transparent;
+  --input: #162640;
+  --ring: #f59a4a;
+
+  --chart-1: #3b87d6;
+  --chart-2: #f59a4a;
+  --chart-3: #5d8ac4;
+  --chart-4: #b9825f;
+  --chart-5: #8ba5c8;
+  --chart-6: #3fcb8b;
+  --chart-7: #ef6a6a;
+  --chart-8: #9a9a9a;
+  --grid-line: rgba(240, 244, 250, 0.06);
+
+  --grad-brand: linear-gradient(
+    100deg in oklab,
+    #1a5fb4 0%,
+    #1a3868 30%,
+    #8e5b44 68%,
+    #f59a4a 100%
+  );
+
+  /* §5 / §13 / §15.2 — identical in both themes by design. */
+  --banner-format: linear-gradient(
+    100deg in oklab,
+    #0e2244 0%,
+    #21497f 22%,
+    #f3b77e 50%,
+    #21497f 78%,
+    #0e2244 100%
+  );
+
+  --role-debater: #3b87d6;
+  --role-judge: #f59a4a;
+  --role-trainer: #3fcb8b;
+  --role-admin: #c99878;
+
+  --banner-survey-scheduled: linear-gradient(100deg, #21497f 0%, #0e2244 100%);
+  --banner-survey-active: linear-gradient(100deg, #f7c078 0%, #e5a038 100%);
+  --banner-survey-overdue: linear-gradient(100deg, #ec8794 0%, #cf4a59 100%);
+  --banner-survey-closed: linear-gradient(100deg, #5c6b7e 0%, #3e4c5e 100%);
+
+  --banner-complaint: linear-gradient(100deg, #e06070 0%, #b32f3f 100%);
+
+  --table-head: #16273f;
+  --table-row: #1e3250;
+  --table-row-alt: #23385a;
+  --table-row-hover: #2a4269;
+  --table-row-selected: #2e2b26;
+
+  --toolbar-surface: #1e3250;
+  --toolbar-field: #16243c;
+  --grad-blue: linear-gradient(135deg, #14305c 0%, #1a5fb4 100%);
+
+  --shadow-card:
+    0 2px 4px -2px rgba(0, 0, 0, 0.3), 0 14px 30px -12px rgba(0, 0, 0, 0.44);
+  --shadow-hover:
+    0 4px 10px -3px rgba(0, 0, 0, 0.38), 0 26px 52px -16px rgba(0, 0, 0, 0.56);
+  --shadow-modal:
+    0 8px 16px -6px rgba(0, 0, 0, 0.44), 0 34px 76px -22px rgba(0, 0, 0, 0.66);
+
+  --shadow-2xs: var(--shadow-card);
+  --shadow-xs: var(--shadow-card);
+  --shadow-sm: var(--shadow-card);
+  --shadow: var(--shadow-card);
+  --shadow-md: var(--shadow-card);
+  --shadow-lg: var(--shadow-hover);
+  --shadow-xl: var(--shadow-modal);
+  --shadow-2xl: var(--shadow-modal);
+
+  --sidebar: #08131f;
+  --sidebar-foreground: #f0f4fa;
+  --sidebar-primary: #f59a4a;
+  --sidebar-primary-foreground: #08131f;
+  --sidebar-accent: rgba(255, 255, 255, 0.07);
+  --sidebar-accent-foreground: #d5e2f2;
+  --sidebar-border: transparent;
+  --sidebar-ring: #f59a4a;
 }
 
 @theme inline {
@@ -157,9 +427,15 @@
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --color-inset: var(--inset);
+
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
@@ -168,10 +444,7 @@
   --color-chart-6: var(--chart-6);
   --color-chart-7: var(--chart-7);
   --color-chart-8: var(--chart-8);
-  --color-success: var(--success);
-  --color-success-foreground: var(--success-foreground);
-  --color-warning: var(--warning);
-  --color-warning-foreground: var(--warning-foreground);
+
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -181,14 +454,36 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
+  --color-brand-blue: var(--brand-blue);
+  --color-brand-orange: var(--brand-orange);
+  --color-brand-deep: var(--brand-deep);
+  --color-brand-warm: var(--brand-warm);
+  --color-proposition: var(--proposition);
+  --color-opposition: var(--opposition);
+  --color-judges: var(--judges);
+  --color-rail-fg: var(--rail-fg);
+  --color-rail-fg-muted: var(--rail-fg-muted);
+  --color-rail-accent: var(--rail-accent);
+
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
   --font-serif: var(--font-serif);
 
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+  --text-display: var(--text-display);
+  --text-headline: var(--text-headline);
+  --text-title: var(--text-title);
+  --text-subtitle: var(--text-subtitle);
+  --text-body: var(--text-body);
+  --text-button: var(--text-button);
+  --text-caption: var(--text-caption);
+  --text-small: var(--text-small);
+
+  --radius-sm: var(--r-badge-sm);
+  --radius-md: var(--r-icon-btn);
+  --radius-lg: var(--r-control);
+  --radius-xl: var(--r-inner);
+  --radius-2xl: var(--r-card);
+  --radius-3xl: var(--r-hero);
 
   --shadow-2xs: var(--shadow-2xs);
   --shadow-xs: var(--shadow-xs);
@@ -201,103 +496,433 @@
 }
 
 @layer base {
-  * {
-    @apply border-border outline-ring/50;
+  /* ═══════════════════════════════════════════════════════════════════════
+     THE NO-BORDER RULE.
+
+     shadcn primitives ship `border` on almost everything. Rather than chase
+     every one, borders are globally neutralised here and re-enabled only
+     where a stroke is an object rather than a separator:
+       .ring-focus / :focus-visible  — accessibility, non-negotiable
+       .allow-border                 — avatar rings, chart gridlines
+     ═══════════════════════════════════════════════════════════════════════ */
+  *,
+  *::before,
+  *::after {
+    border-color: transparent;
+  }
+
+  *:not(.allow-border):not(.allow-border *) {
+    border-style: none;
+  }
+
+  .allow-border {
+    border-style: solid;
+  }
+
+  html {
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply text-foreground;
+    background-color: var(--background);
+    font-size: var(--text-body);
+    font-weight: 600;
+    line-height: var(--leading-body);
+  }
+
+  /* The wash is a pinned layer, so scrolling never drags the gradient and
+     wide viewports never push the warm end off-screen (§4.2). */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background-image: var(--app-wash);
+    background-size: 100% 100%;
+    pointer-events: none;
+  }
+
+  /* ── Type scale (§6.2) — 600 body, 700 subtitles, 800 headings ───────── */
+  h1 {
+    font-size: var(--text-display);
+    font-weight: 800;
+    line-height: 1.25;
+  }
+  h2 {
+    font-size: var(--text-headline);
+    font-weight: 800;
+    line-height: 1.3;
+  }
+  h3 {
+    font-size: var(--text-title);
+    font-weight: 800;
+    line-height: 1.35;
+  }
+  h4 {
+    font-size: var(--text-subtitle);
+    font-weight: 700;
+    line-height: 1.4;
+  }
+  p {
+    font-weight: 600;
+    line-height: var(--leading-body);
+  }
+  label {
+    font-size: var(--text-caption);
+    font-weight: 700;
+  }
+  button {
+    font-size: var(--text-button);
+    font-weight: 700;
+  }
+  input,
+  textarea,
+  select {
+    font-size: var(--text-body);
+    font-weight: 600;
+  }
+
+  /* ── Arabic rules (§6.4) — these are the actual bug ──────────────────── */
+  :lang(ar),
+  [dir="rtl"] {
+    --leading-body: var(--leading-arabic);
+  }
+
+  /* Arabic is cursive; letter-spacing tears joined letters apart. */
+  :lang(ar) *,
+  [dir="rtl"] * {
+    letter-spacing: 0 !important;
+    font-style: normal !important;
+  }
+
+  /* Uppercase does nothing in Arabic and desyncs eyebrows across locales. */
+  :lang(ar) *,
+  [dir="rtl"] * {
+    text-transform: none !important;
+  }
+
+  /* Numerals stay Western in both locales, and never jitter while counting. */
+  .tabular,
+  [class*="tabular-nums"] {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Mixed Arabic title + Latin format name + ISO date reorders unpredictably
+     without this (§17.6). */
+  .bidi-plaintext {
+    unicode-bidi: plaintext;
+  }
+
+  /* ── Focus: the one permitted stroke ─────────────────────────────────── */
+  :focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--ring);
+  }
+
+  /* ── Autofill ─────────────────────────────────────────────────────────
+     Picking a saved value from the browser's suggestion list makes Chrome
+     paint its own near-white highlight over the control, which wiped out the
+     dark field on the login screen. That highlight is applied through a
+     background-color transition, so deferring the transition indefinitely
+     leaves the element's own fill in place — in either theme, without having
+     to hardcode a colour per field. */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active,
+  textarea:-webkit-autofill,
+  select:-webkit-autofill {
+    -webkit-text-fill-color: currentColor;
+    caret-color: currentColor;
+    transition:
+      background-color 0s 600000s,
+      color 0s 600000s;
   }
 
   /* Scrollbar */
   ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 10px;
+    height: 10px;
   }
-
   ::-webkit-scrollbar-track {
     background: transparent;
   }
-
   ::-webkit-scrollbar-thumb {
-    background-color: var(--secondary);
-    border-radius: 9999px;
+    background-color: color-mix(
+      in oklab,
+      var(--muted-foreground) 30%,
+      transparent
+    );
+    border-radius: 999px;
   }
-
   ::-webkit-scrollbar-thumb:hover {
-    opacity: 0.8;
+    background-color: color-mix(
+      in oklab,
+      var(--muted-foreground) 45%,
+      transparent
+    );
   }
-
-  /* Firefox */
   * {
-    scrollbar-color: var(--secondary) transparent;
+    scrollbar-color: color-mix(
+        in oklab,
+        var(--muted-foreground) 30%,
+        transparent
+      )
+      transparent;
     scrollbar-width: thin;
-  }
-
-  /**
-  * Default typography styles for HTML elements (h1-h4, p, label, button, input).
-  * These are in @layer base, so Tailwind utility classes (like text-sm, text-lg) automatically override them.
-  */
-
-  html {
-    font-size: var(--font-size);
-  }
-
-  h1 {
-    font-size: var(--text-2xl);
-    font-weight: var(--font-weight-medium);
-    line-height: 1.5;
-  }
-
-  h2 {
-    font-size: var(--text-xl);
-    font-weight: var(--font-weight-medium);
-    line-height: 1.5;
-  }
-
-  h3 {
-    font-size: var(--text-lg);
-    font-weight: var(--font-weight-medium);
-    line-height: 1.5;
-  }
-
-  h4 {
-    font-size: var(--text-base);
-    font-weight: var(--font-weight-medium);
-    line-height: 1.5;
-  }
-
-  label {
-    font-size: var(--text-base);
-    font-weight: var(--font-weight-medium);
-    line-height: 1.5;
-  }
-
-  button {
-    font-size: var(--text-base);
-    font-weight: var(--font-weight-medium);
-    line-height: 1.5;
-  }
-
-  input {
-    font-size: var(--text-base);
-    font-weight: var(--font-weight-normal);
-    line-height: 1.5;
   }
 }
 
 @layer utilities {
-  /* Hide scrollbar for Chrome, Safari and Opera */
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
-
-  /* Hide scrollbar for IE, Edge and Firefox */
   .no-scrollbar {
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 
+  /* ── Surfaces (§4.3) ──────────────────────────────────────────────────── */
+  /* A card is its base plus a whisper of an accent, running diagonally from
+     the tinted corner to the plain one. The alternation between warm and cool
+     cards is what stops a page reading as white-on-white. */
+  .jd-card {
+    background-color: var(--card);
+    background-image: linear-gradient(
+      135deg,
+      var(--jd-tint, transparent) 0%,
+      transparent 62%
+    );
+    border-radius: var(--r-card);
+    box-shadow: var(--shadow-card);
+  }
+
+  [dir="rtl"] .jd-card {
+    background-image: linear-gradient(
+      225deg,
+      var(--jd-tint, transparent) 0%,
+      transparent 62%
+    );
+  }
+
+  .jd-tint-blue {
+    --jd-tint: var(--tint-blue);
+  }
+  .jd-tint-orange {
+    --jd-tint: var(--tint-orange);
+  }
+  .jd-tint-deep {
+    --jd-tint: var(--tint-deep);
+  }
+  .jd-tint-green {
+    --jd-tint: var(--tint-green);
+  }
+  .jd-tint-red {
+    --jd-tint: var(--tint-red);
+  }
+
+  .jd-inset {
+    background-color: var(--inset);
+    border-radius: var(--r-inner);
+  }
+
+  /* ── The rail (§8.1) ──────────────────────────────────────────────────── */
+  /* Permanently dark in both themes. In light mode it's the anchor the page
+     hangs off; in dark it recedes below the well. Separation from the content
+     is a ~90% luminance gap plus a soft spill — never a line. */
+  /* The warm glow behind the logo is a background LAYER, not a ::before.
+     A pseudo-element needs a positioned host, and the `position: relative`
+     that used to sit here overrode the `fixed` that the mobile sidebar sheet
+     relies on: the panel then laid out in normal flow far below the fold, so
+     opening the menu on a phone showed the scrim and nothing else. This class
+     must never set `position`. */
+  .jd-rail {
+    background-color: var(--rail-solid);
+    background-image:
+      radial-gradient(
+        140% 40% at 0% 0%,
+        rgba(234, 124, 28, 0.1),
+        transparent 60%
+      ),
+      var(--rail-bg);
+    background-repeat: no-repeat;
+    box-shadow: var(--rail-spill);
+    color: var(--rail-fg);
+  }
+
+  /* Mirror the spill and the glow so both fall onto the well, not off-screen. */
+  [dir="rtl"] .jd-rail {
+    background-image:
+      radial-gradient(
+        140% 40% at 100% 0%,
+        rgba(234, 124, 28, 0.1),
+        transparent 60%
+      ),
+      var(--rail-bg);
+    box-shadow: -10px 0 32px -14px rgba(26, 56, 104, 0.34);
+  }
+  [dir="rtl"] .dark .jd-rail,
+  .dark [dir="rtl"] .jd-rail {
+    box-shadow: -10px 0 32px -10px rgba(0, 0, 0, 0.6);
+  }
+
+  /* §5 Screen header band */
+  .jd-grad-header {
+    background-image: var(--grad-header);
+  }
+  [dir="rtl"] .jd-grad-header {
+    background-image: linear-gradient(
+      245deg in oklab,
+      #12294d 0%,
+      #1a5fb4 62%,
+      #2e7dd1 100%
+    );
+  }
+
+  /* §13 Orange form/detail band — one flat colour, so there is no RTL mirror
+     to maintain and no light/dark end to the header. */
+  .jd-band-orange {
+    background-color: var(--band-orange);
+    background-image: none;
+  }
+
+  /* §15.2 Card top banner */
+  .jd-banner-format {
+    background-image: var(--banner-format);
+  }
+  [dir="rtl"] .jd-banner-format {
+    background-image: linear-gradient(
+      260deg in oklab,
+      var(--banner-a, #16305b) 0%,
+      var(--banner-b, #2d5f9e) 22%,
+      var(--banner-c, #fad3ac) 50%,
+      var(--banner-b, #2d5f9e) 78%,
+      var(--banner-a, #16305b) 100%
+    );
+  }
+
+  /* §7 Toolbar surface + the field inset within it */
+  .jd-toolbar {
+    background-color: var(--toolbar-surface);
+    border-radius: 20px;
+    box-shadow: var(--shadow-card);
+    padding: 12px;
+  }
+  .jd-field {
+    background-color: var(--toolbar-field);
+    border-radius: 14px;
+  }
+  /* A bare <input> has no radius of its own, so the global :focus-visible ring
+     rendered as a hard SQUARE inside the rounded field — the "line in the
+     middle". The field itself owns the focus affordance; the control inside it
+     must not draw a second one. */
+  .jd-field :focus-visible,
+  .jd-field :focus {
+    box-shadow: none;
+  }
+
+  /* ── Gradients ────────────────────────────────────────────────────────── */
+  .jd-grad-brand {
+    background-image: var(--grad-brand);
+  }
+  .jd-grad-blue {
+    background-image: var(--grad-blue);
+  }
+
+  /* In RTL the sweep must still lead with blue from the start edge (§17.4). */
+  [dir="rtl"] .jd-grad-brand {
+    background-image: linear-gradient(
+      260deg in oklab,
+      var(--grad-brand-a, #0352a1) 0%,
+      #1a3868 32%,
+      #895541 68%,
+      var(--grad-brand-b, #ea7c1c) 100%
+    );
+  }
+  [dir="rtl"] .dark .jd-grad-brand,
+  .dark [dir="rtl"] .jd-grad-brand {
+    background-image: linear-gradient(
+      260deg in oklab,
+      #1a5fb4 0%,
+      #1a3868 30%,
+      #8e5b44 68%,
+      #f59a4a 100%
+    );
+  }
+  [dir="rtl"] .jd-grad-blue {
+    background-image: linear-gradient(225deg, #1a3868 0%, #0352a1 100%);
+  }
+  [dir="rtl"] .dark .jd-grad-blue,
+  .dark [dir="rtl"] .jd-grad-blue {
+    background-image: linear-gradient(225deg, #14305c 0%, #1a5fb4 100%);
+  }
+
+  /* The radial highlight that turns "a gradient" into "a designed surface". */
+  .jd-hero-light::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      120% 140% at 18% -20%,
+      rgba(255, 255, 255, 0.16),
+      transparent 60%
+    );
+    pointer-events: none;
+  }
+
+  /* ── Scrim: content dissolves under chrome instead of hitting a line ─── */
+  .jd-scrim-top {
+    position: absolute;
+    inset-inline: 0;
+    top: 100%;
+    height: 28px;
+    background: linear-gradient(to bottom, var(--background), transparent);
+    pointer-events: none;
+  }
+
+  /* ── Motion ───────────────────────────────────────────────────────────── */
+  @keyframes jdFadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes jdFadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes jdScaleIn {
+    from {
+      opacity: 0;
+      transform: scale(0.97);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  @keyframes jdPulseDot {
+    0%,
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.45;
+      transform: scale(0.82);
+    }
+  }
   @keyframes gradientMove {
     0% {
       background-position: 0%;
@@ -310,5 +935,75 @@
   .animate-gradient {
     background-size: 200%;
     animation: gradientMove 4s linear infinite;
+  }
+  .animate-fade-up {
+    animation: jdFadeUp 0.46s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+  }
+  .animate-fade-in {
+    animation: jdFadeIn 0.4s ease-out both;
+  }
+  .animate-scale-in {
+    animation: jdScaleIn 0.36s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+  }
+  .animate-pulse-dot {
+    animation: jdPulseDot 1.6s ease-in-out infinite;
+  }
+
+  .jd-enter {
+    animation: jdFadeUp 0.46s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+    animation-delay: calc(var(--jd-i, 0) * 45ms);
+  }
+
+  /* Hover may change background, shadow, transform and inner text colour.
+     It may NEVER introduce a line, outline or pseudo-element rule (§5.4). */
+  .jd-interactive {
+    transition:
+      transform 0.2s cubic-bezier(0.22, 0.61, 0.36, 1),
+      box-shadow 0.2s ease-out,
+      background-color 0.2s ease-out,
+      background-image 0.2s ease-out;
+    will-change: transform;
+  }
+  /* Scale is what reads as "coming toward you"; translation alone reads as
+     sliding up. Capped at 1.012 — past ~1.02 text re-rasterises and blurs. */
+  .jd-interactive:hover {
+    transform: translateY(-4px) scale(1.012);
+    box-shadow: var(--shadow-hover);
+  }
+  .jd-interactive:active {
+    transform: translateY(-1px) scale(1.004);
+    transition-duration: 0.12s;
+  }
+
+  /* Hover deepens the card's OWN accent — never an orange wash on a
+     non-orange component. */
+  .jd-card.jd-interactive:hover {
+    background-image: linear-gradient(
+      135deg,
+      var(--jd-tint, transparent) 0%,
+      transparent 82%
+    );
+  }
+  [dir="rtl"] .jd-card.jd-interactive:hover {
+    background-image: linear-gradient(
+      225deg,
+      var(--jd-tint, transparent) 0%,
+      transparent 82%
+    );
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-fade-up,
+    .animate-fade-in,
+    .animate-scale-in,
+    .animate-pulse-dot,
+    .animate-gradient,
+    .jd-enter {
+      animation: none !important;
+    }
+    .jd-interactive:hover,
+    .jd-interactive:active {
+      transform: none;
+    }
   }
 }

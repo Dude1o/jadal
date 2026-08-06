@@ -32,7 +32,11 @@ export function SelectField({ label, placeholder, options }: SelectFieldProps) {
           onBlur={field.handleBlur}
           className="border-secondary border-2"
         >
-          <SelectValue placeholder={placeholder ?? getTranslation(t, "common.actions.select")} />
+          <SelectValue
+            placeholder={
+              placeholder ?? getTranslation(t, "common.actions.select")
+            }
+          />
         </SelectTrigger>
         <SelectContent>
           {options.map((opt) => (

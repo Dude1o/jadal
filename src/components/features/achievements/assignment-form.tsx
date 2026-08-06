@@ -22,9 +22,15 @@ interface AssignmentFormProps {
   onCancel?: () => void;
 }
 
-export default function AssignmentForm({ userId, onAssign, onCancel }: AssignmentFormProps) {
+export default function AssignmentForm({
+  userId,
+  onAssign,
+  onCancel,
+}: AssignmentFormProps) {
   const { t } = useTranslation();
-  const [selectedUserId, setSelectedUserId] = useState<number | null>(userId ?? null);
+  const [selectedUserId, setSelectedUserId] = useState<number | null>(
+    userId ?? null,
+  );
   const showUserSelector = !userId;
 
   const formDefaultValues: AssignmentFormValues = {
@@ -55,7 +61,8 @@ export default function AssignmentForm({ userId, onAssign, onCancel }: Assignmen
     name: "achievement_id",
     label: `${getTranslation(t, "achievements.single")} *`,
     type: "async-select",
-    queryOptions: () => userAvailableAchievementsQueryOptions(selectedUserId ?? 0),
+    queryOptions: () =>
+      userAvailableAchievementsQueryOptions(selectedUserId ?? 0),
     getOptionLabel: (item: { name: string; type: string }) =>
       `${item.name} (${item.type})`,
     getOptionValue: (item: { id: number }) => String(item.id),
@@ -107,9 +114,12 @@ export default function AssignmentForm({ userId, onAssign, onCancel }: Assignmen
         )}
         <Button
           type="button"
-          className="flex-1 bg-accent hover:bg-accent/80"
+          variant="accent"
+          className="flex-1"
           onClick={() => {
-            (document.getElementById("assignment-form") as HTMLFormElement)?.requestSubmit();
+            (
+              document.getElementById("assignment-form") as HTMLFormElement
+            )?.requestSubmit();
           }}
         >
           {getTranslation(t, "achievements.actions.assign")}

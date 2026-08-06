@@ -24,7 +24,9 @@
       "close": "إغلاق",
       "share": "مشاركة",
       "comingSoon": "قريباً",
-      "confirm": "تأكيد"
+      "confirm": "تأكيد",
+      "clear": "مسح",
+      "back": "رجوع"
     },
     "labels": {
       "actions": "الإجراءات",
@@ -49,7 +51,8 @@
       "activateDescription": "هل أنت متأكد أنك تريد إعادة تفعيل حساب هذا المستخدم؟ ستُستعاد جميع صلاحيات الوصول.",
       "min": "الأقل",
       "max": "الأعلى",
-      "quickActions": "إجراءات سريعة"
+      "quickActions": "إجراءات سريعة",
+      "noResults": "لا توجد نتائج"
     },
     "states": {
       "noData": "لا توجد بيانات متاحة.",
@@ -116,7 +119,8 @@
     "toasts": {
       "success": "نجاح",
       "error": "خطأ"
-    }
+    },
+    "comingSoon": "قريبًا"
   },
   "auth": {
     "login": {
@@ -134,7 +138,10 @@
       "signingIn": "جارٍ تسجيل الدخول...",
       "brand": "جدل",
       "successMessage": "تم تسجيل الدخول بنجاح",
-      "errorMessage": "بريد إلكتروني أو كلمة مرور غير صالحة"
+      "errorMessage": "بريد إلكتروني أو كلمة مرور غير صالحة",
+      "tagline": "منصة المناظرات",
+      "statDebates": "أكثر من 1,200 مناظرة",
+      "statTeams": "أكثر من 40 فريقًا نشطًا"
     },
     "signup": {
       "noAccount": "ليس لديك حساب؟",
@@ -147,7 +154,8 @@
       "title1": "حيث تولد",
       "titleEm": "الحجج العظيمة",
       "title2": ".",
-      "subtitle": "انضم إلى آلاف المتناظرين والمدربين والحكام الذين يبنون مستقبل الخطاب المنظم."
+      "subtitle": "انضم إلى آلاف المتناظرين والمدربين والحكام الذين يبنون مستقبل الخطاب المنظم.",
+      "slogan": "حيث تلتقي الكلمة بالتقنية"
     },
     "session": {
       "welcomeBack": "مرحباً بعودتك",
@@ -356,7 +364,8 @@
         "suspended": "موقوف مؤقتاً",
         "banned": "محظور"
       }
-    }
+    },
+    "subtitle": "إدارة المتناظرين والمدربين والحكام والمشرفين"
   },
   "debates": {
     "single": "مناظرة",
@@ -516,7 +525,8 @@
         "pending": "قيد الانتظار",
         "rejected": "مرفوض"
       }
-    }
+    },
+    "subtitle": "جدولة المناظرات وإعلانها ومراجعتها"
   },
   "debateFormats": {
     "single": "نمط مناظرة",
@@ -580,8 +590,13 @@
       "speakersPerSide": "المحادثون لكل جانب",
       "mainSpeech": "الخطاب الرئيسي",
       "replySpeech": "الخطاب المقابل",
-      "min": "دقائق"
-    }
+      "min": "دقائق",
+      "crossExamination": "المداخلة",
+      "messages": {
+        "notFound": "تفاصيل النسق غير متاحة"
+      }
+    },
+    "subtitle": "الأنساق التي تجري بها المناظرات"
   },
   "debateMotions": {
     "single": "الموضوع",
@@ -609,13 +624,14 @@
         "text": "نص الموضوع",
         "textPlaceholder": "اكتب نص الموضوع هنا...",
         "frameworks": "الإطارات",
-        "selectFrameworks": "اختر الإطارات"
+        "selectFrameworks": "اختر الإطارات",
+        "motion": "القضية"
       }
     },
     "card": {
       "frameworks": "الأطر",
-      "added": "أُضيف ",
-      "updated": "حُدّث ",
+      "added": "أُضيف",
+      "updated": "حُدّث",
       "viewMotion": "عرض الموضوع"
     },
     "empty": "لا توجد مواضيع",
@@ -624,7 +640,8 @@
       "textRequired": "نص الموضوع مطلوب",
       "textTooShort": "يجب أن يكون نص الموضوع 10 أحرف على الأقل",
       "frameworksRequired": "مطلوب إطار واحد على الأقل"
-    }
+    },
+    "subtitle": "الموضوعات التي يتناظر حولها المتناظرون"
   },
   "debateMotionFrameworks": {
     "single": "الإطار",
@@ -666,7 +683,8 @@
       "nameTooShort": "يجب أن يكون الاسم 3 أحرف على الأقل",
       "colorRequired": "اللون مطلوب",
       "colorInvalid": "اللون يجب أن يكون رمزاً سوداء صحيحاً (مثلاً #FF0000)"
-    }
+    },
+    "subtitle": "التصنيفات الموضوعية للقضايا"
   },
   "blogs": {
     "title": "المدونات",
@@ -707,7 +725,8 @@
       "likes": "الإعجابات",
       "dislikes": "عدم الإعجاب",
       "reviewerCommentLabel": "تعليق المراجع",
-      "blogLoading": "جارٍ تحميل المقال"
+      "blogLoading": "جارٍ تحميل المقال",
+      "readFullArticle": "قراءة المقال كاملاً"
     },
     "empty": {
       "noPosts": "لا توجد منشورات لهذا الفلتر."
@@ -735,7 +754,15 @@
         "nameTooShort": "يجب أن يكون الاسم حرفين على الأقل",
         "invalidSlug": "الرابط الثابت يجب أن يكون صحيحاً"
       }
-    }
+    },
+    "subtitle": "المقالات المنشورة على المنصة",
+    "statuses": {
+      "published": "منشور",
+      "pending_review": "قيد المراجعة",
+      "rejected": "مرفوض",
+      "draft": "مسودة"
+    },
+    "single": "تفاصيل المقال"
   },
   "surveys": {
     "single": "استبيان",
@@ -787,7 +814,10 @@
     "status": {
       "open": "مفتوح",
       "closingSoon": "سينتهي قريباً",
-      "closed": "مغلق"
+      "closed": "مغلق",
+      "active": "نشط",
+      "overdue": "متأخر",
+      "scheduled": "مجدول"
     },
     "dates": {
       "noCloseDate": "لا يوجد تاريخ إغلاق",
@@ -807,7 +837,8 @@
       "responses": "إجابات",
       "rate": "% نسبة",
       "noDescription": "لا يوجد وصف",
-      "createdByFallback": "مستخدم #{{id}}"
+      "createdByFallback": "مستخدم #{{id}}",
+      "closingSoon": "يغلق قريبًا"
     },
     "form": {
       "sections": {
@@ -875,8 +906,12 @@
       "informationalSurvey": "استبيان معلوماتي",
       "closedMessage": "انتهت فترة استقبال الإجابات لهذا الاستبيان.",
       "alreadyRespondedMessage": "لقد قمت بالمشاركة في هذا الاستبيان سابقاً.",
-      "notRespondedMessage": "هذا الاستبيان مخصص لجمع آراء وردود الفعل."
-    }
+      "notRespondedMessage": "هذا الاستبيان مخصص لجمع آراء وردود الفعل.",
+      "allRolesTargeted": "جميع الأدوار مستهدفة",
+      "noQuestionsTitle": "لا توجد أسئلة بعد"
+    },
+    "subtitle": "جمع آراء أعضاء المجتمع",
+    "countLabel": "{{count}} إجمالًا"
   },
   "surveyBuilder": {
     "label": "أسئلة الاستطلاع",
@@ -945,7 +980,6 @@
       "resolveConfirm": "تأكيد الحل",
       "description": "سيتم إزالة هذه الشكوى من القائمة النشطة.",
       "adminResponse": "رد المشرف",
-
       "cancel": "إلغاء"
     },
     "statuses": {
@@ -967,8 +1001,20 @@
       "noResponse": "لم يتم تقديم أي رد حتى الآن.",
       "resolve": "تعيين كمحلولة",
       "dismiss": "رفض الشكوى",
-      "viewDebate": "عرض النقاش"
-    }
+      "viewDebate": "عرض النقاش",
+      "complaintText": "نص الشكوى"
+    },
+    "subtitle": "البلاغات المقدمة من الأعضاء ومعالجتها",
+    "empty": {
+      "noData": "لا توجد بلاغات"
+    },
+    "messages": {
+      "dismissed": "تم رفض الشكوى",
+      "dismissError": "تعذّر رفض الشكوى",
+      "resolved": "تم حل الشكوى",
+      "resolvError": "تعذّر حل الشكوى"
+    },
+    "single": "شكوى"
   },
   "teams": {
     "single": "الفريق",
@@ -985,7 +1031,10 @@
       "noLeader": "—",
       "teamSize": "حجم الفريق",
       "leaderBadge": "القائد",
-      "notFound": "الفريق غير موجود"
+      "notFound": "الفريق غير موجود",
+      "messages": {
+        "notFound": "تفاصيل الفريق غير متاحة"
+      }
     },
     "messages": {
       "created": "تم إنشاء الفريق بنجاح",
@@ -1041,7 +1090,8 @@
       "statusRequired": "الحالة مطلوبة",
       "teamMembersRequired": "أعضاء الفريق مطلوبون",
       "leaderMustBeMember": "يجب أن يكون قائد الفريق عضواً في الفريق"
-    }
+    },
+    "subtitle": "الفرق التي تتنافس معًا"
   },
   "categories": {
     "messages": {
@@ -1071,7 +1121,9 @@
     "nextPage": "الصفحة التالية",
     "page": "الصفحة",
     "of": "من",
-    "noResults": "لم يتم العثور على نتائج"
+    "noResults": "لم يتم العثور على نتائج",
+    "pagination": "التنقل بين الصفحات",
+    "showingRange": "عرض {{from}}–{{to}} من {{total}}"
   },
   "toolbar": {
     "search": "ابحث في"
@@ -1257,7 +1309,8 @@
     },
     "groupBy": {
       "type": "حسب النوع",
-      "date": "حسب التاريخ"
+      "date": "حسب التاريخ",
+      "label": "التجميع حسب"
     },
     "form": {
       "sections": {
@@ -1283,10 +1336,38 @@
       "createFirst": "قم بإنشاء أول إنجاز للبدء.",
       "allAssigned": "تم منح جميع الإنجازات",
       "allAssignedDesc": "هذا المستخدم لديه جميع الإنجازات المتاحة."
-    }
+    },
+    "subtitle": "الأوسمة الممنوحة للأعضاء"
   },
   "home": {
-    "welcome": "مرحباً بك",
-    "hello": "مرحباً"
+    "welcome": "مرحبًا بك",
+    "hello": "أهلاً",
+    "title": "نظرة عامة",
+    "subtitle": "لمحة سريعة عن كل ما يجري في جدل",
+    "greeting": "مرحبًا بعودتك، {{name}}",
+    "keyStatistics": "أبرز الإحصائيات",
+    "keyStatisticsSubtitle": "صحة المنصة في لمحة",
+    "latestDebates": "أحدث المناظرات",
+    "latestDebatesSubtitle": "الجولات المجدولة مؤخرًا",
+    "latestSurvey": "أحدث استبيان",
+    "latestSurveySubtitle": "آخر استبيان قمت بنشره",
+    "viewAll": "عرض الكل",
+    "openSurvey": "فتح الاستبيان",
+    "noDebates": "لا توجد مناظرات بعد",
+    "noSurvey": "لا توجد استبيانات بعد",
+    "quickLinks": "روابط سريعة",
+    "questionsCount": "{{count}} أسئلة",
+    "closed": "مغلق",
+    "open": "مفتوح",
+    "noArticles": "لا توجد مقالات بعد",
+    "latestArticles": "أحدث المقالات",
+    "latestArticlesSubtitle": "ما نُشر مؤخرًا على المنصة"
+  },
+  "errors": {
+    "notFound": {
+      "description": "الصفحة التي تبحث عنها غير موجودة أو تم نقلها.",
+      "goHome": "الذهاب إلى الرئيسية",
+      "goBack": "رجوع"
+    }
   }
 }

@@ -120,9 +120,15 @@ export function TeamCard({ team, onEdit, onDelete }: TeamCardProps) {
     <Card
       dir={i18n.dir()}
       className={cn(
-        "group relative flex flex-col overflow-hidden rounded-2xl border border-border shadow-sm bg-card transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/10 dark:hover:shadow-primary/20 cursor-pointer",
+        "group relative flex flex-col overflow-hidden rounded-2xl  shadow-sm bg-card transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/10 dark:hover:shadow-primary/20 cursor-pointer",
       )}
-      style={{ background: backgroundGradient }}
+      style={{
+        // `background` is a SHORTHAND: setting it to a gradient alone wiped out
+        // bg-card, so the card had no surface of its own and dissolved into the
+        // page wash. Longhands keep the white card and put the tint over it.
+        backgroundColor: "var(--table-row)",
+        backgroundImage: backgroundGradient,
+      }}
       onClick={openViewDialog}
     >
       {/* Top accent bar */}
@@ -130,7 +136,7 @@ export function TeamCard({ team, onEdit, onDelete }: TeamCardProps) {
 
       {/* Header */}
       <div className="flex items-start justify-between px-5 pt-5 pb-0">
-        <Avatar className="h-12 w-12 sm:h-14 sm:w-14 shrink-0 rounded-full ring-2 ring-card shadow-md">
+        <Avatar className="h-12 w-12 sm:h-14 sm:w-14 shrink-0 rounded-full ring-2 ring-card shadow-[var(--shadow-card)]">
           <AvatarFallback
             className={cn(
               "text-sm sm:text-base font-bold text-white",
@@ -147,7 +153,7 @@ export function TeamCard({ team, onEdit, onDelete }: TeamCardProps) {
               onClick={(e) => e.stopPropagation()}
               className={cn(
                 "h-8 w-8 flex items-center justify-center rounded-full shrink-0",
-                "text-muted-foreground border border-border/70 bg-background/80 backdrop-blur",
+                "text-muted-foreground /70 bg-background/80 backdrop-blur",
                 "hover:bg-accent hover:text-foreground transition-colors",
                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
               )}
@@ -222,7 +228,7 @@ export function TeamCard({ team, onEdit, onDelete }: TeamCardProps) {
               "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium",
               team.is_random
                 ? "bg-accent/10 text-accent border border-accent/20"
-                : "bg-muted/50 text-muted-foreground border border-border/50",
+                : "bg-muted/50 text-muted-foreground ",
             )}
           >
             {team.is_random ? (
@@ -240,7 +246,7 @@ export function TeamCard({ team, onEdit, onDelete }: TeamCardProps) {
 
           {/* Members */}
           {memberCount > 0 && (
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-muted text-muted-foreground border border-border">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-muted text-muted-foreground ">
               <Users className="h-3.5 w-3.5" />
               {memberCount}
             </span>
@@ -261,22 +267,19 @@ export function TeamCard({ team, onEdit, onDelete }: TeamCardProps) {
       </div>
 
       {/* View Button - Clean & Prominent */}
-      <div className="px-5 pb-5 pt-2 border-t border-border/60 bg-card/80 backdrop-blur-sm">
+      <div className="px-5 pb-5 pt-2 bg-card/80 backdrop-blur-sm">
         <Button
           onClick={(e) => {
             e.stopPropagation();
             openViewDialog();
           }}
-          className="w-full font-medium shadow-sm hover:shadow transition-all"
-          variant="default"
+          className="w-full"
+          variant="accent"
         >
           <Eye className="h-4 w-4 mr-2" />
           {getTranslation(t, "common.actions.view")}
         </Button>
       </div>
-
-      {/* Hover highlight */}
-      <div className="absolute bottom-0 left-0 h-[3px] w-0 bg-gradient-to-r from-primary via-accent to-primary group-hover:w-full transition-all duration-500" />
     </Card>
   );
 }

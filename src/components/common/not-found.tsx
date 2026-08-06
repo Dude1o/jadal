@@ -14,7 +14,7 @@ export default function NotFoundPage() {
     <div className="min-h-screen flex items-center justify-center bg-background relative overflow-hidden">
       {/* Background glow */}
       <div className="absolute inset-0 -z-10">
-        <div className="absolute top-[-20%] left-[10%] w-[500px] h-[500px] bg-purple-500/20 blur-3xl rounded-full" />
+        <div className="absolute top-[-20%] left-[10%] w-[500px] h-[500px] bg-primary/15 blur-3xl rounded-full" />
         <div className="absolute bottom-[-20%] right-[10%] w-[500px] h-[500px] bg-blue-500/20 blur-3xl rounded-full" />
       </div>
 
@@ -25,7 +25,7 @@ export default function NotFoundPage() {
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.4 }}
-            className="text-8xl font-extrabold bg-gradient-to-r from-purple-500 to-blue-500 text-transparent bg-clip-text"
+            className="text-8xl font-extrabold jd-grad-brand text-transparent bg-clip-text"
           >
             404
           </motion.h1>

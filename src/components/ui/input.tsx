@@ -2,15 +2,23 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
+/**
+ * Filled input. No rest border — the fill's tonal step against the card is the
+ * separation. Focus is an inset orange ring, one of the four permitted strokes,
+ * and it never shifts layout (§5.1, §16.3).
+ */
 function Input({ className, type, ...props }: React.ComponentProps<"input">) {
   return (
     <input
       type={type}
       data-slot="input"
       className={cn(
-        "file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input h-9 w-full min-w-0 rounded-md border-[1.5px] dark:border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
-        "focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
-        "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
+        "h-13 w-full min-w-0 rounded-[18px] bg-[var(--inset)] px-4 text-[length:var(--text-body)] font-semibold text-foreground outline-none transition-[box-shadow,background-color] duration-150 ease-in-out",
+        "placeholder:font-semibold placeholder:text-muted-foreground/70",
+        "file:inline-flex file:h-8 file:bg-transparent file:text-[length:var(--text-caption)] file:font-bold file:text-foreground",
+        "disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50",
+        "focus-visible:shadow-[inset_0_0_0_2px_var(--ring)]",
+        "aria-invalid:shadow-[inset_0_0_0_2px_var(--destructive)]",
         className,
       )}
       {...props}

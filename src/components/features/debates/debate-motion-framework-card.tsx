@@ -26,13 +26,18 @@ export default function DebateMotionFrameworkCard({
   onDelete,
 }: Props) {
   const { t } = useTranslation();
-  const accentColor = framework.color_hex || "#6366f1";
+  const accentColor = framework.color_hex || "var(--brand-blue)";
 
   return (
     <Card
-      className="group relative overflow-hidden border border-border shadow-sm bg-card transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/10"
+      className="jd-card jd-interactive group relative flex h-full flex-col overflow-hidden"
       style={{
-        background: `linear-gradient(135deg, ${accentColor}08 0%, ${accentColor}03 40%, transparent 100%)`,
+        // The `background` SHORTHAND used to be set here, which reset
+        // background-color to transparent and left the card as a 3% wash of the
+        // framework colour over the page — no surface, no contrast. Setting the
+        // two longhands keeps the white card and lays the tint on top of it.
+        backgroundColor: "var(--table-row)",
+        backgroundImage: `linear-gradient(135deg, ${accentColor}1F 0%, ${accentColor}0A 38%, transparent 72%)`,
       }}
     >
       {/* Coloured top accent */}

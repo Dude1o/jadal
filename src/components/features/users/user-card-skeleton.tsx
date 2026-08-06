@@ -46,10 +46,10 @@ export function UserCardSkeleton({
         </div>
 
         {/* Divider */}
-        <div className="mx-5 mt-4 h-px bg-linear-to-r from-transparent via-border to-transparent" />
+        <div className="mx-5 mt-4" />
 
         {/* Stats */}
-        <div className="grid grid-cols-2 divide-x divide-border/60">
+        <div className="grid grid-cols-2 gap-2">
           {[
             getTranslation(t, "users.cardSkeleton.likes"),
             getTranslation(t, "users.cardSkeleton.views"),

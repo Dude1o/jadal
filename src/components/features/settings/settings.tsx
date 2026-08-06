@@ -6,9 +6,7 @@ import {
   Moon,
   Sun,
   Monitor,
-  Settings2,
   CheckCircle2,
-  Palette,
   Mail,
 } from "lucide-react";
 
@@ -27,7 +25,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getTranslation } from "@/lib/utils";
 import { useSettingsStore } from "@/store/use-settings-store";
 import { useAuthStore } from "@/store/use-auth-store";
@@ -70,7 +67,7 @@ export default function Settings() {
             </CardTitle>
             <CardDescription>{user?.email}</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-0 divide-y divide-border/50">
+          <CardContent className="space-y-0 ">
             {/* 1. Page View Preference */}
             <div className="group flex flex-col md:flex-row md:items-center justify-between py-6 gap-4">
               <div className="space-y-1">
@@ -81,39 +78,52 @@ export default function Settings() {
                   {getTranslation(t, "settings.view.description")}
                 </p>
               </div>
-              <Tabs
-                value={view}
-                onValueChange={(v) => {
-                  navigate({
-                    search: (prev) => ({ ...prev, view: v }),
-                  });
-                  setView(v as "cards" | "table");
-                }}
-                className="w-full md:w-[260px]"
-              >
-                <TabsList className="grid w-full grid-cols-2 p-1 bg-muted/50 border border-border">
-                  <TabsTrigger
-                    value="cards"
-                    className="gap-2 data-[state=active]:glow-primary data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+              {/* §23 — the same segmented pill row as the theme selector
+                  below. No underline, no orange indicator bar: this is a
+                  settings row and should be the least interesting thing on
+                  the screen while still being obvious. */}
+              <div className="flex flex-wrap gap-2">
+                {[
+                  {
+                    id: "cards",
+                    icon: LayoutGrid,
+                    label: "navigation.view.cards",
+                  },
+                  {
+                    id: "table",
+                    icon: TableIcon,
+                    label: "navigation.view.table",
+                  },
+                ].map((item) => (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => {
+                      navigate({
+                        search: (prev) => ({ ...prev, view: item.id }),
+                      });
+                      setView(item.id as "cards" | "table");
+                    }}
+                    className={`flex cursor-pointer items-center gap-2 rounded-full px-4 py-2 text-[length:var(--text-caption)] font-bold transition-all duration-200 ${
+                      view === item.id
+                        ? "bg-[var(--accent-btn)] text-[var(--accent-btn-fg)] shadow-[0_2px_8px_-3px_rgba(245,154,74,.5)]"
+                        : "bg-[var(--inset)] text-muted-foreground hover:text-foreground"
+                    }`}
                   >
-                    <LayoutGrid className="h-4 w-4" />
-                    {getTranslation(t, "navigation.view.cards")}
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="table"
-                    className="gap-2 data-[state=active]:glow-primary data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
-                  >
-                    <TableIcon className="h-4 w-4" />
-                    {getTranslation(t, "navigation.view.table")}
-                  </TabsTrigger>
-                </TabsList>
-              </Tabs>
+                    <item.icon className="block size-4 shrink-0" />
+                    <span>{getTranslation(t, item.label)}</span>
+                    {view === item.id && (
+                      <CheckCircle2 className="block size-3.5 shrink-0" />
+                    )}
+                  </button>
+                ))}
+              </div>
             </div>
 
             {/* 2. Language Selection */}
             <div className="group flex flex-col md:flex-row md:items-center justify-between py-6 gap-4">
               <div className="space-y-1">
-                <Label className="text-base font-bold text-foreground group-hover:text-jade transition-colors">
+                <Label className="text-base font-bold text-foreground transition-colors">
                   {getTranslation(t, "settings.language.title")}
                 </Label>
                 <p className="text-sm text-muted-foreground">
@@ -121,23 +131,17 @@ export default function Settings() {
                 </p>
               </div>
               <Select value={language} onValueChange={handleLanguageChange}>
-                <SelectTrigger className="w-full md:w-[260px] border-border hover:border-jade focus:ring-jade/30 transition-all">
+                <SelectTrigger className="jd-field h-[46px] w-full px-4 md:w-[260px]">
                   <div className="flex items-center gap-2">
-                    <Languages className="h-4 w-4 text-jade" />
+                    <Languages className="block size-4 shrink-0 text-muted-foreground" />
                     <SelectValue />
                   </div>
                 </SelectTrigger>
-                <SelectContent className="glass">
-                  <SelectItem
-                    value="en"
-                    className="focus:bg-jade-muted focus:text-jade-dark font-medium"
-                  >
+                <SelectContent>
+                  <SelectItem value="en" className="font-semibold">
                     {getTranslation(t, "settings.language.en")}
                   </SelectItem>
-                  <SelectItem
-                    value="ar"
-                    className="focus:bg-jade-muted focus:text-jade-dark font-medium"
-                  >
+                  <SelectItem value="ar" className="font-semibold">
                     {getTranslation(t, "settings.language.ar")}
                   </SelectItem>
                 </SelectContent>
@@ -167,23 +171,16 @@ export default function Settings() {
                   <button
                     key={item.id}
                     onClick={() => setTheme(item.id as any)}
-                    className={`
-                      flex items-center gap-2 px-4 py-2 rounded-md border transition-all duration-200
-                      ${
-                        theme === item.id
-                          ? "bg-accent/10 border-accent text-accent glow-accent"
-                          : "bg-card border-border hover:border-accent/50 text-muted-foreground hover:text-foreground"
-                      }
-                    `}
+                    className={`flex cursor-pointer items-center gap-2 rounded-full px-4 py-2 text-[length:var(--text-caption)] font-bold transition-all duration-200 ${
+                      theme === item.id
+                        ? "bg-[var(--accent-btn)] text-[var(--accent-btn-fg)] shadow-[0_2px_8px_-3px_rgba(245,154,74,.5)]"
+                        : "bg-[var(--inset)] text-muted-foreground hover:text-foreground"
+                    }`}
                   >
-                    <item.icon
-                      className={`h-4 w-4 ${theme === item.id ? "animate-pulse" : ""}`}
-                    />
-                    <span className="text-xs uppercase tracking-wider">
-                      {getTranslation(t, item.label)}
-                    </span>
+                    <item.icon className="block size-4 shrink-0" />
+                    <span>{getTranslation(t, item.label)}</span>
                     {theme === item.id && (
-                      <CheckCircle2 className="h-3 w-3 ml-1" />
+                      <CheckCircle2 className="block size-3.5 shrink-0" />
                     )}
                   </button>
                 ))}

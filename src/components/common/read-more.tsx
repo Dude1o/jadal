@@ -32,8 +32,10 @@ export function ReadMore({
       ? text
       : `${text.slice(0, maxLength).trim()}...`;
 
-  const effectiveReadMoreLabel = readMoreLabel ?? getTranslation(t, "common.actions.readMore");
-  const effectiveShowLessLabel = showLessLabel ?? getTranslation(t, "common.actions.showLess");
+  const effectiveReadMoreLabel =
+    readMoreLabel ?? getTranslation(t, "common.actions.readMore");
+  const effectiveShowLessLabel =
+    showLessLabel ?? getTranslation(t, "common.actions.showLess");
 
   return (
     <div dir="auto" className={className}>

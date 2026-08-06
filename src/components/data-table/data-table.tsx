@@ -57,14 +57,14 @@ export interface CustomAction<TData> {
   label: string;
   action: (item: TData) => void;
   show?: (item: TData) => boolean;
-  color?: "default" | "red" | "orange" | "violet" | "emerald";
+  color?: "default" | "red" | "orange" | "warm" | "emerald";
 }
 
 const getActionColorClasses = (color?: string): string => {
   const colorMap: Record<string, string> = {
     red: "text-destructive focus:text-destructive focus:bg-destructive/10",
     orange: "text-accent focus:text-accent focus:bg-accent/10",
-    violet: "text-chart-5 focus:text-chart-5 focus:bg-chart-5/10",
+    warm: "text-chart-5 focus:text-chart-5 focus:bg-chart-5/10",
     emerald: "text-success focus:text-success focus:bg-success/10",
     default: "",
   };
@@ -436,7 +436,8 @@ export function DataTable<TData, TValue>({
           </Button>
 
           <div className="flex w-[100px] items-center justify-center text-sm font-medium">
-            {getTranslation(t, "table.page")} {getNumber(currentPage)}{" "}
+            {getTranslation(t, "table.page")} {getNumber(currentPage)}
+            {""}
             {getTranslation(t, "table.of")} {getNumber(lastPage)}
           </div>
 

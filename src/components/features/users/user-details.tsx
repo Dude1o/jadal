@@ -1,5 +1,6 @@
+import { getInitials } from "@/lib/utils";
 import { useState, useMemo } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Ban,
   Pause,
@@ -144,8 +145,8 @@ export function UserDetails({ userId }: { userId: number }) {
   };
 
   const typeColors: Record<AchievementType, string> = {
-    GOLD: "bg-yellow-100 text-yellow-800 border-yellow-300",
-    SILVER: "bg-gray-100 text-gray-700 border-gray-300",
+    GOLD: "bg-yellow-100 text-yellow-800 ",
+    SILVER: "bg-gray-100 text-gray-700 ",
     BRONZE: "bg-orange-100 text-orange-700 border-orange-300",
     HONORABLE: "bg-blue-100 text-blue-700 border-blue-300",
     PARTICIPATION: "bg-green-100 text-green-700 border-green-300",
@@ -350,9 +351,9 @@ export function UserDetails({ userId }: { userId: number }) {
         </div>
 
         {/* Hero Identity Card */}
-        <Card className="relative overflow-hidden border-0 shadow-xl ring-1 ring-border/60 mb-8 rounded-3xl bg-card p-0">
+        <Card className="relative overflow-hidden border-0 shadow-xl /60 mb-8 rounded-3xl bg-card p-0">
           <div className="absolute inset-0 bg-gradient-to-tr from-accent/10 via-warning/5 to-transparent pointer-events-none" />
-          <div className="h-32 md:h-40 w-full m-0 bg-gradient-to-r from-muted via-border to-muted relative overflow-hidden">
+          <div className="h-32 md:h-40 w-full m-0 bg-[var(--inset)] relative overflow-hidden">
             <img
               src={coverImage}
               alt="cover"
@@ -370,10 +371,7 @@ export function UserDetails({ userId }: { userId: number }) {
                     className="object-cover"
                   />
                   <AvatarFallback className="text-3xl font-extrabold bg-gradient-to-tr from-accent to-warning text-accent-foreground rounded-full">
-                    {user.name
-                      .split(" ")
-                      .map((n) => n[0])
-                      .join("")}
+                    {getInitials(user.name)}
                   </AvatarFallback>
                 </Avatar>
               </div>
@@ -423,7 +421,7 @@ export function UserDetails({ userId }: { userId: number }) {
         {/* Core Information Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           {/* Contact Widget */}
-          <Card className="border-0 shadow-sm ring-1 ring-border bg-card overflow-hidden rounded-2xl hover:-translate-y-1 transition-all duration-300 hover:ring-accent/30">
+          <Card className="border-0 shadow-[var(--shadow-card)] bg-card overflow-hidden rounded-2xl hover:-translate-y-1 transition-all duration-300 hover:ring-accent/30">
             <div className="p-6">
               <h3 className="flex items-center gap-3 text-base font-bold text-foreground mb-5">
                 <span className="flex-shrink-0 w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center">
@@ -475,7 +473,7 @@ export function UserDetails({ userId }: { userId: number }) {
           </Card>
 
           {/* Governance Widget */}
-          <Card className="border-0 shadow-sm ring-1 ring-border bg-card overflow-hidden rounded-2xl hover:-translate-y-1 transition-all duration-300 hover:ring-chart-5/30">
+          <Card className="border-0 shadow-[var(--shadow-card)] bg-card overflow-hidden rounded-2xl hover:-translate-y-1 transition-all duration-300 hover:ring-chart-5/30">
             <div className="p-6">
               <h3 className="flex items-center gap-3 text-base font-bold text-foreground mb-5">
                 <span className="flex-shrink-0 w-8 h-8 rounded-lg bg-chart-5/10 flex items-center justify-center">
@@ -524,7 +522,7 @@ export function UserDetails({ userId }: { userId: number }) {
         {/* Diagnostics & Activity Row */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           {/* Gamification Points Panel */}
-          <Card className="border-0 shadow-sm ring-1 ring-border bg-card overflow-hidden rounded-2xl hover:-translate-y-1 transition-all duration-300 hover:ring-accent/20">
+          <Card className="border-0 shadow-[var(--shadow-card)] bg-card overflow-hidden rounded-2xl hover:-translate-y-1 transition-all duration-300 hover:ring-accent/20">
             <div className="p-6 relative">
               <div className="absolute right-6 top-6 w-24 h-24 bg-orange-500/5 dark:bg-orange-500/10 rounded-full blur-xl pointer-events-none" />
               <h3 className="flex items-center gap-3 text-base font-bold text-foreground mb-6">
@@ -552,7 +550,7 @@ export function UserDetails({ userId }: { userId: number }) {
           </Card>
 
           {/* System Timeline Panel */}
-          <Card className="border-0 shadow-sm ring-1 ring-border bg-card overflow-hidden rounded-2xl hover:-translate-y-1 transition-all duration-300 hover:ring-border">
+          <Card className="border-0 shadow-[var(--shadow-card)] bg-card overflow-hidden rounded-2xl hover:-translate-y-1 transition-all duration-300 hover:ring-border">
             <div className="p-6">
               <h3 className="flex items-center gap-3 text-base font-bold text-foreground mb-4">
                 <span className="flex-shrink-0 w-8 h-8 rounded-lg bg-muted flex items-center justify-center">
@@ -587,7 +585,7 @@ export function UserDetails({ userId }: { userId: number }) {
         </div>
 
         {/* Achievements Section */}
-        <Card className="border-0 shadow-sm ring-1 ring-border bg-card overflow-hidden rounded-2xl mb-6 hover:-translate-y-1 transition-all duration-300 hover:ring-chart-5/30">
+        <Card className="border-0 shadow-[var(--shadow-card)] bg-card overflow-hidden rounded-2xl mb-6 hover:-translate-y-1 transition-all duration-300 hover:ring-chart-5/30">
           <div className="p-6">
             <div className="flex items-center justify-between mb-5">
               <h3 className="flex items-center gap-3 text-base font-bold text-foreground">
@@ -682,7 +680,7 @@ export function UserDetails({ userId }: { userId: number }) {
         </Card>
 
         {/* Quick Actions Console */}
-        <Card className="border-0 shadow-sm ring-1 ring-border bg-card overflow-hidden rounded-2xl">
+        <Card className="border-0 shadow-[var(--shadow-card)] bg-card overflow-hidden rounded-2xl">
           <div className="p-6">
             <h3 className="text-sm font-bold uppercase tracking-wider text-muted-foreground mb-4">
               {getTranslation(t, "users.details.quickActions")}

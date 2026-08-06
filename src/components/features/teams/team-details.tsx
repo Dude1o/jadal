@@ -50,7 +50,7 @@ export default function TeamDetails({ team_id }: TeamDetailsProps) {
       {/* ── Header Section (Merged Hero & Member Count) ── */}
       <div className="flex items-start justify-between gap-4 border-b pb-3 border-border/80">
         <div className="flex gap-3 items-center min-w-0">
-          <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-gradient-to-br from-accent to-warning text-accent-foreground shadow-sm flex items-center justify-center">
+          <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-[var(--accent-btn)] text-[var(--accent-btn-fg)] shadow-[0_4px_10px_-4px_rgba(234,124,28,.45)]">
             <Users className="w-5 h-5" />
           </div>
           <div className="min-w-0">
@@ -59,17 +59,19 @@ export default function TeamDetails({ team_id }: TeamDetailsProps) {
             </h1>
             {team.leader?.name && (
               <p className="text-xs text-muted-foreground line-clamp-1 font-medium mt-0.5">
-                {getTranslation(t, "teams.details.leaderPrefix") || "Led by"}{" "}
+                {getTranslation(t, "teams.details.leaderPrefix") || "Led by"}
+                {""}
                 {team.leader.name}
               </p>
             )}
           </div>
         </div>
 
-        <Badge className="px-2.5 py-1 text-xs font-bold bg-accent text-accent-foreground border border-accent/30 rounded-lg shrink-0 flex items-center gap-1.5 shadow-none">
+        <Badge className="flex shrink-0 items-center gap-1.5 rounded-lg bg-[var(--accent-btn)] px-2.5 py-1 text-xs font-bold text-[var(--accent-btn-fg)] shadow-none">
           <Users className="w-3.5 h-3.5" />
           <span>
-            {totalMembers}{" "}
+            {totalMembers}
+            {""}
             <span className="font-semibold">
               {getTranslation(t, "teams.details.members") || "members"}
             </span>
@@ -92,9 +94,7 @@ export default function TeamDetails({ team_id }: TeamDetailsProps) {
 
         <div
           className={`p-2.5 rounded-xl border ${
-            isActive
-              ? "bg-success/10 border-success/20"
-              : "bg-muted border-border/60"
+            isActive ? "bg-success/10 " : "bg-muted "
           }`}
         >
           <p
@@ -114,11 +114,11 @@ export default function TeamDetails({ team_id }: TeamDetailsProps) {
           </p>
         </div>
 
-        <div className="p-2.5 rounded-xl bg-accent/10 border border-accent/20">
-          <p className="text-[10px] font-bold text-accent uppercase tracking-wider mb-0.5">
+        <div className="rounded-xl bg-[color-mix(in_oklab,var(--accent-btn)_18%,transparent)] p-2.5">
+          <p className="mb-0.5 text-[10px] font-bold tracking-wider text-[var(--accent-btn-fg)] uppercase dark:text-[var(--accent-btn)]">
             {getTranslation(t, "teams.details.teamSize") || "Team Size"}
           </p>
-          <p className="text-base font-black text-accent">{totalMembers}</p>
+          <p className="text-base font-black text-[var(--accent-btn-fg)] dark:text-[var(--accent-btn)]">{totalMembers}</p>
         </div>
       </div>
 
@@ -137,8 +137,8 @@ export default function TeamDetails({ team_id }: TeamDetailsProps) {
             {members.map((member, idx) => {
               const isLeader = team.leader?.id === member.user.id;
               const bgColor = isLeader
-                ? "from-primary/10 to-primary/5 border-primary/20"
-                : "from-muted to-muted/50 border-border/60";
+                ? "from-primary/10 to-primary/5 "
+                : "from-muted to-muted/50 ";
 
               const badgeColor = isLeader
                 ? "bg-primary text-primary-foreground"

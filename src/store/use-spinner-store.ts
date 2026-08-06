@@ -10,7 +10,8 @@ interface SpinnerStore {
 export const useSpinnerStore = create<SpinnerStore>((set) => ({
   pending: 0,
   isLoading: false,
-  start: () => set((state) => ({ pending: state.pending + 1, isLoading: true })),
+  start: () =>
+    set((state) => ({ pending: state.pending + 1, isLoading: true })),
   stop: () =>
     set((state) => {
       const next = Math.max(0, state.pending - 1);

@@ -14,7 +14,6 @@ import {
   resolveOptions,
   useAsyncData,
 } from "@/lib/utils";
-import { useQuery } from "@tanstack/react-query";
 import { Spinner } from "@/components/ui/spinner";
 
 export type FilterOptions =
@@ -89,17 +88,21 @@ function FilterSelect({
       }
       disabled={isLoading}
     >
-      <SelectTrigger className="w-full sm:w-40 capitalize border-2 border-secondary">
+      <SelectTrigger className="jd-field h-[46px] w-full min-w-0 shrink px-4 text-[length:var(--text-body)] font-semibold capitalize sm:w-44">
         {" "}
         {isLoading ? (
           <Spinner />
         ) : (
-          <SelectValue placeholder={getTranslation(t, filter.label)} />
+          <SelectValue
+            className="truncate"
+            placeholder={getTranslation(t, filter.label)}
+          />
         )}
       </SelectTrigger>
       <SelectContent>
         <SelectItem value="all">
-          {showAllLabel ? getTranslation(t, "common.labels.all") : null}{" "}
+          {showAllLabel ? getTranslation(t, "common.labels.all") : null}
+          {""}
           {getTranslation(t, filter.label)}
         </SelectItem>
         {resolvedOptions.map((opt, index) => (
@@ -137,7 +140,7 @@ export function ToolbarFilters({
   return (
     <div
       dir={i18n.dir()}
-      className="flex flex-col items-stretch gap-2 sm:flex-row sm:flex-wrap sm:items-center"
+      className="flex min-w-0 flex-wrap items-center gap-2 [&>*]:min-w-0"
     >
       {filters.map((filter) => (
         <FilterSelect
@@ -149,12 +152,12 @@ export function ToolbarFilters({
       ))}
       {hasActiveFilters && (
         <Button
-          variant="secondary"
+          variant="ghost"
           onClick={onReset}
-          className="h-10 px-3 w-full sm:w-auto"
+          className="h-[46px] shrink-0 px-4"
         >
+          <RotateCcw className="size-4" />
           {getTranslation(t, "common.actions.resetFilters")}
-          <RotateCcw className="ml-2 h-4 w-4" />
         </Button>
       )}
     </div>

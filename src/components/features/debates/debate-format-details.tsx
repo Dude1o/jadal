@@ -97,7 +97,7 @@ export default function DebateFormatDetails({
       {/* ── Header Section (Merged Hero & Total Duration) ── */}
       <div className="flex items-start justify-between gap-4 border-b pb-3 border-border/80">
         <div className="flex gap-3 items-center min-w-0">
-          <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-gradient-to-br from-accent to-warning text-accent-foreground shadow-sm flex items-center justify-center">
+          <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-[var(--accent-btn)] text-[var(--accent-btn-fg)] shadow-[0_4px_10px_-4px_rgba(234,124,28,.45)]">
             <LayoutGrid className="w-5 h-5" />
           </div>
           <div className="min-w-0">
@@ -112,10 +112,11 @@ export default function DebateFormatDetails({
           </div>
         </div>
 
-        <Badge className="px-2.5 py-1 text-xs font-bold bg-accent text-accent-foreground border border-accent/30 rounded-lg shrink-0 flex items-center gap-1.5 shadow-none">
+        <Badge className="flex shrink-0 items-center gap-1.5 rounded-lg bg-[var(--accent-btn)] px-2.5 py-1 text-xs font-bold text-[var(--accent-btn-fg)] shadow-none">
           <Clock className="w-3.5 h-3.5" />
           <span>
-            {Math.floor(totalDuration / 60)}{" "}
+            {Math.floor(totalDuration / 60)}
+            {""}
             <span className="font-semibold">
               {getTranslation(t, "debateFormats.details.min") || "min"}
             </span>
@@ -127,12 +128,12 @@ export default function DebateFormatDetails({
       {Object.keys(parsedDetails).length > 0 && (
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
           {parsedDetails.speakers_per_side && (
-            <div className="p-2.5 rounded-xl bg-accent/10 border border-accent/20">
-              <p className="text-[10px] font-bold text-accent uppercase tracking-wider mb-0.5">
+            <div className="rounded-xl bg-[color-mix(in_oklab,var(--accent-btn)_18%,transparent)] p-2.5">
+              <p className="mb-0.5 text-[10px] font-bold tracking-wider text-[var(--accent-btn-fg)] uppercase dark:text-[var(--accent-btn)]">
                 {getTranslation(t, "debateFormats.details.speakersPerSide") ||
                   "Speakers / Side"}
               </p>
-              <p className="text-base font-black text-accent">
+              <p className="text-base font-black text-[var(--accent-btn-fg)] dark:text-[var(--accent-btn)]">
                 {parsedDetails.speakers_per_side}
               </p>
             </div>
@@ -146,7 +147,8 @@ export default function DebateFormatDetails({
               </p>
               <p className="text-base font-black text-primary">
                 {parsedDetails.main_speech_duration}
-                {/* 1. Add an explicit space here: */}{" "}
+                {/* 1. Add an explicit space here: */}
+                {""}
                 {/* 2. Alternatively, bump ml-0.5 up to ml-1 or ml-1.5 for visual spacing: */}
                 <span className="text-[10px] font-bold ml-1">
                   {getTranslation(t, "debateFormats.details.min") || "min"}
@@ -163,7 +165,8 @@ export default function DebateFormatDetails({
               </p>
               <p className="text-base font-black text-primary">
                 {parsedDetails.reply_speech_duration}
-                {/* 1. Add an explicit space here: */}{" "}
+                {/* 1. Add an explicit space here: */}
+                {""}
                 {/* 2. Alternatively, bump ml-0.5 up to ml-1 or ml-1.5 for visual spacing: */}
                 <span className="text-[10px] font-bold ml-1">
                   {getTranslation(t, "debateFormats.details.min") || "min"}
@@ -207,12 +210,12 @@ export default function DebateFormatDetails({
                 phase.role === "proposition" || phase.role === "pro";
 
               const bgColor = isProposition
-                ? "from-primary/10 to-primary/5 border-primary/20"
-                : "from-accent/10 to-accent/5 border-accent/20";
+                ? "from-primary/10 to-primary/5 "
+                : "from-[color-mix(in_oklab,var(--accent-btn)_16%,transparent)] to-transparent";
 
               const badgeColor = isProposition
                 ? "bg-primary text-primary-foreground"
-                : "bg-accent text-accent-foreground";
+                : "bg-[var(--accent-btn)] text-[var(--accent-btn-fg)]";
 
               return (
                 <div
@@ -239,7 +242,8 @@ export default function DebateFormatDetails({
                   <Badge
                     className={`text-[10px] font-bold rounded-md px-2 py-0.5 shadow-none border-0 ${badgeColor}`}
                   >
-                    {Math.floor(phase.duration_seconds / 60)}{" "}
+                    {Math.floor(phase.duration_seconds / 60)}
+                    {""}
                     {getTranslation(t, "debateFormats.details.min") || "min"}
                   </Badge>
                 </div>

@@ -28,6 +28,15 @@ import DeleteItem from "@/components/common/delete-item";
 
 import achievementImage from "@/assets/achievement_placeholder.png";
 
+/**
+ * §19.3 — a single flat hex cannot look metallic. Each metal is a multi-stop
+ * ramp (highlight, saturated body, shadow, rim catch-light), because that value
+ * swing is what the eye reads as metal.
+ *
+ * The critical test is gold versus bronze. Gold's body #D4A017 is yellow-warm;
+ * bronze's body #9A5A28 is brown-red. Bronze was previously orange-400/500,
+ * which is a UI colour, not a metal — that is the reported failure.
+ */
 const typeMeta: Record<
   AchievementType,
   {
@@ -36,47 +45,58 @@ const typeMeta: Record<
     chip: string;
     gradient: string;
     glow: string;
+    core: string;
     icon: typeof Trophy;
   }
 > = {
   GOLD: {
-    ring: "border-amber-400/90",
-    ribbon: "bg-gradient-to-b from-amber-300 via-amber-500 to-amber-700",
-    chip: "bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-500/30",
-    gradient: "linear-gradient(145deg,#fef3c7 0%,#fbbf24 50%,#b45309 100%)",
-    glow: "0 0 32px -6px rgba(245,158,11,0.55)",
+    ring: "",
+    ribbon: "bg-[linear-gradient(180deg,#F5DE93_0%,#D4A017_55%,#A9741B_100%)]",
+    chip: "bg-[#D4A017]/12 text-[#8A6410] dark:text-[#E8C55A]",
+    gradient:
+      "linear-gradient(135deg,#FBEFB8 0%,#E8C55A 26%,#D4A017 52%,#A9741B 78%,#F5DE93 100%)",
+    glow: "0 0 20px -4px rgba(212,160,23,.45)",
+    core: "#D4A017",
     icon: Trophy,
   },
   SILVER: {
-    ring: "border-slate-300/90",
-    ribbon: "bg-gradient-to-b from-slate-200 via-slate-400 to-slate-600",
-    chip: "bg-slate-500/10 text-slate-700 dark:text-slate-300 border-slate-400/30",
-    gradient: "linear-gradient(145deg,#f8fafc 0%,#cbd5e1 50%,#475569 100%)",
-    glow: "0 0 32px -6px rgba(148,163,184,0.5)",
+    ring: "",
+    ribbon: "bg-[linear-gradient(180deg,#F0F5FA_0%,#A9B6C4_55%,#75828F_100%)]",
+    chip: "bg-[#A9B6C4]/16 text-[#5B6875] dark:text-[#DCE4EC]",
+    gradient:
+      "linear-gradient(135deg,#FFFFFF 0%,#DCE4EC 26%,#A9B6C4 52%,#75828F 78%,#F0F5FA 100%)",
+    glow: "0 0 20px -4px rgba(169,182,196,.45)",
+    core: "#A9B6C4",
     icon: Medal,
   },
   BRONZE: {
-    ring: "border-orange-400/90",
-    ribbon: "bg-gradient-to-b from-orange-300 via-orange-500 to-orange-800",
-    chip: "bg-orange-500/10 text-orange-700 dark:text-orange-300 border-orange-500/30",
-    gradient: "linear-gradient(145deg,#ffedd5 0%,#fb923c 50%,#9a3412 100%)",
-    glow: "0 0 32px -6px rgba(234,88,12,0.5)",
+    ring: "",
+    ribbon: "bg-[linear-gradient(180deg,#D89A64_0%,#9A5A28_55%,#6B3A18_100%)]",
+    chip: "bg-[#9A5A28]/12 text-[#7A4620] dark:text-[#D89A64]",
+    gradient:
+      "linear-gradient(135deg,#E6B189 0%,#C07E43 26%,#9A5A28 52%,#6B3A18 78%,#D89A64 100%)",
+    glow: "0 0 20px -4px rgba(154,90,40,.45)",
+    core: "#9A5A28",
     icon: Award,
   },
   HONORABLE: {
-    ring: "border-blue-400/90",
-    ribbon: "bg-gradient-to-b from-blue-300 via-blue-500 to-blue-700",
-    chip: "bg-blue-500/10 text-blue-700 dark:text-blue-300 border-blue-500/30",
-    gradient: "linear-gradient(145deg,#dbeafe 0%,#60a5fa 50%,#1d4ed8 100%)",
-    glow: "0 0 32px -6px rgba(59,130,246,0.5)",
+    ring: "",
+    ribbon: "bg-[linear-gradient(180deg,#8FB4E0_0%,#2E7DD1_55%,#12294D_100%)]",
+    chip: "bg-primary/12 text-primary",
+    gradient:
+      "linear-gradient(135deg,#DCE9F8 0%,#8FB4E0 26%,#2E7DD1 52%,#12294D 78%,#B9D3EF 100%)",
+    glow: "0 0 20px -4px rgba(46,125,209,.45)",
+    core: "#2E7DD1",
     icon: Star,
   },
   PARTICIPATION: {
-    ring: "border-emerald-400/90",
-    ribbon: "bg-gradient-to-b from-emerald-300 via-emerald-500 to-emerald-700",
-    chip: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/30",
-    gradient: "linear-gradient(145deg,#d1fae5 0%,#34d399 50%,#047857 100%)",
-    glow: "0 0 32px -6px rgba(16,185,129,0.5)",
+    ring: "",
+    ribbon: "bg-[linear-gradient(180deg,#8FD9B6_0%,#1FA463_55%,#0E5734_100%)]",
+    chip: "bg-success/12 text-success",
+    gradient:
+      "linear-gradient(135deg,#D8F2E5 0%,#8FD9B6 26%,#1FA463 52%,#0E5734 78%,#B4E7CF 100%)",
+    glow: "0 0 20px -4px rgba(31,164,99,.45)",
+    core: "#1FA463",
     icon: Heart,
   },
 };
@@ -107,7 +127,7 @@ export function AchievementCard({
       transition={{ type: "spring", stiffness: 380, damping: 24 }}
       className="h-full"
     >
-      <Card className="group relative h-full overflow-hidden border border-border/50 bg-card rounded-2xl shadow-sm hover:shadow-xl hover:border-border transition-shadow duration-300">
+      <Card className="jd-card jd-interactive jd-tint-orange group relative h-full overflow-hidden">
         {/* ambient type glow — now always breathing, not hover-gated */}
         <motion.div
           className="pointer-events-none absolute -top-10 left-1/2 h-28 w-40 -translate-x-1/2 rounded-full blur-3xl"
@@ -142,7 +162,7 @@ export function AchievementCard({
               <motion.button
                 whileHover={{ scale: 1.08 }}
                 whileTap={{ scale: 0.94 }}
-                className="h-8 w-8 flex items-center justify-center rounded-full border border-border/70 bg-background/90 backdrop-blur-sm text-muted-foreground opacity-0 group-hover:opacity-100 hover:text-foreground hover:border-foreground/25 hover:bg-background transition-all duration-200 shadow-sm"
+                className="h-8 w-8 flex items-center justify-center rounded-full /70 bg-background/90 backdrop-blur-sm text-muted-foreground opacity-0 group-hover:opacity-100 hover:text-foreground hover:border-foreground/25 hover:bg-background transition-all duration-200 shadow-sm"
               >
                 <MoreHorizontal className="h-3.5 w-3.5" />
               </motion.button>
@@ -200,14 +220,14 @@ export function AchievementCard({
               {/* ribbons */}
               <div className="absolute -top-3 left-1/2 -translate-x-1/2 flex justify-center z-0">
                 <motion.span
-                  className={`block w-4 h-12 -rotate-[16deg] translate-x-[5px] shadow-md ${meta.ribbon}`}
+                  className={`block w-4 h-12 -rotate-[16deg] translate-x-[5px] shadow-[var(--shadow-card)] ${meta.ribbon}`}
                   style={{ clipPath: ribbonClip }}
                   initial={{ y: -6, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.12, type: "spring", stiffness: 300 }}
                 />
                 <motion.span
-                  className={`block w-4 h-12 rotate-[16deg] -translate-x-[5px] shadow-md ${meta.ribbon}`}
+                  className={`block w-4 h-12 rotate-[16deg] -translate-x-[5px] shadow-[var(--shadow-card)] ${meta.ribbon}`}
                   style={{ clipPath: ribbonClip }}
                   initial={{ y: -6, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
@@ -217,9 +237,10 @@ export function AchievementCard({
 
               {/* medal — bumped from 4.75rem to 6rem */}
               <motion.div
-                className={`relative z-10 w-24 h-24 rounded-full border-[3px] ${meta.ring} flex items-center justify-center ring-[5px] ring-background overflow-hidden cursor-default`}
+                className={`allow-border relative z-10 flex size-[104px] cursor-default items-center justify-center overflow-hidden rounded-full border-[6px] ${meta.ring}`}
                 style={{
                   backgroundImage: meta.gradient,
+                  borderColor: meta.core,
                   boxShadow: meta.glow,
                 }}
                 whileHover={{
@@ -263,7 +284,7 @@ export function AchievementCard({
 
             {/* type chip */}
             <motion.span
-              className={`text-[10px] font-bold uppercase tracking-[0.09em] px-2.5 py-1 rounded-full border ${meta.chip}`}
+              className={`inline-flex h-[26px] items-center rounded-full px-3 text-[length:var(--text-small)] font-bold ${meta.chip}`}
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.22 }}

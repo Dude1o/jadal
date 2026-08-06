@@ -3,7 +3,7 @@ import { BlogCard } from "@/components/features/blogs/blog-card";
 import { ChevronDown, Plus, MoreHorizontal, Edit, Trash2 } from "lucide-react";
 import { getTranslation } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 
 import {
@@ -114,16 +114,17 @@ export function BlogList({ page = 1 }: BlogListProps) {
   // Queries
   // =========================
 
-  const { data: categories } = useSuspenseQuery(blogCategoriesQueryOptions());
+  const { data: categories } = useQuery(blogCategoriesQueryOptions());
 
-  const { data: tags } = useSuspenseQuery(blogTagsQueryOptions());
+  const { data: tags } = useQuery(blogTagsQueryOptions());
 
-  const { data: blogPaginatedData } = useSuspenseQuery(
-    blogsQueryOptions({
+  const { data: blogPaginatedData } = useQuery({
+    ...blogsQueryOptions({
       page,
       perPage: 12,
     }),
-  );
+    placeholderData: keepPreviousData,
+  });
 
   const blogs = blogPaginatedData?.data || [];
   const meta = blogPaginatedData?.meta;
@@ -302,10 +303,9 @@ export function BlogList({ page = 1 }: BlogListProps) {
     >
       {/* Header */}
       <div
-        className="sticky top-0 z-20 border-b backdrop-blur-md"
+        className="sticky top-0 z-20 backdrop-blur-md"
         style={{
           background: "color-mix(in oklch, var(--background) 85%, transparent)",
-          borderColor: "var(--border)",
         }}
       >
         <div
@@ -313,16 +313,8 @@ export function BlogList({ page = 1 }: BlogListProps) {
           dir={i18n.dir()}
         >
           <div className="flex items-center justify-between">
-            <h1
-              className="text-xl font-bold tracking-tight"
-              style={{
-                color: "var(--foreground)",
-                fontFamily: "var(--font-serif)",
-              }}
-            >
-              {getTranslation(t, "blogs.title")}
-            </h1>
-
+            {/* §18.1 The header band already carries the page title; this
+                second copy is the duplicate that was reported. */}
             <div className="flex flex-row gap-2">
               {/* Categories Toggle */}
               <button
@@ -577,6 +569,19 @@ export function BlogList({ page = 1 }: BlogListProps) {
           </div>
         ) : (
           <>
+            <div className="mx-auto grid max-w-[1440px] grid-cols-1 gap-7 min-[760px]:grid-cols-2 min-[1560px]:grid-cols-3">
+              {filteredBlogs.map((blog, i) => (
+                <div
+                  key={blog.id}
+                  style={{
+                    animationDelay: `${i * 60}ms`,
+                    animation: "fadeSlideIn 0.35s ease both",
+                  }}
+                >
+                  <BlogCard blog={blog} variant="feed" />
+                </div>
+              ))}
+            </div>
             {meta && meta.last_page > 1 && (
               <div className="mb-4">
                 <Pagination
@@ -593,19 +598,6 @@ export function BlogList({ page = 1 }: BlogListProps) {
                 />
               </div>
             )}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {filteredBlogs.map((blog, i) => (
-                <div
-                  key={blog.id}
-                  style={{
-                    animationDelay: `${i * 60}ms`,
-                    animation: "fadeSlideIn 0.35s ease both",
-                  }}
-                >
-                  <BlogCard blog={blog} variant="feed" />
-                </div>
-              ))}
-            </div>
           </>
         )}
       </div>

@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { useSuspenseQuery, useQueries } from "@tanstack/react-query";
+import { entityIcons } from "@/lib/entity-icons";
+import { useQueries, useSuspenseQuery } from "@tanstack/react-query";
 import {
   ArrowLeft,
   Calendar,
@@ -18,7 +19,6 @@ import {
   CalendarPlus,
   Zap,
   Info,
-  Gavel,
   Quote,
   Flame,
   LayoutGrid,
@@ -28,6 +28,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { OrangeBand, BandChip } from "@/components/common/orange-band";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -40,7 +41,7 @@ import {
 import { debateQueryOptions, teamQueryOptions } from "@/api/query-options";
 import type { Debate } from "@/types";
 import { useTranslation } from "react-i18next";
-import { getTranslation, isRTL } from "@/lib/utils";
+import { getInitials, getTranslation, isRTL } from "@/lib/utils";
 import { useNavigate } from "@tanstack/react-router";
 import { dialog, toast } from "@/services";
 import { debateKeys } from "@/lib/constants";
@@ -64,6 +65,13 @@ interface DebateDetailsProps {
 export function DebateDetails({ debateId }: DebateDetailsProps) {
   const [isJoining, setIsJoining] = useState(false);
   const { t } = useTranslation();
+  const DebateIcon = entityIcons.debates.outline;
+
+  /* Actions sitting ON the orange band are navy-filled. An orange button on an
+     orange surface has no edge, and the red "join live" button read as a
+     failure warning rather than a call to action. */
+  const bandAction =
+    "h-11 rounded-full bg-[#1a3868] px-5 font-bold text-white shadow-[0_6px_16px_-6px_rgba(26,56,104,.55)] hover:bg-[#16305b]";
   const navigate = useNavigate();
 
   const { mutate: announceDebate } = useCreate({
@@ -239,64 +247,35 @@ export function DebateDetails({ debateId }: DebateDetailsProps) {
           </div>
         </div>
 
-        {/* ── Cyber-Glass Hero Card ── */}
-        <Card className="relative overflow-hidden border-0 shadow-xl ring-1 ring-border/60 mb-6 rounded-3xl bg-card">
-          <div className="absolute inset-0 bg-gradient-to-tr from-accent/10 via-warning/5 to-transparent pointer-events-none" />
-          <div className="h-28 bg-gradient-to-r from-muted via-border to-muted relative overflow-hidden">
-            <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
-          </div>
-
-          <CardContent className="relative pt-0 pb-8 px-6 md:px-10">
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 -mt-10">
-              <div className="flex flex-col sm:flex-row items-start gap-5 flex-1 min-w-0">
-                <div className="flex-shrink-0 w-16 h-16 rounded-2xl bg-gradient-to-br from-accent to-warning text-accent-foreground shadow-lg flex items-center justify-center ring-4 ring-card">
-                  <Gavel className="w-7 h-7" />
-                </div>
-
-                <div className="space-y-2 flex-1 min-w-0">
-                  <h1 className="text-xl md:text-2xl lg:text-3xl font-black text-foreground tracking-tight leading-tight">
-                    {debate.title}
-                  </h1>
-
-                  <div className="flex items-center gap-3 flex-wrap pt-0.5">
-                    <Badge
-                      variant="outline"
-                      className={`text-xs px-3 py-0.5 font-bold rounded-md tracking-wide shadow-sm capitalize border ${
-                        isLive
-                          ? "bg-destructive/10 text-destructive border-destructive/20"
-                          : isCompleted
-                            ? "bg-success/10 text-success border-success/20"
-                            : isScheduled
-                              ? "bg-primary/10 text-primary border-primary/20"
-                              : isAnnounced
-                                ? "bg-primary/10 text-primary border-primary/20"
-                                : isCancelled
-                                  ? "bg-destructive/10 text-destructive border-destructive/20"
-                                  : isTeamsSelected
-                                    ? "bg-success/10 text-success border-success/20"
-                                    : "bg-primary/10 text-primary border-primary/20"
-                      }`}
-                    >
-                      {isLive && (
-                        <span className="relative flex h-2 w-2 ltr:mr-1.5 rtl:ml-1.5">
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-destructive/60 opacity-75" />
-                          <span className="relative inline-flex rounded-full h-2 w-2 bg-destructive" />
-                        </span>
-                      )}
-                      {getTranslation(t, `debates.statuses.${debate.status}`)}
-                    </Badge>
-                    <span className="text-xs font-semibold text-muted-foreground bg-muted/60 px-2.5 py-1 rounded-md">
-                      {getTranslation(t, "debates.details.hostedBy")}
-                      {": "}
-                      <strong className="text-foreground font-bold">
-                        {debate.created_by.name}
-                      </strong>
+        {/* §12.7 — the same bright-orange band as the survey and complaint
+            details, identical in both themes. The status used to be a red
+            "live" / green "completed" pill; over orange those read as an
+            error, so state now travels as a translucent navy chip and the
+            word itself carries the meaning. */}
+        <div className="mb-6">
+          <OrangeBand
+            title={debate.title}
+            icon={<DebateIcon />}
+            chips={
+              <>
+                <BandChip strong>
+                  {isLive && (
+                    <span className="relative flex size-2">
+                      <span className="absolute inline-flex size-full animate-ping rounded-full bg-[#1a3868]/50" />
+                      <span className="relative inline-flex size-2 rounded-full bg-[#1a3868]" />
                     </span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex-shrink-0 self-start md:self-auto pt-2 md:pt-0 flex flex-wrap gap-2">
+                  )}
+                  {getTranslation(t, `debates.statuses.${debate.status}`)}
+                </BandChip>
+                <BandChip>
+                  {getTranslation(t, "debates.details.hostedBy")}
+                  {": "}
+                  {debate.created_by.name}
+                </BandChip>
+              </>
+            }
+            actions={
+              <div className="flex flex-wrap gap-2">
                 {isScheduled && (
                   <Button
                     onClick={() => {
@@ -323,7 +302,7 @@ export function DebateDetails({ debateId }: DebateDetailsProps) {
                         ),
                       });
                     }}
-                    className="w-full sm:w-auto bg-accent hover:bg-accent/90 text-accent-foreground shadow-md rounded-xl h-11 px-6 font-bold tracking-wide gap-2 transition-all"
+                    className={bandAction}
                   >
                     <Megaphone className="w-5 h-5" />
                     {getTranslation(t, "debates.details.announceLineUp")}
@@ -332,67 +311,74 @@ export function DebateDetails({ debateId }: DebateDetailsProps) {
                 {isLive && (
                   <Button
                     onClick={() => setIsJoining(true)}
-                    className="w-full sm:w-auto bg-destructive hover:bg-destructive/90 text-destructive-foreground shadow-md rounded-xl h-11 px-6 font-bold tracking-wide gap-2 transition-all hover:scale-102"
+                    className={bandAction}
                   >
-                    <PlayCircle className="w-5 h-5 animate-pulse" />
+                    <PlayCircle className="w-5 h-5" />
                     {getTranslation(t, "debates.details.joinLive")}
                   </Button>
                 )}
                 {isCompleted && debate.recording_url && (
-                  <Button className="w-full sm:w-auto font-bold tracking-wide h-11 px-6 rounded-xl gap-2 bg-primary text-primary-foreground hover:bg-primary/90 transition-all shadow-md">
+                  <Button className={bandAction}>
                     <PlayCircle className="w-5 h-5" />
                     {getTranslation(t, "debates.details.watchRecording")}
                   </Button>
                 )}
               </div>
+            }
+          />
+        </div>
+
+        {/* ── The motion ──
+            Was a tall card whose height was fixed regardless of how short the
+            motion was, with a 4px rule down the start edge of the quote. The
+            rule is gone (it is exactly the leading-bar pattern removed
+            everywhere else) and the box now sizes to its text. What carries the
+            weight instead is the type itself: the motion is the largest string
+            on this screen, set on a warm tinted panel with an oversized quote
+            mark behind it. */}
+        <section className="jd-card jd-tint-orange relative mb-6 overflow-hidden px-6 py-6 sm:px-8">
+          <Quote
+            aria-hidden
+            className="pointer-events-none absolute -top-3 size-28 text-[color-mix(in_oklab,var(--accent-btn)_22%,transparent)] end-4 rotate-180"
+          />
+
+          <p className="relative text-[length:var(--text-caption)] font-bold tracking-[0.14em] text-muted-foreground uppercase">
+            {getTranslation(t, "debates.details.motion")}
+          </p>
+
+          <blockquote className="bidi-plaintext relative mt-3 max-w-[60ch] text-[length:var(--text-headline)] leading-snug font-extrabold text-foreground">
+            {debate.motion.text}
+          </blockquote>
+
+          {debate?.motion?.frameworks?.length > 0 && (
+            <div className="relative mt-5 flex flex-wrap items-center gap-2">
+              {debate.motion.frameworks.map((fw) => (
+                <span
+                  key={fw.id}
+                  className="inline-flex h-7 items-center gap-2 rounded-full px-3 text-[length:var(--text-small)] font-bold"
+                  style={{
+                    // The framework colour arrives as a tint, not as a rule
+                    // down one side of a rectangle.
+                    background: `color-mix(in oklab, ${fw.color_hex || "#EA7C1C"} 16%, transparent)`,
+                    color: `color-mix(in oklab, ${fw.color_hex || "#EA7C1C"} 72%, var(--foreground))`,
+                  }}
+                >
+                  <span
+                    aria-hidden
+                    className="size-2 rounded-full"
+                    style={{ background: fw.color_hex || "#EA7C1C" }}
+                  />
+                  {fw.name}
+                </span>
+              ))}
             </div>
-          </CardContent>
-        </Card>
-
-        {/* ── Motion Card (Cinematic Layout) ── */}
-        <Card className="border-0 shadow-sm ring-1 ring-border bg-card mb-6 rounded-2xl overflow-hidden">
-          <CardHeader className="pb-3 px-6 pt-6">
-            <CardTitle className="flex items-center gap-2.5 text-xs font-bold text-muted-foreground uppercase tracking-widest">
-              <span className="w-7 h-7 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0">
-                <Quote className="w-3.5 h-3.5 text-accent" />
-              </span>
-              {getTranslation(t, "debates.details.motion")}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="px-6 pb-6 space-y-5">
-            <blockquote className="text-base md:text-lg font-bold border-l-4 border-accent pl-4 py-2 text-card-foreground leading-relaxed bg-gradient-to-r from-accent/5 to-transparent rounded-r-xl">
-              "{debate.motion.text}"
-            </blockquote>
-
-            {debate?.motion?.frameworks?.length > 0 && (
-              <div className="pt-2">
-                <p className="text-[10px] font-bold text-muted-foreground tracking-widest uppercase mb-2.5">
-                  {getTranslation(t, "debates.details.frameworks")}
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {debate.motion.frameworks.map((fw) => (
-                    <Badge
-                      key={fw.id}
-                      variant="outline"
-                      className="text-xs px-3 py-1 font-bold bg-card text-muted-foreground border-border shadow-sm rounded-md"
-                      style={{
-                        borderLeftWidth: "4px",
-                        borderLeftColor: fw.color_hex || "#ff9544",
-                      }}
-                    >
-                      {fw.name}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+          )}
+        </section>
 
         {/* ── Row 1: Status · Info · Quick Actions Console ── */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
           {/* Status Metric Panel */}
-          <Card className="border-0 shadow-sm ring-1 ring-border bg-card rounded-2xl overflow-hidden hover:-translate-y-1 transition-all duration-300">
+          <Card className="border-0 shadow-[var(--shadow-card)] bg-card rounded-2xl overflow-hidden hover:-translate-y-1 transition-all duration-300">
             <CardHeader className="pb-2 px-6 pt-6">
               <CardTitle className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
                 {isCompleted ? (
@@ -443,7 +429,7 @@ export function DebateDetails({ debateId }: DebateDetailsProps) {
           </Card>
 
           {/* Core Information Ledger */}
-          <Card className="border-0 shadow-sm ring-1 ring-border bg-card rounded-2xl overflow-hidden hover:-translate-y-1 transition-all duration-300">
+          <Card className="border-0 shadow-[var(--shadow-card)] bg-card rounded-2xl overflow-hidden hover:-translate-y-1 transition-all duration-300">
             <CardHeader className="pb-2 px-6 pt-6">
               <CardTitle className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
                 <Info className="w-4 h-4 text-accent" />
@@ -497,7 +483,7 @@ export function DebateDetails({ debateId }: DebateDetailsProps) {
                 </Badge>
               </div>
               {debate.description && (
-                <div className="pt-3 border-t border-border/60">
+                <div className="pt-3 ">
                   <p className="text-muted-foreground text-xs font-semibold mb-1">
                     {getTranslation(t, "debates.form.fields.description")}
                   </p>
@@ -510,7 +496,7 @@ export function DebateDetails({ debateId }: DebateDetailsProps) {
           </Card>
 
           {/* Dashboard Quick Actions Console */}
-          <Card className="border-0 shadow-sm ring-1 ring-border bg-card rounded-2xl overflow-hidden hover:-translate-y-1 transition-all duration-300">
+          <Card className="border-0 shadow-[var(--shadow-card)] bg-card rounded-2xl overflow-hidden hover:-translate-y-1 transition-all duration-300">
             <CardHeader className="pb-2 px-6 pt-6">
               <CardTitle className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
                 <Zap className="w-4 h-4 text-accent" />
@@ -557,7 +543,7 @@ export function DebateDetails({ debateId }: DebateDetailsProps) {
         {/* ── Row 2: Structure + Participants Split view ── */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Timeline Phases/Structure Card */}
-          <Card className="border-0 shadow-sm ring-1 ring-border bg-card rounded-2xl overflow-hidden">
+          <Card className="border-0 shadow-[var(--shadow-card)] bg-card rounded-2xl overflow-hidden">
             <CardHeader className="pb-4 px-6 pt-6 border-b border-border/60">
               <CardTitle className="flex items-center justify-between text-base font-bold text-foreground">
                 <span className="flex items-center gap-2.5">
@@ -569,7 +555,8 @@ export function DebateDetails({ debateId }: DebateDetailsProps) {
                 <span className="text-xs font-bold text-muted-foreground bg-muted px-2.5 py-1 rounded-md">
                   {getTranslation(t, "debates.details.minTotal")}
                   {": "}
-                  {Math.floor(totalDuration / 60)}{" "}
+                  {Math.floor(totalDuration / 60)}
+                  {""}
                   {getTranslation(t, "debates.details.min")}
                 </span>
               </CardTitle>
@@ -594,7 +581,8 @@ export function DebateDetails({ debateId }: DebateDetailsProps) {
                       </div>
 
                       <span className="text-xs font-bold text-muted-foreground flex-shrink-0">
-                        {Math.floor(phase.duration_seconds / 60)}{" "}
+                        {Math.floor(phase.duration_seconds / 60)}
+                        {""}
                         {getTranslation(t, "debates.details.min")}
                       </span>
 
@@ -602,9 +590,9 @@ export function DebateDetails({ debateId }: DebateDetailsProps) {
                         variant="outline"
                         className={`text-[10px] px-2.5 py-0.5 capitalize font-bold rounded-md tracking-wide flex-shrink-0 shadow-sm border ${
                           phase.status === "active"
-                            ? "bg-destructive/10 text-destructive border-destructive/20"
+                            ? "bg-destructive/10 text-destructive "
                             : phase.status === "completed"
-                              ? "bg-success/10 text-success border-success/20"
+                              ? "bg-success/10 text-success "
                               : "bg-warning/10 text-warning border-warning/20" // pending
                         }`}
                       >
@@ -620,7 +608,7 @@ export function DebateDetails({ debateId }: DebateDetailsProps) {
           </Card>
 
           {/* Interactive Participants Grid */}
-          <Card className="border-0 shadow-sm ring-1 ring-border bg-card rounded-2xl overflow-hidden">
+          <Card className="border-0 shadow-[var(--shadow-card)] bg-card rounded-2xl overflow-hidden">
             <CardHeader className="pb-4 px-6 pt-6 border-b border-border/60">
               <CardTitle className="flex items-center gap-2.5 text-base font-bold text-foreground">
                 <span className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
@@ -656,8 +644,7 @@ export function DebateDetails({ debateId }: DebateDetailsProps) {
                       p.status !== "rejected" &&
                       p.status !== "pending" &&
                       (key === "neutral"
-                        ? p.side !== "proposition" &&
-                          p.side !== "opposition"
+                        ? p.side !== "proposition" && p.side !== "opposition"
                         : p.side === key),
                   );
                 }
@@ -668,9 +655,7 @@ export function DebateDetails({ debateId }: DebateDetailsProps) {
                   key === "proposition" || key === "opposition"
                     ? [
                         ...new Set(
-                          group
-                            .filter((p) => p.team_id)
-                            .map((p) => p.team_id),
+                          group.filter((p) => p.team_id).map((p) => p.team_id),
                         ),
                       ]
                     : [];
@@ -721,81 +706,73 @@ export function DebateDetails({ debateId }: DebateDetailsProps) {
                             </>
                           )}
                         </>
-                      )}{" "}
-                      ({group.length})
+                      )}
+                      {""}({group.length})
                     </h4>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        {group.map((p, i) => {
-                          const color =
-                            avatarColors[i % avatarColors.length];
-                          const statusColor: Record<string, string> = {
-                            approved:
-                              "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400",
-                            pending:
-                              "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",
-                            rejected:
-                              "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
-                          };
-                          return (
-                            <div
-                              key={p.id}
-                              onClick={() =>
-                                navigate({ to: `/users/${p.user.id}` })
-                              }
-                              className="group flex items-center gap-3 p-3.5 rounded-xl border border-border/60 hover:bg-muted hover:border-accent/30 dark:hover:border-accent/30 dark:hover:ring-1 hover:ring-accent/20 transition-all duration-200 cursor-pointer shadow-sm hover:shadow"
-                            >
-                              <Avatar className="w-10 h-10 flex-shrink-0 rounded-xl border border-border shadow-sm transform transition-transform duration-200 group-hover:scale-105">
-                                <AvatarImage
-                                  src={p.user.avatar_url || ""}
-                                  alt={p.user.name}
-                                  className="object-cover"
-                                />
-                                <AvatarFallback
-                                  className={`${color.bg} font-black text-xs rounded-xl`}
-                                >
-                                  {p.user.name
-                                    .split(" ")
-                                    .map((n) => n[0])
-                                    .join("")}
-                                </AvatarFallback>
-                              </Avatar>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {group.map((p, i) => {
+                        const color = avatarColors[i % avatarColors.length];
+                        const statusColor: Record<string, string> = {
+                          approved:
+                            "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400",
+                          pending:
+                            "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",
+                          rejected:
+                            "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
+                        };
+                        return (
+                          <div
+                            key={p.id}
+                            onClick={() =>
+                              navigate({ to: `/users/${p.user.id}` })
+                            }
+                            className="group flex items-center gap-3 p-3.5 rounded-xl border border-border/60 hover:bg-muted hover:border-accent/30 dark:hover:border-accent/30 dark:hover:ring-1 hover:ring-accent/20 transition-all duration-200 cursor-pointer shadow-sm hover:shadow"
+                          >
+                            <Avatar className="w-10 h-10 flex-shrink-0 rounded-xl border border-border shadow-sm transform transition-transform duration-200 group-hover:scale-105">
+                              <AvatarImage
+                                src={p.user.avatar_url || ""}
+                                alt={p.user.name}
+                                className="object-cover"
+                              />
+                              <AvatarFallback
+                                className={`${color.bg} font-black text-xs rounded-xl`}
+                              >
+                                {getInitials(p.user.name)}
+                              </AvatarFallback>
+                            </Avatar>
 
-                              <div className="min-w-0 flex-1">
-                                <div className="flex items-center gap-2">
-                                  <p className="text-sm font-bold text-card-foreground truncate group-hover:text-accent transition-colors">
-                                    {p.user.name}
-                                  </p>
-                                  {p.status && (
-                                    <Badge
-                                      className={`text-[10px] px-1.5 py-0 font-medium ${statusColor[p.status]}`}
-                                    >
-                                      {getTranslation(
-                                        t,
-                                        `debates.details.participantStatus.${p.status}`,
-                                      )}
-                                    </Badge>
-                                  )}
-                                </div>
-                                <p className="text-[11px] font-bold text-muted-foreground capitalize mt-0.5 tracking-wide">
-                                  {p.role
-                                    ? getTranslation(
-                                        t,
-                                        `users.roles.${p.role}`,
-                                      )
-                                    : getTranslation(
-                                        t,
-                                        `users.roles.${p.user.role}`,
-                                      )}
+                            <div className="min-w-0 flex-1">
+                              <div className="flex items-center gap-2">
+                                <p className="text-sm font-bold text-card-foreground truncate group-hover:text-accent transition-colors">
+                                  {p.user.name}
                                 </p>
+                                {p.status && (
+                                  <Badge
+                                    className={`text-[10px] px-1.5 py-0 font-medium ${statusColor[p.status]}`}
+                                  >
+                                    {getTranslation(
+                                      t,
+                                      `debates.details.participantStatus.${p.status}`,
+                                    )}
+                                  </Badge>
+                                )}
                               </div>
+                              <p className="text-[11px] font-bold text-muted-foreground capitalize mt-0.5 tracking-wide">
+                                {p.role
+                                  ? getTranslation(t, `users.roles.${p.role}`)
+                                  : getTranslation(
+                                      t,
+                                      `users.roles.${p.user.role}`,
+                                    )}
+                              </p>
                             </div>
-                          );
-                        })}
-                      </div>
+                          </div>
+                        );
+                      })}
                     </div>
-                  );
-                },
-              )}
+                  </div>
+                );
+              })}
             </CardContent>
           </Card>
         </div>

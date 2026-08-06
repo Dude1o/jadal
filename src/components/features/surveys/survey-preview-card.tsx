@@ -44,7 +44,7 @@ export default function SurveyPreviewCard({
               className="space-y-3 border rounded-lg p-4"
             >
               <Label className="font-semibold">
-                {index + 1}.{" "}
+                {index + 1}.{""}
                 {question.question_text ||
                   getTranslation(t, "surveys.questions.untitled")}
               </Label>

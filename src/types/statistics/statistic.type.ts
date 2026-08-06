@@ -14,6 +14,13 @@ export interface Statistic {
   variant?: StatVariant;
   description?: string;
   badge?: string;
+
+  /** Historical points, rendered as a sparkline in the card. */
+  series?: number[];
+  /** Parts of a whole, rendered as a donut. Values are absolute, not %. */
+  parts?: { label: string; value: number; color: string }[];
+  /** Upper bound for the progress bar. Defaults to the section maximum. */
+  max?: number;
 }
 
 export interface QueryLike<T> {

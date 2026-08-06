@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { useSuspenseQuery, useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 import {
   Select,
@@ -47,16 +47,16 @@ const typeMeta: Record<
   }
 > = {
   GOLD: {
-    ring: "border-amber-400",
+    ring: "",
     ribbon: "bg-amber-500",
-    chip: "bg-amber-50 text-amber-700 border-amber-200",
+    chip: "bg-amber-50 text-amber-700 ",
     gradient: "linear-gradient(135deg,#fde68a,#f59e0b)",
     icon: Trophy,
   },
   SILVER: {
-    ring: "border-slate-400",
+    ring: "",
     ribbon: "bg-slate-400",
-    chip: "bg-slate-50 text-slate-700 border-slate-200",
+    chip: "bg-slate-50 text-slate-700 ",
     gradient: "linear-gradient(135deg,#e2e8f0,#94a3b8)",
     icon: Medal,
   },
@@ -68,16 +68,16 @@ const typeMeta: Record<
     icon: Award,
   },
   HONORABLE: {
-    ring: "border-blue-400",
+    ring: "",
     ribbon: "bg-blue-500",
-    chip: "bg-blue-50 text-blue-700 border-blue-200",
+    chip: "bg-blue-50 text-blue-700 ",
     gradient: "linear-gradient(135deg,#bfdbfe,#3b82f6)",
     icon: Star,
   },
   PARTICIPATION: {
-    ring: "border-emerald-400",
+    ring: "",
     ribbon: "bg-emerald-500",
-    chip: "bg-emerald-50 text-emerald-700 border-emerald-200",
+    chip: "bg-emerald-50 text-emerald-700 ",
     gradient: "linear-gradient(135deg,#a7f3d0,#10b981)",
     icon: Heart,
   },
@@ -94,9 +94,10 @@ export function AchievementList() {
   const { data: usersData } = useData(usersQueryOptions({ perPage: 200 }));
   const usersList = usersData?.data ?? [];
 
-  const { data: achievementsData } = useSuspenseQuery(
-    achievementsQueryOptions(selectedUserId ?? 0),
-  );
+  const { data: achievementsData } = useQuery({
+    ...achievementsQueryOptions(selectedUserId ?? 0),
+    placeholderData: keepPreviousData,
+  });
   const achievementsList: UserAchievement[] = achievementsData?.data ?? [];
 
   const { data: catalogData } = useQuery(achievementCatalogQueryOptions());
@@ -145,10 +146,10 @@ export function AchievementList() {
   };
 
   return (
-    <div className="min-h-screen py-16 px-6">
+    <div className="p-4 sm:p-6 lg:p-8">
       <AppHeader
+        entity="achievements"
         title={getTranslation(t, "achievements.userAchievements")}
-        view="cards"
         onCreate={openAssignDialog}
         buttonLabel={getTranslation(t, "achievements.actions.assign")}
       />
@@ -192,7 +193,7 @@ export function AchievementList() {
             )}
           />
         ) : (
-          <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 items-stretch gap-5 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
             {joined.map(({ flat, type, catalogId }) => {
               const meta = typeMeta[type];
               const Icon = meta.icon;

@@ -1,16 +1,21 @@
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import {
-  Clock,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Archive,
   BarChart2,
-  HelpCircle,
-  MoreHorizontal,
+  Clock,
   Edit,
-  Trash,
-  User,
-  Users,
+  HelpCircle,
+  PlayCircle,
+  Trash2,
+  TriangleAlert,
 } from "lucide-react";
 import getTime, {
-  cn,
   getInitials,
   getTranslation,
   isClosed,
@@ -20,14 +25,6 @@ import type { Survey, SurveyQuestion, SurveyResponse } from "@/types";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "@tanstack/react-router";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import SurveyForm from "./survey-form";
 import DeleteItem from "@/components/common/delete-item";
 import { useDialogStore } from "@/services";
@@ -41,6 +38,20 @@ interface SurveyCardProps {
   onEdit?: (id, values) => void;
   onDelete?: (id: number) => void | Promise<void>;
 }
+
+/**
+ * Survey card, built on the debate-format card: one white surface, a coloured
+ * banner across the top, header, a two-up stat block, then the action row.
+ *
+ * The banner is the only thing that varies — it carries the survey's stage, so
+ * a wall of these reads as a status board at a glance without a single chip
+ * having to shout. Closed is deliberately the quietest of the three.
+ */
+const STAGE = {
+  closed: { color: "#5A7296", icon: Archive, key: "closed" },
+  overdue: { color: "#D84857", icon: TriangleAlert, key: "overdue" },
+  active: { color: "#157A49", icon: PlayCircle, key: "active" },
+} as const;
 
 export function SurveyCard({
   survey,
@@ -61,17 +72,12 @@ export function SurveyCard({
   const closed = isClosed(closes_at, startTime);
   const urgent = isUrgent(closes_at, startTime);
 
+  const stage = closed ? STAGE.closed : urgent ? STAGE.overdue : STAGE.active;
+  const StageIcon = stage.icon;
+
   const closesLabel = closes_at
     ? getTime(closes_at)
     : getTranslation(t, "surveys.dates.noCloseDate");
-
-  const responseRate =
-    responses.length > 0 && target_roles.length > 0
-      ? Math.min(
-          100,
-          Math.round((responses.length / (target_roles.length * 50)) * 100),
-        )
-      : undefined;
 
   const fallbackName =
     typeof created_by === "object" &&
@@ -89,198 +95,173 @@ export function SurveyCard({
     if (onDelete) await onDelete(id);
   };
 
-  // Determine accent color for card tint based on status
-  const statusColor = closed
-    ? "var(--destructive)"
-    : urgent
-      ? "var(--warning)" // amber
-      : "var(--primary)";
-  const backgroundGradient = `linear-gradient(135deg, color-mix(in oklch, ${statusColor} 6%, transparent) 0%, color-mix(in oklch, ${statusColor} 2%, transparent) 40%, transparent 100%)`;
+  const openEditDialog = () => {
+    const id = dialog.open({
+      title: getTranslation(t, "surveys.actions.edit"),
+      closeOnOutsideClick: true,
+      closable: true,
+      children: (
+        <SurveyForm
+          survey_id={survey.id}
+          onSubmit={(values) => {
+            handleUpdateSurvey(survey.id!, values);
+            dialog.close(id);
+          }}
+        />
+      ),
+    });
+  };
+
+  const openDeleteDialog = () => {
+    const id = dialog.open({
+      title: getTranslation(t, "common.actions.delete"),
+      closeOnOutsideClick: true,
+      closable: true,
+      children: (
+        <DeleteItem
+          itemName={getTranslation(t, "surveys.single")}
+          gender="male"
+          onDelete={() => {
+            handleDeleteSurvey(survey.id!);
+            dialog.close(id);
+          }}
+          onCancel={() => dialog.close(id)}
+        />
+      ),
+    });
+  };
 
   return (
-    <Card
-      className="group relative flex h-full w-full flex-col overflow-hidden rounded-2xl border border-border shadow-sm bg-card transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/10 dark:hover:shadow-primary/20 cursor-pointer"
-      onClick={() => navigate({ to: `/surveys/${survey.id}` })}
-      style={{ background: backgroundGradient }}
-    >
-      {/* Top accent gradient */}
+    <Card className="jd-card jd-interactive group relative flex h-full w-full flex-col overflow-hidden bg-[var(--table-row)]">
+      {/* The stage banner. Same position and weight as the debate-format card;
+          only the hue is survey-specific. */}
       <div
-        className={cn(
-          "h-1.5 w-full bg-gradient-to-r",
-          closed
-            ? "from-destructive via-destructive/60 to-destructive/60"
-            : urgent
-              ? "from-warning via-warning to-warning/60"
-              : "from-primary via-chart-5 to-primary/60",
-        )}
+        className="absolute inset-x-0 top-0 h-1.5"
+        style={{
+          backgroundImage: `linear-gradient(90deg, ${stage.color} 0%, color-mix(in oklab, ${stage.color} 55%, transparent) 100%)`,
+        }}
       />
 
-      <CardContent className="flex flex-1 flex-col justify-between p-5">
-        <div className="space-y-4">
-          {/* Header with title & actions */}
-          <div className="flex items-start justify-between gap-3">
-            <div className="space-y-1 min-w-0">
-              <h3 className="line-clamp-1 text-base font-bold tracking-tight text-card-foreground transition-colors group-hover:text-primary">
-                {title}
-              </h3>
-              <p className="line-clamp-2 min-h-[2.5rem] text-xs leading-relaxed text-muted-foreground">
-                {description || getTranslation(t, "surveys.labels.noTitle")}
-              </p>
-            </div>
-
-            {/* Context Actions Dropdown */}
-            <div onClick={(e) => e.stopPropagation()} className="shrink-0">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8 rounded-full border border-border bg-card text-muted-foreground opacity-60 transition-all hover:bg-muted hover:text-foreground group-hover:opacity-100"
-                  >
-                    <MoreHorizontal className="h-4 w-4" />
-                    <span className="sr-only">
-                      {getTranslation(t, "common.actions.openMenu")}
-                    </span>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-40 rounded-xl">
-                  <DropdownMenuLabel className="text-xs font-normal text-muted-foreground">
-                    {getTranslation(t, "common.labels.actions")}
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    className="flex items-center gap-2 text-sm cursor-pointer"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setTimeout(() => {
-                        const id = dialog.open({
-                          title: getTranslation(t, "surveys.actions.edit"),
-                          closeOnOutsideClick: true,
-                          children: (
-                            <SurveyForm
-                              onSubmit={(values) => {
-                                handleUpdateSurvey(survey.id!, values);
-                                dialog.close(id);
-                              }}
-                              survey_id={survey.id}
-                            />
-                          ),
-                          closable: true,
-                        });
-                      }, 0);
-                    }}
-                  >
-                    <Edit className="h-3.5 w-3.5" />
-                    {getTranslation(t, "common.actions.edit")}
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    className="flex items-center gap-2 text-sm text-destructive focus:text-destructive cursor-pointer"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setTimeout(() => {
-                        const id = dialog.open({
-                          title: getTranslation(t, "common.actions.delete"),
-                          closeOnOutsideClick: true,
-                          children: (
-                            <DeleteItem
-                              itemName={getTranslation(t, "surveys.single")}
-                              gender="male"
-                              onDelete={() => {
-                                handleDeleteSurvey(survey.id!);
-                                dialog.close(id);
-                              }}
-                              onCancel={() => {
-                                dialog.close(id);
-                              }}
-                            />
-                          ),
-                          closable: true,
-                        });
-                      }, 0);
-                    }}
-                  >
-                    <Trash className="h-3.5 w-3.5" />
-                    {getTranslation(t, "common.delete.title")}
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
+      <CardHeader className="relative px-6 pt-6 pb-3">
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0 space-y-1.5">
+            <CardTitle className="line-clamp-2 text-xl font-bold tracking-tight text-card-foreground">
+              {title}
+            </CardTitle>
+            <CardDescription className="line-clamp-2 text-sm leading-relaxed text-muted-foreground">
+              {description || getTranslation(t, "surveys.labels.noTitle")}
+            </CardDescription>
           </div>
 
-          {/* Metrics pills */}
-          <div className="flex flex-wrap items-center gap-2">
-            {questions.length > 0 && (
-              <div className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 border border-primary/20 px-2.5 py-0.5 text-xs font-medium text-primary">
-                <HelpCircle className="h-3 w-3" />
-                <span>
-                  {questions.length}{" "}
-                  {questions.length === 1
-                    ? getTranslation(t, "surveys.card.question")
-                    : getTranslation(t, "surveys.card.questions")}
-                </span>
-              </div>
-            )}
-            {responses.length > 0 && (
-              <div className="inline-flex items-center gap-1.5 rounded-full bg-success/10 border border-success/20 px-2.5 py-0.5 text-xs font-medium text-success">
-                <BarChart2 className="h-3 w-3" />
-                <span>
-                  {responses.length}{" "}
-                  {responses.length === 1
-                    ? getTranslation(t, "surveys.card.response")
-                    : getTranslation(t, "surveys.card.responses")}
-                </span>
-              </div>
-            )}
+          <span
+            className="flex size-10 shrink-0 items-center justify-center rounded-xl"
+            style={{
+              background: `color-mix(in oklab, ${stage.color} 16%, transparent)`,
+              color: stage.color,
+            }}
+          >
+            <StageIcon className="size-5" />
+          </span>
+        </div>
+      </CardHeader>
+
+      <CardContent className="flex flex-1 flex-col space-y-5 px-6 pt-0 pb-6">
+        {/* Two-up metrics, identical shape to the format card. */}
+        <div className="grid grid-cols-2 gap-3">
+          <div className="rounded-xl bg-muted/50 p-3">
+            <div className="mb-1 flex items-center gap-2">
+              <HelpCircle className="size-4 text-primary" />
+              <span className="text-xs font-medium tracking-wider text-muted-foreground uppercase">
+                {getTranslation(t, "surveys.card.questions")}
+              </span>
+            </div>
+            <p className="text-2xl font-bold text-card-foreground tabular-nums">
+              {questions.length}
+            </p>
+          </div>
+          <div className="rounded-xl bg-muted/50 p-3">
+            <div className="mb-1 flex items-center gap-2">
+              <BarChart2 className="size-4 text-primary" />
+              <span className="text-xs font-medium tracking-wider text-muted-foreground uppercase">
+                {getTranslation(t, "surveys.card.responses")}
+              </span>
+            </div>
+            <p className="text-2xl font-bold text-card-foreground tabular-nums">
+              {responses.length}
+            </p>
           </div>
         </div>
 
-        {/* Target Roles Tags – now translated */}
+        {/* Stage + deadline. The stage word is coloured, not the whole chip. */}
+        <div className="flex flex-wrap items-center gap-2">
+          <span
+            className="inline-flex h-7 items-center gap-1.5 rounded-full px-3 text-xs font-bold"
+            style={{
+              background: `color-mix(in oklab, ${stage.color} 14%, transparent)`,
+              color: `color-mix(in oklab, ${stage.color} 78%, var(--foreground))`,
+            }}
+          >
+            <StageIcon className="size-3.5" />
+            {getTranslation(t, `surveys.status.${stage.key}`)}
+          </span>
+          <span className="inline-flex h-7 items-center gap-1.5 rounded-full bg-muted px-3 text-xs font-medium text-muted-foreground">
+            <Clock className="size-3.5 shrink-0" />
+            {closesLabel}
+          </span>
+        </div>
+
         {target_roles.length > 0 && (
-          <div className="flex flex-wrap gap-1.5 pt-4 mt-auto">
+          <div className="flex flex-wrap gap-1.5">
             {target_roles.map((role) => (
               <span
                 key={role}
-                className="inline-flex items-center rounded-md border border-border bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground capitalize"
+                className="inline-flex items-center rounded-md bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground capitalize"
               >
                 {getTranslation(t, `users.roles.${role}`) ?? role}
               </span>
             ))}
           </div>
         )}
-      </CardContent>
-
-      {/* Footer */}
-      <CardFooter className="flex items-center justify-between border-t border-border bg-muted/40 px-5 py-3 text-xs">
-        <div className="flex items-center gap-4">
-          <span
-            className={cn(
-              "flex items-center gap-1.5 font-medium",
-              urgent && !closed && "text-warning",
-              closed && "text-destructive/80",
-            )}
-          >
-            <Clock className="h-3.5 w-3.5 shrink-0 opacity-70" />
-            {closesLabel}
-          </span>
-          {responseRate !== undefined && (
-            <span className="font-semibold text-primary/90">
-              {responseRate}
-              {getTranslation(t, "surveys.card.rate")}
-            </span>
-          )}
-        </div>
 
         {displayName && (
-          <div className="flex items-center gap-2 max-w-[40%]">
-            <div className="h-5 w-5 shrink-0 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-[9px] font-bold text-primary">
-              {getInitials(displayName) || <User className="h-2.5 w-2.5" />}
-            </div>
-            <span className="truncate text-muted-foreground">
-              {displayName}
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-[9px] font-bold text-primary">
+              {getInitials(displayName)}
             </span>
+            <span className="truncate">{displayName}</span>
           </div>
         )}
-      </CardFooter>
+
+        {/* Action row — the same trio the format card uses. */}
+        <div className="mt-auto flex gap-2 pt-1">
+          <Button
+            variant="accent"
+            className="flex-1"
+            onClick={() => navigate({ to: `/surveys/${survey.id}` })}
+          >
+            {getTranslation(t, "common.actions.view")}
+          </Button>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={openEditDialog}
+            title={getTranslation(t, "common.actions.edit")}
+            aria-label={getTranslation(t, "common.actions.edit")}
+          >
+            <Edit className="size-4" />
+          </Button>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={openDeleteDialog}
+            className="text-destructive hover:bg-destructive/10 hover:text-destructive"
+            title={getTranslation(t, "common.delete.title")}
+            aria-label={getTranslation(t, "common.delete.title")}
+          >
+            <Trash2 className="size-4" />
+          </Button>
+        </div>
+      </CardContent>
     </Card>
   );
 }

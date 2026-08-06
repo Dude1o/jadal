@@ -93,15 +93,11 @@ export function StatisticTabs({ activeTab, onTabChange }: StatisticTabsProps) {
           value={activeTab}
           onValueChange={(v) => onTabChange(v as StatTab)}
         >
-          <TabsList className="w-full flex-wrap h-auto">
+          <TabsList className="w-full flex-wrap">
             {TAB_DEFS.map((tab) => {
               const Icon = tab.icon;
               return (
-                <TabsTrigger
-                  key={tab.value}
-                  value={tab.value}
-                  className="flex-1 min-w-[100px] sm:min-w-[130px]"
-                >
+                <TabsTrigger key={tab.value} value={tab.value} className="">
                   <Icon />
                   <span>{getTranslation(t, tab.labelKey)}</span>
                 </TabsTrigger>

@@ -24,7 +24,9 @@
       "close": "Close",
       "share": "Share",
       "comingSoon": "Coming soon",
-      "confirm": "Confirm"
+      "confirm": "Confirm",
+      "clear": "Clear",
+      "back": "Back"
     },
     "labels": {
       "actions": "Actions",
@@ -49,7 +51,8 @@
       "activateDescription": "Are you sure you want to reactivate this user account? All access privileges will be restored.",
       "min": "Minimum",
       "max": "Maximum",
-      "quickActions": "Quick Actions"
+      "quickActions": "Quick Actions",
+      "noResults": "No results"
     },
     "states": {
       "noData": "No data available.",
@@ -116,7 +119,8 @@
     "toasts": {
       "success": "Success",
       "error": "Error"
-    }
+    },
+    "comingSoon": "Coming soon"
   },
   "auth": {
     "login": {
@@ -134,7 +138,10 @@
       "signingIn": "Signing in...",
       "brand": "Jadal",
       "successMessage": "Logged in successfully",
-      "errorMessage": "Invalid email or password"
+      "errorMessage": "Invalid email or password",
+      "tagline": "Debate platform",
+      "statDebates": "1,200+ debates hosted",
+      "statTeams": "40+ active teams"
     },
     "signup": {
       "noAccount": "Don't have an account?",
@@ -147,7 +154,8 @@
       "title1": "Where great",
       "titleEm": "arguments",
       "title2": "are born.",
-      "subtitle": "Join thousands of debaters, trainers, and judges building the future of structured discourse."
+      "subtitle": "Join thousands of debaters, trainers, and judges building the future of structured discourse.",
+      "slogan": "Where words meet technology"
     },
     "session": {
       "welcomeBack": "Welcome back",
@@ -361,7 +369,8 @@
         "suspended": "Suspended",
         "banned": "Banned"
       }
-    }
+    },
+    "subtitle": "Manage debaters, trainers, judges and admins"
   },
   "debates": {
     "single": "Debate",
@@ -521,7 +530,8 @@
         "pending": "Pending",
         "rejected": "Rejected"
       }
-    }
+    },
+    "subtitle": "Schedule, announce and review debate rounds"
   },
   "debateFormats": {
     "single": "Debate Format",
@@ -585,8 +595,13 @@
       "speakersPerSide": "Speakers per Side",
       "mainSpeech": "Main Speech",
       "replySpeech": "Reply Speech",
-      "min": "Minutes"
-    }
+      "min": "Minutes",
+      "crossExamination": "Cross Exam",
+      "messages": {
+        "notFound": "Format details unavailable"
+      }
+    },
+    "subtitle": "The structures debates are run under"
   },
   "debateMotions": {
     "single": "Motion",
@@ -614,13 +629,14 @@
         "text": "Motion Text",
         "textPlaceholder": "Write the motion here...",
         "frameworks": "Frameworks",
-        "selectFrameworks": "Select frameworks"
+        "selectFrameworks": "Select frameworks",
+        "motion": "Motion"
       }
     },
     "card": {
       "frameworks": "Frameworks",
-      "added": "Added ",
-      "updated": "Updated ",
+      "added": "Added",
+      "updated": "Updated",
       "viewMotion": "View Motion"
     },
     "empty": "No motions found",
@@ -629,7 +645,8 @@
       "textRequired": "Motion text is required",
       "textTooShort": "Motion text must be at least 10 characters",
       "frameworksRequired": "At least one framework is required"
-    }
+    },
+    "subtitle": "Topics debaters argue for and against"
   },
   "debateMotionFrameworks": {
     "single": "Motion Framework",
@@ -671,7 +688,8 @@
       "nameTooShort": "Name must be at least 3 characters",
       "colorRequired": "Color is required",
       "colorInvalid": "Color must be a valid hex code (e.g. #FF0000)"
-    }
+    },
+    "subtitle": "Thematic groupings for debate motions"
   },
   "blogs": {
     "title": "Blogs",
@@ -711,7 +729,8 @@
       "likes": "Likes",
       "dislikes": "Dislikes",
       "reviewerCommentLabel": "Reviewer Comment",
-      "blogLoading": "Loading article"
+      "blogLoading": "Loading article",
+      "readFullArticle": "Read full article"
     },
     "empty": {
       "noPosts": "No posts found for this filter."
@@ -739,7 +758,15 @@
         "nameTooShort": "Name must be at least 2 characters",
         "invalidSlug": "Slug must be valid"
       }
-    }
+    },
+    "subtitle": "Articles published on the platform",
+    "statuses": {
+      "published": "Published",
+      "pending_review": "Pending review",
+      "rejected": "Rejected",
+      "draft": "Draft"
+    },
+    "single": "Article Details"
   },
   "surveys": {
     "single": "Survey",
@@ -791,7 +818,10 @@
     "status": {
       "open": "Open",
       "closingSoon": "Closing Soon",
-      "closed": "Closed"
+      "closed": "Closed",
+      "active": "Active",
+      "overdue": "Overdue",
+      "scheduled": "Scheduled"
     },
     "dates": {
       "noCloseDate": "No close date",
@@ -811,7 +841,8 @@
       "responses": "responses",
       "rate": "% rate",
       "noDescription": "No description",
-      "createdByFallback": "User #{{id}}"
+      "createdByFallback": "User #{{id}}",
+      "closingSoon": "Closing soon"
     },
     "form": {
       "sections": {
@@ -879,8 +910,12 @@
       "informationalSurvey": "Informational Survey",
       "closedMessage": "The response period for this survey has ended.",
       "alreadyRespondedMessage": "You have already participated in this survey.",
-      "notRespondedMessage": "This survey is designed to collect opinions and feedback."
-    }
+      "notRespondedMessage": "This survey is designed to collect opinions and feedback.",
+      "allRolesTargeted": "All roles targeted",
+      "noQuestionsTitle": "No questions yet"
+    },
+    "subtitle": "Collect feedback from your community",
+    "countLabel": "{{count}} total"
   },
   "surveyBuilder": {
     "label": "Survey Questions",
@@ -969,8 +1004,20 @@
       "noResponse": "No response has been provided yet.",
       "resolve": "Mark as Resolved",
       "dismiss": "Dismiss Complaint",
-      "viewDebate": "View Debate"
-    }
+      "viewDebate": "View Debate",
+      "complaintText": "Complaint text"
+    },
+    "subtitle": "Reports raised by members, and their resolution",
+    "empty": {
+      "noData": "No complaints filed"
+    },
+    "messages": {
+      "dismissed": "Complaint dismissed",
+      "dismissError": "Could not dismiss the complaint",
+      "resolved": "Complaint resolved",
+      "resolvError": "Could not resolve the complaint"
+    },
+    "single": "Complaint"
   },
   "teams": {
     "single": "Team",
@@ -987,7 +1034,10 @@
       "noLeader": "—",
       "teamSize": "Team Size",
       "leaderBadge": "Leader",
-      "notFound": "Team not found"
+      "notFound": "Team not found",
+      "messages": {
+        "notFound": "Team details unavailable"
+      }
     },
     "messages": {
       "noMembers": "No members configured.",
@@ -1042,7 +1092,8 @@
       "statusRequired": "Status is required",
       "teamMembersRequired": "Team Members are required",
       "leaderMustBeMember": "The team leader must be a member of the team"
-    }
+    },
+    "subtitle": "Groups that compete together"
   },
   "categories": {
     "messages": {
@@ -1072,7 +1123,9 @@
     "nextPage": "Next page",
     "page": "Page",
     "of": "of",
-    "noResults": "No results found"
+    "noResults": "No results found",
+    "pagination": "Pagination",
+    "showingRange": "Showing {{from}}–{{to}} of {{total}}"
   },
   "toolbar": {
     "search": "Search"
@@ -1095,7 +1148,7 @@
     "basedOnReviews": "Based on 2.1k reviews",
     "conversionRate": "Conversion Rate",
     "vsLastQuarter": "vs last quarter",
-    "visitorToCustomer": "Visitor \u2192 customer rate",
+    "visitorToCustomer": "Visitor → customer rate",
     "serverUptime": "Server Uptime",
     "stable": "stable",
     "thirtyDayAverage": "30-day rolling average",
@@ -1258,7 +1311,8 @@
     },
     "groupBy": {
       "type": "By Type",
-      "date": "By Date"
+      "date": "By Date",
+      "label": "Group by"
     },
     "form": {
       "sections": {
@@ -1284,10 +1338,38 @@
       "createFirst": "Create your first achievement to get started.",
       "allAssigned": "All achievements assigned",
       "allAssignedDesc": "This user has all available achievements."
-    }
+    },
+    "subtitle": "Badges awarded to members"
   },
   "home": {
     "welcome": "Welcome",
-    "hello": "Hello"
+    "hello": "Hello",
+    "title": "Overview",
+    "subtitle": "A snapshot of what's happening across Jadal",
+    "greeting": "Welcome back, {{name}}",
+    "keyStatistics": "Key statistics",
+    "keyStatisticsSubtitle": "Platform health at a glance",
+    "latestDebates": "Latest debates",
+    "latestDebatesSubtitle": "The most recently scheduled rounds",
+    "latestSurvey": "Latest survey",
+    "latestSurveySubtitle": "The most recent survey you published",
+    "viewAll": "View all",
+    "openSurvey": "Open survey",
+    "noDebates": "No debates yet",
+    "noSurvey": "No surveys yet",
+    "quickLinks": "Quick links",
+    "questionsCount": "{{count}} questions",
+    "closed": "Closed",
+    "open": "Open",
+    "noArticles": "No articles yet",
+    "latestArticles": "Latest articles",
+    "latestArticlesSubtitle": "Recently published on the platform"
+  },
+  "errors": {
+    "notFound": {
+      "description": "The page you are looking for does not exist or has been moved.",
+      "goHome": "Go to dashboard",
+      "goBack": "Go back"
+    }
   }
 }

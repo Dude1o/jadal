@@ -20,7 +20,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import { CalendarIcon } from "lucide-react";
+import { AlertCircle, CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
 
 type NewSurveyQuestion = Omit<SurveyQuestion, "id" | "survey_id">;
@@ -71,7 +71,9 @@ export default function SurveyBuilder() {
       {/* BUILDER */}
       <Card className="w-full xl:w-[55%] mx-0 xl:mx-3">
         <CardHeader>
-          <CardTitle>{getTranslation(t, "surveys.actions.addSurvey")}</CardTitle>
+          <CardTitle>
+            {getTranslation(t, "surveys.actions.addSurvey")}
+          </CardTitle>
         </CardHeader>
 
         <CardContent className="space-y-6">
@@ -105,11 +107,17 @@ export default function SurveyBuilder() {
                     validators={{
                       onChange: ({ value }) =>
                         !value.trim()
-                          ? getTranslation(t, "surveys.validation.titleRequired")
+                          ? getTranslation(
+                              t,
+                              "surveys.validation.titleRequired",
+                            )
                           : undefined,
                       onSubmit: ({ value }) =>
                         !value.trim()
-                          ? getTranslation(t, "surveys.validation.titleRequired")
+                          ? getTranslation(
+                              t,
+                              "surveys.validation.titleRequired",
+                            )
                           : undefined,
                     }}
                   >
@@ -123,12 +131,16 @@ export default function SurveyBuilder() {
                           value={field.state.value}
                           onBlur={field.handleBlur}
                           onChange={(e) => field.handleChange(e.target.value)}
-                          placeholder={getTranslation(t, "surveys.form.titlePlaceholder")}
+                          placeholder={getTranslation(
+                            t,
+                            "surveys.form.titlePlaceholder",
+                          )}
                         />
 
                         {getError(field.state.meta.errors) && (
                           <p className="text-sm text-destructive font-medium">
-                            ⚠ {getError(field.state.meta.errors)}
+                            <AlertCircle className="size-3.5 shrink-0" />
+                            {getError(field.state.meta.errors)}
                           </p>
                         )}
                       </div>
@@ -145,12 +157,16 @@ export default function SurveyBuilder() {
                           value={field.state.value}
                           onBlur={field.handleBlur}
                           onChange={(e) => field.handleChange(e.target.value)}
-                          placeholder={getTranslation(t, "surveys.form.descriptionPlaceholder")}
+                          placeholder={getTranslation(
+                            t,
+                            "surveys.form.descriptionPlaceholder",
+                          )}
                         />
 
                         {getError(field.state.meta.errors) && (
                           <p className="text-sm text-destructive font-medium">
-                            ⚠ {getError(field.state.meta.errors)}
+                            <AlertCircle className="size-3.5 shrink-0" />
+                            {getError(field.state.meta.errors)}
                           </p>
                         )}
                       </div>
@@ -178,7 +194,9 @@ export default function SurveyBuilder() {
                   >
                     {(field) => (
                       <div className="space-y-2">
-                        <Label>{getTranslation(t, "surveys.form.fields.closesAt")}</Label>
+                        <Label>
+                          {getTranslation(t, "surveys.form.fields.closesAt")}
+                        </Label>
 
                         <Popover
                           open={isDatePickerOpen}
@@ -218,7 +236,8 @@ export default function SurveyBuilder() {
 
                         {getError(field.state.meta.errors) && (
                           <p className="text-sm text-destructive font-medium">
-                            ⚠ {getError(field.state.meta.errors)}
+                            <AlertCircle className="size-3.5 shrink-0" />
+                            {getError(field.state.meta.errors)}
                           </p>
                         )}
                       </div>
@@ -227,14 +246,20 @@ export default function SurveyBuilder() {
 
                   {/* QUESTIONS */}
                   {field.state.value.map((question, index) => (
-                    <Card key={index} className="border-4 p-5">
+                    <Card key={index} className=" p-5">
                       <Label>
                         {`${getTranslation(t, "surveys.questions.single")} ${getNumber(index + 1)} (`}
                         {question.type === "open_text"
                           ? getTranslation(t, "surveys.questions.types.text")
                           : question.type === "rating"
-                            ? getTranslation(t, "surveys.questions.types.rating")
-                            : getTranslation(t, "surveys.questions.types.select")}
+                            ? getTranslation(
+                                t,
+                                "surveys.questions.types.rating",
+                              )
+                            : getTranslation(
+                                t,
+                                "surveys.questions.types.select",
+                              )}
                         {")"}
                       </Label>
 
@@ -269,7 +294,11 @@ export default function SurveyBuilder() {
                           {(subField) => (
                             <div className="space-y-2">
                               <Label>
-                                {getTranslation(t, "surveys.options.selectLabel")} *
+                                {getTranslation(
+                                  t,
+                                  "surveys.options.selectLabel",
+                                )}{" "}
+                                *
                               </Label>
 
                               <Input
@@ -280,7 +309,10 @@ export default function SurveyBuilder() {
                                   // Force validation
                                   subField.validate("change");
                                 }}
-                                placeholder={getTranslation(t, "surveys.form.questionTextPlaceholder")}
+                                placeholder={getTranslation(
+                                  t,
+                                  "surveys.form.questionTextPlaceholder",
+                                )}
                                 className="border-3"
                               />
 
@@ -319,7 +351,8 @@ export default function SurveyBuilder() {
                             {(optionsField) => (
                               <div className="space-y-3">
                                 <Label>
-                                  {getTranslation(t, "surveys.options.plural")} *
+                                  {getTranslation(t, "surveys.options.plural")}{" "}
+                                  *
                                 </Label>
 
                                 {(optionsField.state.value ?? []).map(
@@ -330,24 +363,24 @@ export default function SurveyBuilder() {
                                       validators={{
                                         onChange: ({ value }) =>
                                           !value?.trim()
-                                ? getTranslation(
-                                    t,
-                                    "surveys.validation.optionRequired",
-                                  )
+                                            ? getTranslation(
+                                                t,
+                                                "surveys.validation.optionRequired",
+                                              )
                                             : undefined,
                                         onBlur: ({ value }) =>
                                           !value?.trim()
-                                ? getTranslation(
-                                    t,
-                                    "surveys.validation.optionRequired",
-                                  )
+                                            ? getTranslation(
+                                                t,
+                                                "surveys.validation.optionRequired",
+                                              )
                                             : undefined,
                                         onSubmit: ({ value }) =>
                                           !value?.trim()
-                                ? getTranslation(
-                                    t,
-                                    "surveys.validation.optionRequired",
-                                  )
+                                            ? getTranslation(
+                                                t,
+                                                "surveys.validation.optionRequired",
+                                              )
                                             : undefined,
                                       }}
                                     >
@@ -367,7 +400,7 @@ export default function SurveyBuilder() {
                                                 optionsField.validate("change"); // Revalidate parent
                                               }}
                                               placeholder={`${getTranslation(t, "surveys.options.single")} ${getNumber(optIndex + 1)}`}
-                                              className="border-3"
+                                              className=""
                                             />
 
                                             {optionField.state.meta.errors
@@ -420,7 +453,10 @@ export default function SurveyBuilder() {
                                   variant="secondary"
                                   onClick={() => optionsField.pushValue("")}
                                 >
-                                  {getTranslation(t, "surveys.questions.actions.addOption")}
+                                  {getTranslation(
+                                    t,
+                                    "surveys.questions.actions.addOption",
+                                  )}
                                 </Button>
                               </div>
                             )}
@@ -437,7 +473,10 @@ export default function SurveyBuilder() {
                             }
                           }}
                         >
-                          {getTranslation(t, "surveys.questions.actions.removeQuestion")}
+                          {getTranslation(
+                            t,
+                            "surveys.questions.actions.removeQuestion",
+                          )}
                         </Button>
                       </CardContent>
                     </Card>
@@ -491,7 +530,8 @@ export default function SurveyBuilder() {
 
                   {getError(field.state.meta.errors) && (
                     <p className="text-sm text-destructive font-medium">
-                      ⚠ {getError(field.state.meta.errors)}
+                      <AlertCircle className="size-3.5 shrink-0" />
+                      {getError(field.state.meta.errors)}
                     </p>
                   )}
                 </div>
@@ -504,17 +544,25 @@ export default function SurveyBuilder() {
               validators={{
                 onChange: ({ value }) =>
                   value.length < 1
-                    ? getTranslation(t, "surveys.validation.targetRolesRequired")
+                    ? getTranslation(
+                        t,
+                        "surveys.validation.targetRolesRequired",
+                      )
                     : undefined,
                 onSubmit: ({ value }) =>
                   value.length < 1
-                    ? getTranslation(t, "surveys.validation.targetRolesRequired")
+                    ? getTranslation(
+                        t,
+                        "surveys.validation.targetRolesRequired",
+                      )
                     : undefined,
               }}
             >
               {(field) => (
                 <div className="space-y-2">
-                  <Label>{getTranslation(t, "surveys.form.fields.targetRoles")} *</Label>
+                  <Label>
+                    {getTranslation(t, "surveys.form.fields.targetRoles")} *
+                  </Label>
 
                   <div className="space-y-3 border rounded-md p-4">
                     {ROLES.map((role) => (
@@ -550,7 +598,8 @@ export default function SurveyBuilder() {
 
                   {getError(field.state.meta.errors) && (
                     <p className="text-sm text-destructive font-medium">
-                      ⚠ {getError(field.state.meta.errors)}
+                      <AlertCircle className="size-3.5 shrink-0" />
+                      {getError(field.state.meta.errors)}
                     </p>
                   )}
                 </div>
@@ -578,10 +627,11 @@ export default function SurveyBuilder() {
             {(values) => (
               <>
                 {/* Survey Info */}
-                <div className="space-y-4 pb-6 border-b">
+                <div className="space-y-4 pb-6 ">
                   <div>
                     <h3 className="text-lg font-semibold">
-                      {values.title || getTranslation(t, "surveys.labels.noTitle")}
+                      {values.title ||
+                        getTranslation(t, "surveys.labels.noTitle")}
                     </h3>
                     {values.description && (
                       <p className="text-sm text-muted-foreground mt-2">

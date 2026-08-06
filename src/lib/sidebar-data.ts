@@ -1,24 +1,17 @@
 import type { SideBarItem } from "@/types";
+import { entityIcons } from "./entity-icons";
 import {
   Activity,
   Calendar,
-  ChartPie,
   CheckCircle,
-  CircleAlert,
-  FileText,
-  Form,
   HeartPulse,
-  Home,
   Megaphone,
   MessagesSquare,
   Presentation,
   Radio,
   Scale,
   ShieldAlert,
-  Sparkles,
-  Swords,
   Trophy,
-  User,
   Users,
   XCircle,
 } from "lucide-react";
@@ -27,14 +20,14 @@ export const sidebarItems: SideBarItem[] = [
   {
     title: "navigation.sidebar.home",
     url: "/",
-    icon: Home,
+    icon: entityIcons.home.outline,
     hasPlusIcon: false,
   },
 
   {
     title: "navigation.sidebar.users",
     url: "/users",
-    icon: User,
+    icon: entityIcons.users.outline,
     subItems: [
       {
         title: "navigation.submenu.admins",
@@ -66,7 +59,7 @@ export const sidebarItems: SideBarItem[] = [
   {
     title: "navigation.sidebar.debates",
     url: "/debates",
-    icon: MessagesSquare,
+    icon: entityIcons.debates.outline,
     subItems: [
       {
         title: "navigation.submenu.scheduled",
@@ -110,7 +103,7 @@ export const sidebarItems: SideBarItem[] = [
   {
     title: "navigation.sidebar.statistics",
     url: "/statistics",
-    icon: ChartPie,
+    icon: entityIcons.statistics.outline,
     subItems: [
       {
         title: "navigation.submenu.frameworkFairness",
@@ -148,50 +141,50 @@ export const sidebarItems: SideBarItem[] = [
   {
     title: "navigation.sidebar.debateFormats",
     url: "/debate-formats",
-    icon: Swords,
+    icon: entityIcons.debateFormats.outline,
   },
 
   {
     title: "navigation.sidebar.debateMotions",
     url: "/debate-motions",
-    icon: Sparkles,
+    icon: entityIcons.motions.outline,
   },
 
   {
     title: "navigation.sidebar.debateMotionFrameworks",
     url: "/debate-motion-frameworks",
-    icon: Scale,
+    icon: entityIcons.motionFrameworks.outline,
   },
 
   {
     title: "navigation.sidebar.blogs",
     url: "/blogs",
-    icon: FileText,
+    icon: entityIcons.blog.outline,
     hasPlusIcon: false,
   },
 
   {
     title: "navigation.sidebar.achievements",
     url: "/achievements",
-    icon: Trophy,
+    icon: entityIcons.achievements.outline,
   },
 
   {
     title: "navigation.sidebar.teams",
     url: "/teams",
-    icon: Users,
+    icon: entityIcons.teams.outline,
     hasPlusIcon: false,
   },
 
   {
     title: "navigation.sidebar.surveys",
     url: "/surveys",
-    icon: Form,
+    icon: entityIcons.surveys.outline,
   },
 
   {
     title: "navigation.sidebar.complaints",
     url: "/complaints",
-    icon: CircleAlert,
+    icon: entityIcons.complaints.outline,
   },
 ];

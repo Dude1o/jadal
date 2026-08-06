@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "@tanstack/react-router";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 import { getTranslation } from "@/lib/utils";
 import { debateMotionFrameworksQueryOptions } from "@/api/query-options";
@@ -69,13 +69,14 @@ export default function DebateMotionFrameworkList({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearch, navigate]);
 
-  const { data: paginatedData } = useSuspenseQuery(
-    debateMotionFrameworksQueryOptions({
+  const { data: paginatedData } = useQuery({
+    ...debateMotionFrameworksQueryOptions({
       search: debouncedSearch || undefined,
       page,
       perPage: 12,
     }),
-  );
+    placeholderData: keepPreviousData,
+  });
 
   const frameworks = paginatedData?.data ?? [];
 
@@ -175,8 +176,9 @@ export default function DebateMotionFrameworkList({
   };
 
   return (
-    <div className="min-h-screen py-16 px-6">
+    <div className="p-4 sm:p-6 lg:p-8">
       <AppHeader
+        entity="motionFrameworks"
         title={getTranslation(t, "debateMotionFrameworks.all")}
         view={view}
         setView={updateView}
@@ -226,7 +228,7 @@ export default function DebateMotionFrameworkList({
               showResetButton={!!localSearch}
             />
           ) : (
-            <div className="mt-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="mt-6 grid grid-cols-1 items-stretch gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {filteredFrameworks.map((framework) => (
                 <DebateMotionFrameworkCard
                   key={framework.id}

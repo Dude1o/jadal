@@ -4,7 +4,7 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "@tanstack/react-router";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 import { getTranslation } from "@/lib/utils";
 import { debateMotionsQueryOptions } from "@/api/query-options";
@@ -20,7 +20,6 @@ import {
   createDebateMotionMutationOptions,
   editDebateMotionMutationOptions,
   deleteDebateMotionMutationOptions,
-  createDebateMotionFrameworkMutationOptions,
 } from "@/api/mutation-options";
 
 import type { Motion } from "@/types";
@@ -32,7 +31,6 @@ import { DataTable } from "@/components/data-table/data-table";
 import DebateMotionCard from "./debate-motion-card";
 import DeleteItem from "@/components/common/delete-item";
 import DebateMotionForm from "./debate-motion-form";
-import DebateMotionFrameworkForm from "./debate-motion-framework-form";
 import { debateMotionOrderColumns } from "./columns/debate-motion-order-columns";
 import { AppToolbar } from "@/components/layout/toolbar/app-toolbar";
 import Pagination from "@/components/common/pagination";
@@ -56,8 +54,14 @@ export default function DebateMotionList({
   const [localSearch, setLocalSearch] = useState(search);
   const debouncedSearch = useDebounce(localSearch, 500);
 
-  // Sync URL search with local state
-  useEffect(() => setLocalSearch(search), [search]);
+  // Sync URL -> local only for EXTERNAL navigation (back button, a link
+  // with a query). Without this guard the effect fires on our own
+  // debounced URL write and clobbers whatever has been typed since.
+  useEffect(() => {
+    if ((search || "") !== (debouncedSearch || "")) return;
+    setLocalSearch(search);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [search]);
 
   // Update URL when debounced search changes
   useEffect(() => {
@@ -75,15 +79,16 @@ export default function DebateMotionList({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearch, navigate]);
 
-  const { data: paginatedData } = useSuspenseQuery(
-    debateMotionsQueryOptions({
+  const { data: paginatedData } = useQuery({
+    ...debateMotionsQueryOptions({
       search: debouncedSearch || undefined,
       page,
       perPage: 12,
     }),
-  );
+    placeholderData: keepPreviousData,
+  });
 
-  const motions = paginatedData.data;
+  const motions = paginatedData?.data ?? [];
 
   const filteredMotions = motions;
 
@@ -91,15 +96,6 @@ export default function DebateMotionList({
     mutationOptions: createDebateMotionMutationOptions(),
     queryKey: debateMotionKeys.list(),
     successMessage: getTranslation(t, "debateMotions.messages.created"),
-  });
-
-  const { mutate: createMotionFramework } = useCreate({
-    mutationOptions: createDebateMotionFrameworkMutationOptions(),
-    queryKey: debateMotionKeys.list(),
-    successMessage: getTranslation(
-      t,
-      "debateMotionFrameworks.messages.created",
-    ),
   });
 
   const { mutate: updateMotion } = useUpdate({
@@ -116,7 +112,6 @@ export default function DebateMotionList({
   });
 
   const handleCreate = (values: any) => createMotion(values);
-  const handleCreateFramework = (values: any) => createMotionFramework(values);
   const handleUpdate = (id: number, values: any) =>
     updateMotion({ id, data: values });
   const handleDelete = (id: number) => deleteMotion(id);
@@ -128,20 +123,6 @@ export default function DebateMotionList({
         <DebateMotionForm
           onSubmit={(values) => {
             handleCreate(values);
-            dialog.close(id);
-          }}
-        />
-      ),
-    });
-  };
-
-  const openCreateFrameworkDialog = () => {
-    const id = dialog.open({
-      title: getTranslation(t, "debateMotionFrameworks.actions.create"),
-      children: (
-        <DebateMotionFrameworkForm
-          onSubmit={(values) => {
-            handleCreateFramework(values);
             dialog.close(id);
           }}
         />
@@ -191,24 +172,19 @@ export default function DebateMotionList({
   };
 
   return (
-    <div className="min-h-screen py-16 px-6">
+    <div className="p-4 sm:p-6 lg:p-8">
       <AppHeader
+        entity="motions"
         title={getTranslation(t, "debateMotions.all")}
         view={view}
         setView={updateView}
-        showCreateButton={true}
-        actions={[
-          {
-            label: getTranslation(t, "debateMotionFrameworks.actions.create"),
-            variant: "default",
-            onClick: openCreateFrameworkDialog,
-          },
-          {
-            label: getTranslation(t, "debateMotions.actions.create"),
-            variant: "default",
-            onClick: openCreateDialog,
-          },
-        ]}
+        // One action, and it goes through onCreate/buttonLabel so it picks up
+        // the header's `accent` default: flat orange, navy text. Passing
+        // variant "default" is what made it the blue brand gradient.
+        // Frameworks have their own screen; creating one from here was a second
+        // primary competing with the actual primary.
+        onCreate={openCreateDialog}
+        buttonLabel={getTranslation(t, "debateMotions.actions.create")}
       />
 
       {view === "cards" ? (
@@ -251,7 +227,17 @@ export default function DebateMotionList({
             />
           ) : (
             <>
-              {paginatedData.meta.last_page > 1 && (
+              <div className="mt-6 grid grid-cols-1 items-stretch gap-5 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+                {filteredMotions.map((motion) => (
+                  <DebateMotionCard
+                    key={motion.id}
+                    motion={motion}
+                    onEdit={openEditDialog}
+                    onDelete={openDeleteDialog}
+                  />
+                ))}
+              </div>
+              {paginatedData?.meta?.last_page > 1 && (
                 <Pagination
                   currentPage={paginatedData?.meta?.current_page}
                   lastPage={paginatedData?.meta?.last_page}
@@ -264,16 +250,6 @@ export default function DebateMotionList({
                   }}
                 />
               )}
-              <div className="mt-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredMotions.map((motion) => (
-                  <DebateMotionCard
-                    key={motion.id}
-                    motion={motion}
-                    onEdit={openEditDialog}
-                    onDelete={openDeleteDialog}
-                  />
-                ))}
-              </div>
             </>
           )}
         </>
