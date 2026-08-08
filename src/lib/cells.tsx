@@ -310,7 +310,7 @@ export const Cell = {
       return (
         <span className="text-sm">
           {date.toLocaleDateString()}
-          {""}
+          {" "}
           {date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
         </span>
       );

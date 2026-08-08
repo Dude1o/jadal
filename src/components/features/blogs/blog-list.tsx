@@ -1,8 +1,18 @@
 import { useState } from "react";
 import { BlogCard } from "@/components/features/blogs/blog-card";
-import { ChevronDown, Plus, MoreHorizontal, Edit, Trash2 } from "lucide-react";
+import {
+  ChevronDown,
+  Edit,
+  FolderTree,
+  Hash,
+  MoreHorizontal,
+  Plus,
+  Trash2,
+} from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { getTranslation } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
+import type { TFunction } from "i18next";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 
@@ -13,6 +23,7 @@ import {
 } from "@/api/query-options";
 
 import BlogCategoryForm from "./blog-category-form";
+import AppHeader from "@/components/common/app-header";
 
 import Pagination from "@/components/common/pagination";
 import DeleteItem from "@/components/common/delete-item";
@@ -114,9 +125,11 @@ export function BlogList({ page = 1 }: BlogListProps) {
   // Queries
   // =========================
 
-  const { data: categories } = useQuery(blogCategoriesQueryOptions());
+  const { data: categoriesData } = useQuery(blogCategoriesQueryOptions());
+  const categories = categoriesData ?? [];
 
-  const { data: tags } = useQuery(blogTagsQueryOptions());
+  const { data: tagsData } = useQuery(blogTagsQueryOptions());
+  const tags = tagsData ?? [];
 
   const { data: blogPaginatedData } = useQuery({
     ...blogsQueryOptions({
@@ -295,269 +308,82 @@ export function BlogList({ page = 1 }: BlogListProps) {
 
   return (
     <div
-      className="min-h-screen"
-      style={{
-        background: "var(--background)",
-        fontFamily: "var(--font-sans)",
-      }}
+      className="min-h-screen p-4 sm:p-6 lg:p-8"
+      style={{ fontFamily: "var(--font-sans)" }}
     >
-      {/* Header */}
-      <div
-        className="sticky top-0 z-20 backdrop-blur-md"
-        style={{
-          background: "color-mix(in oklch, var(--background) 85%, transparent)",
-        }}
-      >
+      {/* The blue band every other screen has. */}
+      <div>
+        <AppHeader
+          entity="blog"
+          title={getTranslation(t, "blogs.title")}
+          description={getTranslation(t, "blogs.subtitle")}
+        />
+      </div>
+      {/* Topics and tags.
+          Every chip here used to be `border` + transparent fill. The global
+          no-border rule zeroes border-style, so unselected chips rendered as
+          bare text floating on the page with no shape at all — that is what
+          made this strip look unfinished. Chips are now tinted fills, which is
+          how every other control in the app separates itself.
+
+          The row-level `More` button also used hardcoded `right-2`/`pr-9`, so
+          in Arabic it sat on top of the label. Logical properties throughout. */}
+      <div>
         <div
-          className="max-w-2xl mx-auto px-3 sm:px-4 py-3 flex flex-col gap-3"
+          className="jd-toolbar grid gap-x-8 gap-y-5 lg:grid-cols-2"
           dir={i18n.dir()}
         >
-          <div className="flex items-center justify-between">
-            {/* §18.1 The header band already carries the page title; this
-                second copy is the duplicate that was reported. */}
-            <div className="flex flex-row gap-2">
-              {/* Categories Toggle */}
-              <button
-                onClick={() => setShowCategories((prev) => !prev)}
-                className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full border transition-all duration-200"
-                style={{
-                  borderColor: "var(--border)",
-                  color: "var(--muted-foreground)",
-                  background: showCategories
-                    ? "color-mix(in oklch, var(--accent) 10%, transparent)"
-                    : "transparent",
-                }}
-              >
-                {getTranslation(t, "blogs.topics")}
+          <FilterRow
+            icon={FolderTree}
+            label={getTranslation(t, "blogs.topics")}
+            count={categories.length}
+            open={showCategories}
+            onToggle={() => setShowCategories((v) => !v)}
+            onCreate={openCreateCategory}
+            createLabel={getTranslation(t, "blogs.actions.createCategory")}
+            allActive={!activeCategory}
+            onClearAll={() => setActiveCategory(null)}
+            allLabel={getTranslation(t, "common.labels.all")}
+            items={categories.map((category) => ({
+              key: category.id,
+              name: category.name,
+              active: activeCategory === category.name,
+              onSelect: () =>
+                setActiveCategory(
+                  activeCategory === category.name ? null : category.name,
+                ),
+              onEdit: () => openEditCategory(category),
+              onDelete: () => openDeleteCategory(category),
+            }))}
+            t={t}
+          />
 
-                <ChevronDown
-                  className="h-3 w-3 transition-transform duration-200"
-                  style={{
-                    transform: showCategories
-                      ? "rotate(180deg)"
-                      : "rotate(0deg)",
-                  }}
-                />
-              </button>
-
-              {/* Tags Toggle */}
-              <button
-                onClick={() => setShowTags((prev) => !prev)}
-                className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full border transition-all duration-200"
-                style={{
-                  borderColor: "var(--border)",
-                  color: "var(--muted-foreground)",
-                  background: showTags
-                    ? "color-mix(in oklch, var(--accent) 10%, transparent)"
-                    : "transparent",
-                }}
-              >
-                {getTranslation(t, "blogs.tags")}
-
-                <ChevronDown
-                  className="h-3 w-3 transition-transform duration-200"
-                  style={{
-                    transform: showTags ? "rotate(180deg)" : "rotate(0deg)",
-                  }}
-                />
-              </button>
-            </div>
-          </div>
-
-          {/* Categories */}
-          {showCategories && (
-            <div className="flex flex-col gap-3">
-              <div className="flex gap-2 flex-wrap pb-1">
-                <button
-                  onClick={() => setActiveCategory(null)}
-                  className="text-sm font-medium px-4 py-2 rounded-full border transition-all duration-200"
-                  style={{
-                    background: !activeCategory
-                      ? "color-mix(in oklch, var(--accent) 15%, transparent)"
-                      : "transparent",
-
-                    borderColor: !activeCategory
-                      ? "var(--accent)"
-                      : "var(--border)",
-
-                    color: !activeCategory
-                      ? "var(--accent)"
-                      : "var(--muted-foreground)",
-                  }}
-                >
-                  {getTranslation(t, "common.labels.all")}
-                </button>
-
-                {categories.map((category) => (
-                  <div key={category.id} className="relative inline-flex">
-                    <button
-                      onClick={() =>
-                        setActiveCategory(
-                          activeCategory === category.name
-                            ? null
-                            : category.name,
-                        )
-                      }
-                      className="text-sm font-medium px-4 py-2 rounded-full border transition-all duration-200 flex items-center gap-2 pr-9"
-                      style={{
-                        background:
-                          activeCategory === category.name
-                            ? "color-mix(in oklch, var(--accent) 15%, transparent)"
-                            : "transparent",
-
-                        borderColor:
-                          activeCategory === category.name
-                            ? "var(--accent)"
-                            : "var(--border)",
-
-                        color:
-                          activeCategory === category.name
-                            ? "var(--accent)"
-                            : "var(--muted-foreground)",
-                      }}
-                    >
-                      {category.name}
-                    </button>
-
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <button className="absolute right-2 top-1/2 -translate-y-1/2 p-1 hover:bg-muted rounded-full transition-colors">
-                          <MoreHorizontal className="h-4 w-4" />
-                        </button>
-                      </DropdownMenuTrigger>
-
-                      <DropdownMenuContent align="end" className="w-40">
-                        <DropdownMenuItem
-                          onClick={() => openEditCategory(category)}
-                          className="gap-2 cursor-pointer"
-                        >
-                          <Edit className="h-4 w-4" />
-                          {getTranslation(t, "common.actions.edit")}
-                        </DropdownMenuItem>
-
-                        <DropdownMenuItem
-                          onClick={() => openDeleteCategory(category)}
-                          className="gap-2 text-destructive cursor-pointer"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                          {getTranslation(t, "common.actions.delete")}
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </div>
-                ))}
-              </div>
-
-              <button
-                onClick={openCreateCategory}
-                className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full border transition-all duration-200 hover:border-accent/50 hover:text-accent self-start"
-                style={{
-                  borderColor: "var(--border)",
-                  color: "var(--muted-foreground)",
-                }}
-              >
-                <Plus className="h-3.5 w-3.5" />
-                {getTranslation(t, "blogs.actions.createCategory")}
-              </button>
-            </div>
-          )}
-
-          {/* Tags */}
-          {showTags && (
-            <div className="flex flex-col gap-3">
-              <div className="flex gap-2 flex-wrap pb-1">
-                <button
-                  onClick={() => setActiveTag(null)}
-                  className="text-sm font-medium px-4 py-2 rounded-full border transition-all duration-200"
-                  style={{
-                    background: !activeTag
-                      ? "color-mix(in oklch, var(--accent) 15%, transparent)"
-                      : "transparent",
-
-                    borderColor: !activeTag ? "var(--accent)" : "var(--border)",
-
-                    color: !activeTag
-                      ? "var(--accent)"
-                      : "var(--muted-foreground)",
-                  }}
-                >
-                  {getTranslation(t, "common.labels.all")}
-                </button>
-
-                {tags.map((tag) => (
-                  <div key={tag.id} className="relative inline-flex">
-                    <button
-                      onClick={() =>
-                        setActiveTag(activeTag === tag.id ? null : tag.id)
-                      }
-                      className="text-sm font-medium px-4 py-2 rounded-full border transition-all duration-200 flex items-center gap-2 pr-9"
-                      style={{
-                        background:
-                          activeTag === tag.id
-                            ? "color-mix(in oklch, var(--accent) 15%, transparent)"
-                            : "transparent",
-
-                        borderColor:
-                          activeTag === tag.id
-                            ? "var(--accent)"
-                            : "var(--border)",
-
-                        color:
-                          activeTag === tag.id
-                            ? "var(--accent)"
-                            : "var(--muted-foreground)",
-                      }}
-                    >
-                      {tag.name}
-                    </button>
-
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <button className="absolute right-2 top-1/2 -translate-y-1/2 p-1 hover:bg-muted rounded-full transition-colors">
-                          <MoreHorizontal className="h-4 w-4" />
-                        </button>
-                      </DropdownMenuTrigger>
-
-                      <DropdownMenuContent align="end" className="w-40">
-                        <DropdownMenuItem
-                          onClick={() => openEditTag(tag)}
-                          className="gap-2 cursor-pointer"
-                        >
-                          <Edit className="h-4 w-4" />
-                          {getTranslation(t, "common.actions.edit")}
-                        </DropdownMenuItem>
-
-                        <DropdownMenuItem
-                          onClick={() => openDeleteTag(tag)}
-                          className="gap-2 text-destructive cursor-pointer"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                          {getTranslation(t, "common.actions.delete")}
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </div>
-                ))}
-              </div>
-
-              <button
-                onClick={openCreateTag}
-                className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full border transition-all duration-200 hover:border-accent/50 hover:text-accent self-start"
-                style={{
-                  borderColor: "var(--border)",
-                  color: "var(--muted-foreground)",
-                }}
-              >
-                <Plus className="h-3.5 w-3.5" />
-                {getTranslation(t, "blogs.actions.createTag")}
-              </button>
-            </div>
-          )}
+          <FilterRow
+            icon={Hash}
+            label={getTranslation(t, "blogs.tags")}
+            count={tags.length}
+            open={showTags}
+            onToggle={() => setShowTags((v) => !v)}
+            onCreate={openCreateTag}
+            createLabel={getTranslation(t, "blogs.actions.createTag")}
+            allActive={!activeTag}
+            onClearAll={() => setActiveTag(null)}
+            allLabel={getTranslation(t, "common.labels.all")}
+            items={tags.map((tag) => ({
+              key: tag.id,
+              name: tag.name,
+              active: activeTag === tag.id,
+              onSelect: () => setActiveTag(activeTag === tag.id ? null : tag.id),
+              onEdit: () => openEditTag(tag),
+              onDelete: () => openDeleteTag(tag),
+            }))}
+            t={t}
+          />
         </div>
       </div>
 
       {/* Feed */}
-      <div className="max-w-5xl mx-auto px-3 sm:px-4 py-4 sm:py-5">
+      <div className="pt-6">
         {filteredBlogs.length === 0 ? (
           <div
             className="text-center py-16 text-sm"
@@ -569,7 +395,7 @@ export function BlogList({ page = 1 }: BlogListProps) {
           </div>
         ) : (
           <>
-            <div className="mx-auto grid max-w-[1440px] grid-cols-1 gap-7 min-[760px]:grid-cols-2 min-[1560px]:grid-cols-3">
+            <div className="grid grid-cols-1 items-stretch gap-7 min-[760px]:grid-cols-2 min-[1560px]:grid-cols-3">
               {filteredBlogs.map((blog, i) => (
                 <div
                   key={blog.id}
@@ -616,5 +442,171 @@ export function BlogList({ page = 1 }: BlogListProps) {
         }
       `}</style>
     </div>
+  );
+}
+
+type FilterChip = {
+  key: number | string;
+  name: string;
+  active: boolean;
+  onSelect: () => void;
+  onEdit: () => void;
+  onDelete: () => void;
+};
+
+/**
+ * One taxonomy: a disclosure header, then a wrap of selectable chips.
+ *
+ * Two rows side by side from `lg` up. Stacked full-width, each row was a short
+ * label at one end and a lone button at the other with a metre of nothing
+ * between them.
+ *
+ * Collapsed, the row still reports its state: an orange dot on the icon and
+ * the selected chip echoed beside the label, so closing a section never hides
+ * the fact that a filter is on.
+ */
+function FilterRow({
+  icon: Icon,
+  label,
+  count,
+  open,
+  onToggle,
+  onCreate,
+  createLabel,
+  allActive,
+  onClearAll,
+  allLabel,
+  items,
+  t,
+}: {
+  icon: LucideIcon;
+  label: string;
+  count: number;
+  open: boolean;
+  onToggle: () => void;
+  onCreate: () => void;
+  createLabel: string;
+  allActive: boolean;
+  onClearAll: () => void;
+  allLabel: string;
+  items: FilterChip[];
+  t: TFunction;
+}) {
+  const chip =
+    "inline-flex h-9 cursor-pointer items-center rounded-full px-4 text-[length:var(--text-caption)] font-bold transition-[background-color,color,box-shadow] duration-150 ease-out";
+  const idle =
+    "bg-[var(--toolbar-field)] text-muted-foreground hover:bg-[color-mix(in_oklab,var(--accent-btn)_16%,var(--toolbar-field))] hover:text-foreground";
+  const on =
+    "bg-[var(--accent-btn)] text-[var(--accent-btn-fg)] shadow-[0_2px_8px_-3px_rgba(245,154,74,.55)]";
+
+  const selected = items.find((i) => i.active);
+
+  return (
+    <section className="min-w-0">
+      <div className="flex min-w-0 items-center gap-2">
+        <button
+          type="button"
+          onClick={onToggle}
+          aria-expanded={open}
+          className="group flex min-w-0 flex-1 cursor-pointer items-center gap-2.5 text-start"
+        >
+          <span className="relative flex size-9 shrink-0 items-center justify-center rounded-[12px] bg-[var(--toolbar-field)] text-muted-foreground transition-colors duration-150 ease-out group-hover:text-foreground">
+            <Icon className="size-[18px]" />
+            {selected && (
+              <span className="absolute end-1 top-1 size-2 rounded-full bg-[var(--accent-btn)]" />
+            )}
+          </span>
+
+          <span className="min-w-0">
+            <span className="flex items-center gap-1.5">
+              <span className="text-[length:var(--text-caption)] font-bold tracking-[0.1em] text-foreground uppercase">
+                {label}
+              </span>
+              <span className="text-[length:var(--text-small)] font-bold text-muted-foreground tabular-nums">
+                {count}
+              </span>
+            </span>
+            <span className="block truncate text-[length:var(--text-small)] font-semibold text-muted-foreground">
+              {selected ? selected.name : allLabel}
+            </span>
+          </span>
+
+          <ChevronDown
+            className={`ms-1 size-4 shrink-0 text-muted-foreground transition-transform duration-200 ${
+              open ? "rotate-180" : ""
+            }`}
+          />
+        </button>
+
+        <button
+          type="button"
+          onClick={onCreate}
+          aria-label={createLabel}
+          title={createLabel}
+          className="flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-[12px] bg-[var(--toolbar-field)] text-muted-foreground transition-colors duration-150 ease-out hover:bg-[var(--accent-btn)] hover:text-[var(--accent-btn-fg)]"
+        >
+          <Plus className="size-4" />
+        </button>
+      </div>
+
+      {open && (
+        <div className="mt-3 flex flex-wrap gap-2">
+          <button
+            type="button"
+            onClick={onClearAll}
+            className={`${chip} ${allActive ? on : idle}`}
+          >
+            {allLabel}
+          </button>
+
+          {items.map((item) => (
+            <span key={item.key} className="relative inline-flex">
+              <button
+                type="button"
+                onClick={item.onSelect}
+                className={`${chip} pe-9 ${item.active ? on : idle}`}
+              >
+                {item.name}
+              </button>
+
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    type="button"
+                    aria-label={getTranslation(t, "common.labels.actions")}
+                    className="absolute end-1 top-1/2 flex size-7 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full transition-colors duration-150 ease-out hover:bg-black/10 dark:hover:bg-white/15"
+                  >
+                    <MoreHorizontal className="size-3.5" />
+                  </button>
+                </DropdownMenuTrigger>
+
+                <DropdownMenuContent align="end" className="w-40">
+                  <DropdownMenuItem
+                    onClick={item.onEdit}
+                    className="cursor-pointer gap-2"
+                  >
+                    <Edit className="size-4" />
+                    {getTranslation(t, "common.actions.edit")}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={item.onDelete}
+                    className="cursor-pointer gap-2 text-destructive"
+                  >
+                    <Trash2 className="size-4" />
+                    {getTranslation(t, "common.actions.delete")}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </span>
+          ))}
+
+          {items.length === 0 && (
+            <span className="inline-flex h-9 items-center text-[length:var(--text-caption)] font-semibold text-muted-foreground/70">
+              {getTranslation(t, "common.labels.noResults")}
+            </span>
+          )}
+        </div>
+      )}
+    </section>
   );
 }

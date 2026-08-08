@@ -60,7 +60,7 @@ export default function TeamDetails({ team_id }: TeamDetailsProps) {
             {team.leader?.name && (
               <p className="text-xs text-muted-foreground line-clamp-1 font-medium mt-0.5">
                 {getTranslation(t, "teams.details.leaderPrefix") || "Led by"}
-                {""}
+                {" "}
                 {team.leader.name}
               </p>
             )}
@@ -71,7 +71,7 @@ export default function TeamDetails({ team_id }: TeamDetailsProps) {
           <Users className="w-3.5 h-3.5" />
           <span>
             {totalMembers}
-            {""}
+            {" "}
             <span className="font-semibold">
               {getTranslation(t, "teams.details.members") || "members"}
             </span>

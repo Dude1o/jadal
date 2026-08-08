@@ -250,14 +250,12 @@ export default function DebateFormatList({
             />
           ) : (
             <>
-              <div
-                className="
-    mt-5
-    grid
-    gap-6
-    grid-cols-[repeat(auto-fit,minmax(280px,1fr))]
-  "
-              >
+              {/* `auto-fit` COLLAPSES empty tracks, so a search returning one
+                  format stretched that card across the whole row — the card
+                  changed size with the result count. Fixed columns keep a card
+                  the same width whether there is one or twenty, and match
+                  every other list screen. */}
+              <div className="mt-5 grid grid-cols-1 items-stretch gap-6 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
                 {filteredFormats.map((format) => (
                   <DebateFormatCard
                     key={format.id}

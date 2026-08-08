@@ -715,7 +715,8 @@
       "approveError": "Failed to approve blog",
       "rejectAction": "Reject",
       "rejectLabel": "Rejected",
-      "rejectError": "Failed to reject blog"
+      "rejectError": "Failed to reject blog",
+      "approveVerb": "Approve"
     },
     "time": {
       "minRead": "min/s read",
@@ -948,7 +949,8 @@
       "types": {
         "mcq": "MCQ",
         "open_text": "Text",
-        "rating": "Rating"
+        "rating": "Rating",
+        "text": "Text"
       },
       "placeholder": "e.g., How satisfied were you with the presentation clarity?"
     },
@@ -1046,7 +1048,8 @@
       "deleted": "Team deleted successfully",
       "createError": "Failed to create team",
       "updateError": "Failed to update team",
-      "deleteError": "Failed to delete team"
+      "deleteError": "Failed to delete team",
+      "notFound": "No information for this team. It may have been deleted, or it does not exist."
     },
     "fields": {
       "city": "City",
@@ -1339,7 +1342,13 @@
       "allAssigned": "All achievements assigned",
       "allAssignedDesc": "This user has all available achievements."
     },
-    "subtitle": "Badges awarded to members"
+    "subtitle": "Badges awarded to members",
+    "dateGroups": {
+      "today": "Today",
+      "thisWeek": "This week",
+      "thisMonth": "This month",
+      "older": "Older"
+    }
   },
   "home": {
     "welcome": "Welcome",

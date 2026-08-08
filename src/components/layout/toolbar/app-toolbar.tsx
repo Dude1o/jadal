@@ -29,8 +29,8 @@ export function AppToolbar({
     /* An elevated surface, not a bare row. The field sits inset within it, so
        page -> toolbar -> field reads as two steps instead of the one ~3%
        delta that made the whole thing invisible in light mode (section 7.2). */
-    <div className="jd-toolbar mb-6 flex flex-wrap items-center justify-between gap-3">
-      <div className="flex min-w-0 flex-1 flex-wrap items-center gap-3">
+    <div className="jd-toolbar mb-6 flex flex-wrap items-center justify-between gap-3 max-sm:p-2.5">
+      <div className="flex w-full min-w-0 flex-1 flex-wrap items-center gap-2.5 sm:w-auto sm:gap-3">
         {search && (
           <ToolbarSearch
             title={search.title}

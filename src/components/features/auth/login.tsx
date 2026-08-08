@@ -141,7 +141,7 @@ export default function Login({ onSubmit, isLoading, error }: LoginProps) {
           />
 
           <div className="relative flex items-center gap-3">
-            <span className="flex size-[88px] items-center justify-center rounded-[28px] bg-card shadow-[var(--shadow-card)]">
+            <span className="flex size-[88px] items-center justify-center rounded-[28px] bg-white shadow-[var(--shadow-card)]">
               <img
                 src={logo}
                 alt=""
@@ -170,7 +170,7 @@ export default function Login({ onSubmit, isLoading, error }: LoginProps) {
         <div className="flex flex-1 flex-col justify-center bg-white px-8 py-12 sm:px-12 dark:bg-[rgba(14,29,51,.94)] dark:backdrop-blur-[20px]">
           {/* Compact lockup below lg, where the brand panel is hidden */}
           <div className="mb-8 flex flex-col items-center lg:hidden">
-            <span className="flex size-[88px] items-center justify-center rounded-[28px] bg-background dark:bg-white/[0.06]">
+            <span className="flex size-[88px] items-center justify-center rounded-[28px] bg-white shadow-[var(--shadow-card)]">
               <img
                 src={logo}
                 alt=""

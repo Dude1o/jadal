@@ -103,6 +103,13 @@ export function AchievementCatalogList() {
     deleteCatalog({ id });
   };
 
+  /* A group key is an id, never display text. Grouped by type it is an
+     AchievementType; grouped by date it is one of the four buckets below. */
+  const groupLabel = (key: string) =>
+    groupBy === "type"
+      ? getTranslation(t, `achievements.types.${key.toLowerCase()}`)
+      : getTranslation(t, `achievements.dateGroups.${key}`);
+
   const groups = useMemo(() => {
     if (groupBy === "type") {
       const map = new Map<AchievementType, AchievementCatalog[]>();
@@ -122,10 +129,10 @@ export function AchievementCatalogList() {
     catalogList.forEach((c) => {
       const d = new Date(c.created_at);
       let key: string;
-      if (d.toDateString() === now.toDateString()) key = "Today";
-      else if (d >= startOfWeek) key = "This week";
-      else if (d >= startOfMonth) key = "This month";
-      else key = "Older";
+      if (d.toDateString() === now.toDateString()) key = "today";
+      else if (d >= startOfWeek) key = "thisWeek";
+      else if (d >= startOfMonth) key = "thisMonth";
+      else key = "older";
       const list = map.get(key) ?? [];
       list.push(c);
       map.set(key, list);
@@ -205,7 +212,7 @@ export function AchievementCatalogList() {
               <div key={key}>
                 <div className="flex items-center gap-3 mb-4">
                   <h3 className="text-sm font-semibold tracking-wide uppercase text-foreground/80">
-                    {key.toLowerCase()}
+                    {groupLabel(key)}
                   </h3>
                   <span className="text-[11px] text-muted-foreground bg-muted rounded-full px-2 py-0.5">
                     {items.length}
@@ -237,7 +244,7 @@ export function AchievementCatalogList() {
               <div key={key}>
                 <div className="flex items-center gap-3 mb-4">
                   <h3 className="text-sm font-semibold tracking-wide uppercase text-foreground/80">
-                    {key}
+                    {groupLabel(key)}
                   </h3>
                   <span className="text-[11px] text-muted-foreground bg-muted rounded-full px-2 py-0.5">
                     {items.length}

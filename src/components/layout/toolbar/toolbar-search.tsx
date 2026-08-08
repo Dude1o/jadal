@@ -36,7 +36,7 @@ export function ToolbarSearch({
         // Focus is a soft ring on the OUTER edge of the field, following its
         // 14px radius. An inset 2px bar of solid #F59A4A read as a hard square
         // cutting through the middle of the control.
-        "jd-field flex h-[46px] w-full max-w-sm items-center gap-2.5 px-4 transition-[box-shadow] duration-150 ease-in-out",
+        "jd-field flex h-[46px] w-full items-center gap-2.5 px-4 sm:max-w-sm transition-[box-shadow] duration-150 ease-in-out",
         "focus-within:shadow-[0_0_0_3px_color-mix(in_oklab,var(--accent-btn)_78%,transparent)]",
         className,
       )}

@@ -437,7 +437,7 @@ export function DataTable<TData, TValue>({
 
           <div className="flex w-[100px] items-center justify-center text-sm font-medium">
             {getTranslation(t, "table.page")} {getNumber(currentPage)}
-            {""}
+            {" "}
             {getTranslation(t, "table.of")} {getNumber(lastPage)}
           </div>
 

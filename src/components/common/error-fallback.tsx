@@ -79,7 +79,7 @@ export default function ErrorFallback({
             <span className="font-semibold text-foreground/70">
               {getTranslation(t, "common.errors.details")}:
             </span>
-            {""}
+            {" "}
             {status ? `[Status ${status}] ` : ""}
             {errorMessage}
           </div>

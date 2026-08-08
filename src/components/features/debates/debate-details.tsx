@@ -556,7 +556,7 @@ export function DebateDetails({ debateId }: DebateDetailsProps) {
                   {getTranslation(t, "debates.details.minTotal")}
                   {": "}
                   {Math.floor(totalDuration / 60)}
-                  {""}
+                  {" "}
                   {getTranslation(t, "debates.details.min")}
                 </span>
               </CardTitle>
@@ -582,7 +582,7 @@ export function DebateDetails({ debateId }: DebateDetailsProps) {
 
                       <span className="text-xs font-bold text-muted-foreground flex-shrink-0">
                         {Math.floor(phase.duration_seconds / 60)}
-                        {""}
+                        {" "}
                         {getTranslation(t, "debates.details.min")}
                       </span>
 
@@ -707,7 +707,7 @@ export function DebateDetails({ debateId }: DebateDetailsProps) {
                           )}
                         </>
                       )}
-                      {""}({group.length})
+                      {" "}({group.length})
                     </h4>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       {group.map((p, i) => {

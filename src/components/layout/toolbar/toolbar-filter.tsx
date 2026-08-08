@@ -88,7 +88,10 @@ function FilterSelect({
       }
       disabled={isLoading}
     >
-      <SelectTrigger className="jd-field h-[46px] w-full min-w-0 shrink px-4 text-[length:var(--text-body)] font-semibold capitalize sm:w-44">
+      {/* Phone: two filters share a row (basis 50% minus the gap) instead of
+          each claiming a full-width band. From sm up nothing changes — fixed
+          176px, as before. */}
+      <SelectTrigger className="jd-field h-[46px] w-full min-w-0 flex-1 basis-[calc(50%-0.25rem)] px-4 text-[length:var(--text-body)] font-semibold capitalize sm:w-44 sm:flex-none sm:basis-auto">
         {" "}
         {isLoading ? (
           <Spinner />
@@ -102,7 +105,7 @@ function FilterSelect({
       <SelectContent>
         <SelectItem value="all">
           {showAllLabel ? getTranslation(t, "common.labels.all") : null}
-          {""}
+          {" "}
           {getTranslation(t, filter.label)}
         </SelectItem>
         {resolvedOptions.map((opt, index) => (
@@ -140,7 +143,7 @@ export function ToolbarFilters({
   return (
     <div
       dir={i18n.dir()}
-      className="flex min-w-0 flex-wrap items-center gap-2 [&>*]:min-w-0"
+      className="flex w-full min-w-0 flex-wrap items-center gap-2 sm:w-auto [&>*]:min-w-0"
     >
       {filters.map((filter) => (
         <FilterSelect
@@ -154,10 +157,16 @@ export function ToolbarFilters({
         <Button
           variant="ghost"
           onClick={onReset}
-          className="h-[46px] shrink-0 px-4"
+          aria-label={getTranslation(t, "common.actions.resetFilters")}
+          title={getTranslation(t, "common.actions.resetFilters")}
+          className="size-[46px] shrink-0 rounded-[14px] p-0 sm:h-[46px] sm:w-auto sm:px-4"
         >
           <RotateCcw className="size-4" />
-          {getTranslation(t, "common.actions.resetFilters")}
+          {/* The label is worth a whole row on a phone; the glyph is not
+              ambiguous next to the filters it resets. */}
+          <span className="max-sm:hidden">
+            {getTranslation(t, "common.actions.resetFilters")}
+          </span>
         </Button>
       )}
     </div>

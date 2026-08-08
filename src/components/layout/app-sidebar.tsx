@@ -97,7 +97,9 @@ const AppSidebar = () => {
           to="/"
           className="flex items-center gap-3 group-data-[collapsible=icon]:justify-center"
         >
-          <span className="flex size-10 shrink-0 items-center justify-center rounded-[14px] bg-white/[0.08]">
+          {/* Solid white tile: the logo is a solid-ink mark, and an 8%-white
+              wash on navy left it sitting in a smudge rather than on a plate. */}
+          <span className="flex size-10 shrink-0 items-center justify-center rounded-[14px] bg-white shadow-[0_2px_8px_-3px_rgba(0,0,0,.45)]">
             <img
               src={logo}
               alt=""
@@ -139,7 +141,14 @@ const AppSidebar = () => {
                                 asChild
                                 isActive={isActive}
                                 data-nav-active={isActive || undefined}
-                                className="flex-1"
+                                /* `flex-1` sets flex-basis:0, which beats the
+                                   collapsed rail's `w-11!` for the flex main
+                                   size — these three rows grew to 60px while
+                                   every plain row stayed 44px, shifting their
+                                   icons 8px out of the column. The chevron is
+                                   not rendered when collapsed, so there is
+                                   nothing to share the row with anyway. */
+                                className={cn(state !== "collapsed" && "flex-1")}
                               >
                                 <Link
                                   to={item.url}
@@ -251,6 +260,9 @@ const AppSidebar = () => {
                 className={cn(
                   "flex w-full cursor-pointer items-center justify-between gap-2 rounded-[18px] bg-white/[0.06] px-3 py-2.5 text-start transition-colors duration-150 ease-in-out hover:bg-white/[0.11]",
                   isRTL() && "flex-row-reverse",
+                  // Collapsed, only the avatar remains — centre it in the rail
+                  // instead of leaving it hanging off the start edge.
+                  state === "collapsed" && "justify-center px-0",
                 )}
               >
                 <span

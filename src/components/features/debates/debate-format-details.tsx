@@ -116,7 +116,7 @@ export default function DebateFormatDetails({
           <Clock className="w-3.5 h-3.5" />
           <span>
             {Math.floor(totalDuration / 60)}
-            {""}
+            {" "}
             <span className="font-semibold">
               {getTranslation(t, "debateFormats.details.min") || "min"}
             </span>
@@ -148,7 +148,7 @@ export default function DebateFormatDetails({
               <p className="text-base font-black text-primary">
                 {parsedDetails.main_speech_duration}
                 {/* 1. Add an explicit space here: */}
-                {""}
+                {" "}
                 {/* 2. Alternatively, bump ml-0.5 up to ml-1 or ml-1.5 for visual spacing: */}
                 <span className="text-[10px] font-bold ml-1">
                   {getTranslation(t, "debateFormats.details.min") || "min"}
@@ -166,7 +166,7 @@ export default function DebateFormatDetails({
               <p className="text-base font-black text-primary">
                 {parsedDetails.reply_speech_duration}
                 {/* 1. Add an explicit space here: */}
-                {""}
+                {" "}
                 {/* 2. Alternatively, bump ml-0.5 up to ml-1 or ml-1.5 for visual spacing: */}
                 <span className="text-[10px] font-bold ml-1">
                   {getTranslation(t, "debateFormats.details.min") || "min"}
@@ -243,7 +243,7 @@ export default function DebateFormatDetails({
                     className={`text-[10px] font-bold rounded-md px-2 py-0.5 shadow-none border-0 ${badgeColor}`}
                   >
                     {Math.floor(phase.duration_seconds / 60)}
-                    {""}
+                    {" "}
                     {getTranslation(t, "debateFormats.details.min") || "min"}
                   </Badge>
                 </div>

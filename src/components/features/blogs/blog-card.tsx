@@ -172,9 +172,16 @@ export function BlogCard({ blog, variant = "feed" }: BlogCardProps) {
             </div>
           )}
 
-          {/* Approve / Reject Buttons */}
+          {/* Approve / Reject Buttons.
+              The whole block stops propagation rather than each handler doing
+              it: the card's onClick opens the reading view, so every control
+              in here — including the textarea below — has to swallow its own
+              click or reviewing an article also opened it. */}
           {showActionButtons && !showRejectForm && (
-            <div className="flex gap-2 mt-auto pt-4 ">
+            <div
+              className="mt-auto flex gap-2 pt-4"
+              onClick={(e) => e.stopPropagation()}
+            >
               <button
                 onClick={handleApprove}
                 disabled={isLoading}
@@ -202,7 +209,10 @@ export function BlogCard({ blog, variant = "feed" }: BlogCardProps) {
 
           {/* Reject Form */}
           {showRejectForm && (
-            <div className="mt-auto pt-4 flex flex-col gap-3">
+            <div
+              className="mt-auto flex flex-col gap-3 pt-4"
+              onClick={(e) => e.stopPropagation()}
+            >
               <label className="text-xs font-medium">
                 {getTranslation(t, "blogs.card.reviewerComment")}
               </label>

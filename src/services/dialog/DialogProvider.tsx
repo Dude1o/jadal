@@ -11,12 +11,21 @@ import {
 import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
 
+/**
+ * Widths apply from the `sm` breakpoint UP.
+ *
+ * Unprefixed they were the last `max-w-*` in the merge, so they replaced
+ * DialogContent's own `max-w-[calc(100%-2rem)]`. On a phone `max-w-xl` is
+ * 576px — wider than the viewport — so `w-full` took over and every dialog
+ * went edge to edge. Prefixed, the two live in different tailwind-merge
+ * groups and the mobile clamp survives.
+ */
 const sizeClasses = {
-  sm: "max-w-sm",
-  md: "max-w-xl",
-  lg: "max-w-3xl",
-  xl: "max-w-5xl",
-  full: "max-w-[95vw] h-[90vh]",
+  sm: "sm:max-w-sm",
+  md: "sm:max-w-xl",
+  lg: "sm:max-w-3xl",
+  xl: "sm:max-w-5xl",
+  full: "sm:max-w-[95vw] sm:h-[90vh]",
 };
 
 export function DialogProvider() {
@@ -35,7 +44,7 @@ export function DialogProvider() {
         >
           <DialogContent
             className={cn(
-              "w-full h-auto flex flex-col gap-4 mx-0.5",
+              "flex h-auto w-full flex-col gap-4",
               !d.width && sizeClasses[d.size ?? "md"],
               i18n.dir() === "rtl" &&
                 "[&>button:last-of-type]:left-4 [&>button:last-of-type]:right-auto",
@@ -43,7 +52,11 @@ export function DialogProvider() {
             style={{
               width: d.width,
               height: d.height,
-              maxWidth: !d.width ? undefined : d.width, // let style override if explicit width
+              // An explicit width still has to respect the screen gutter, or a
+              // caller asking for 900px pins a phone dialog to both edges.
+              maxWidth: d.width
+                ? `min(${d.width}, calc(100% - 2rem))`
+                : undefined,
             }}
             onPointerDownOutside={(e) => {
               if (d.closeOnOutsideClick === false) e.preventDefault();
